@@ -1,23 +1,85 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { SearchNormal, User, ShoppingCart } from "iconsax-reactjs";
+import {
+  SearchNormal,
+  User,
+  ShoppingCart,
+  HamburgerMenu,
+} from "iconsax-reactjs";
 import { Poppins } from "next/font/google";
 
 import Logo from "../../../../../public/images/loraceLogo.png";
+import CartModal from "./Modal/CartModal";
+import UserModal from "./Modal/UserModal";
+import MenuModal from "./Modal/MenuModal";
+import SearchModal from "./Modal/SearchModal";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-poppins',
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
 const Header = () => {
+  const [showCartModal, setShowCartModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [showMenuModal, setShowMenuModal] = useState(false);
+  const [animateModal, setAnimateModal] = useState(false);
+
+  // Logic to handle cartModal
+  const handleCartModalOpen = () => {
+    setShowCartModal(true);
+    setTimeout(() => setAnimateModal(true), 10);
+  };
+
+  const handleCartModalClose = () => {
+    setAnimateModal(false);
+    setTimeout(() => setShowCartModal(false), 300);
+  };
+
+  // Logic to handle menuModal
+  const handleUserModalOpen = () => {
+    setShowUserModal(true);
+    setTimeout(() => setAnimateModal(true), 10);
+  };
+
+  const handleUserModalClose = () => {
+    setAnimateModal(false);
+    setTimeout(() => setShowUserModal(false), 300);
+  };
+
+  // Logic to handle menuModal
+  const handleMenuModalOpen = () => {
+    setShowMenuModal(true);
+    setTimeout(() => setAnimateModal(true), 10);
+  };
+
+  const handleMenuModalClose = () => {
+    setAnimateModal(false);
+    setTimeout(() => setShowMenuModal(false), 300);
+  };
+
+    // Logic to handle seachModal
+    const handleSearchModalOpen = () => {
+      setShowSearchModal(true);
+      setTimeout(() => setAnimateModal(true), 10);
+    };
+  
+    const handleSearchModalClose = () => {
+      setAnimateModal(false);
+      setTimeout(() => setShowSearchModal(false), 300);
+    };
+
   return (
     <div>
-      <div className="font-poppins w-[90%] mx-auto flex justify-between items-center py-4">
-        <div>
+      <div className="font-poppins w-[90%] mx-auto flex justify-between items-center py-8 md:py-4">
+        <div className="inline md:hidden">
+          <HamburgerMenu size="30" color="#000" onClick={handleMenuModalOpen} />
+        </div>
+        <div className="md:static absolute left-1/2 -translate-x-1/2 md:translate-x-0">
           <Image
             src={Logo.src}
             alt="Lorace Babycare Logo"
@@ -25,7 +87,7 @@ const Header = () => {
             height={100}
           />
         </div>
-        <div>
+        <div className="hidden md:inline">
           <ul className="flex gap-8 text-black font-[500] text-base">
             <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
               Store
@@ -56,18 +118,52 @@ const Header = () => {
         <div className="flex items-center gap-4">
           <SearchNormal
             size="20"
+            onClick={handleSearchModalOpen}
             className="text-black hover:text-[#4fb3e5] hover:cursor-pointer hover:scale-110 transition-all duration-300"
           />
           <User
             size="20"
-            className="text-black hover:text-[#4fb3e5] hover:cursor-pointer hover:scale-110 transition-all duration-300"
+            onClick={handleUserModalOpen}
+            className="md:inline hidden text-black hover:text-[#4fb3e5] hover:cursor-pointer hover:scale-110 transition-all duration-300"
           />
           <ShoppingCart
             size="20"
+            onClick={handleCartModalOpen}
             className="text-black hover:text-[#4fb3e5] hover:cursor-pointer hover:scale-110 transition-all duration-300"
           />
         </div>
       </div>
+      {/* Cart Modal */}
+      {showCartModal && (
+        <CartModal
+          handleClose={handleCartModalClose}
+          animateModal={animateModal}
+        />
+      )}
+
+      {/* Search Modal */}
+      {showSearchModal && (
+        <SearchModal
+          handleClose={handleSearchModalClose}
+          animateModal={animateModal}
+        />
+      )}
+
+      {/* User Modal */}
+      {showUserModal && (
+        <UserModal
+          handleClose={handleUserModalClose}
+          animateModal={animateModal}
+        />
+      )}
+
+      {/* Menu Modal */}
+      {showMenuModal && (
+        <MenuModal
+          handleClose={handleMenuModalClose}
+          animateModal={animateModal}
+        />
+      )}
     </div>
   );
 };
