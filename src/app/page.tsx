@@ -2,12 +2,14 @@
 
 import React from 'react'
 
-import Header from './components/ui/home/Header';
+import HeaderBar from './components/ui/home/Header/HeaderBar';
+import HeroSection from './components/ui/home/Hero/HeroSection'
 
 const page = () => {
   return (
     <div>
-      <Header />
+      <HeaderBar />
+      <HeroSection />
     </div>
   )
 }

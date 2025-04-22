@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   SearchNormal,
@@ -10,7 +10,7 @@ import {
 } from "iconsax-reactjs";
 import { Poppins } from "next/font/google";
 
-import Logo from "../../../../../public/images/loraceLogo.png";
+import Logo from "../../../../../../public/images/loraceLogo.png";
 import CartModal from "./Modal/CartModal";
 import UserModal from "./Modal/UserModal";
 import MenuModal from "./Modal/MenuModal";
@@ -22,7 +22,8 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-const Header = () => {
+const HeaderBar = () => {
+  const [scrolled, setScrolled] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
@@ -73,9 +74,22 @@ const Header = () => {
       setTimeout(() => setShowSearchModal(false), 300);
     };
 
+    useEffect(() => {
+      const handleScroll = () => {
+        setScrolled(window.scrollY > 10);
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);  
+
   return (
-    <div>
-      <div className="font-poppins w-[90%] mx-auto flex justify-between items-center py-8 md:py-4">
+    <>
+    <div className={`
+      fixed top-0 left-0 w-full z-50 transition-all duration-30 backdrop-blur-sm bg-white
+      ${scrolled ? "shadow-sm" : ""}
+    `}>
+      <div className={`font-poppins w-[90%] mx-auto flex justify-between items-center py-4`}>
         <div className="inline md:hidden">
           <HamburgerMenu size="30" color="#000" onClick={handleMenuModalOpen} />
         </div>
@@ -133,8 +147,10 @@ const Header = () => {
           />
         </div>
       </div>
-      {/* Cart Modal */}
-      {showCartModal && (
+    </div>
+
+    {/* Cart Modal */}
+    {showCartModal && (
         <CartModal
           handleClose={handleCartModalClose}
           animateModal={animateModal}
@@ -164,8 +180,9 @@ const Header = () => {
           animateModal={animateModal}
         />
       )}
-    </div>
+
+    </>
   );
 };
 
-export default Header;
+export default HeaderBar;
