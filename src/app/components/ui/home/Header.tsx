@@ -110,7 +110,7 @@ const Header = () => {
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
             <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
-              Mother
+              For Mum
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
           </ul>
@@ -124,7 +124,7 @@ const Header = () => {
           <User
             size="20"
             onClick={handleUserModalOpen}
-            className="md:inline hidden text-black hover:text-[#4fb3e5] hover:cursor-pointer hover:scale-110 transition-all duration-300"
+            className="md:inline hidden text-black hover:text-[#b970a0] hover:cursor-pointer hover:scale-110 transition-all duration-300"
           />
           <ShoppingCart
             size="20"

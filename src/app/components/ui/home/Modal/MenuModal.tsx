@@ -1,5 +1,6 @@
 import React from 'react'
-import { CloseCircle } from 'iconsax-reactjs';
+import { IoMdClose } from "react-icons/io";
+
 
 interface MenuModalProps {
     handleClose: () => void,
@@ -25,18 +26,26 @@ const MenuModal: React.FC<MenuModalProps> = ({handleClose, animateModal}) => {
               animateModal ? "translate-x-0 opacity-100" : "-translate-x-full"
             }`}
           >
-            <div className="flex justify-between items-center mb-4 w-full">
-              <h2 className="text-xl font-semibold text-[#3474c0] flex-1 text-left">
-                Mobile Menu
+            <div className="flex justify-between items-center mb-4 w-full border-b-2 border-gray-100 pb-4">
+              <h2 className="text-xl font-[400] flex-1 text-left">
+                Menu
               </h2>
               <button
                 onClick={handleClose}
                 className="p-1 rounded-full hover:bg-gray-200 transition duration-200"
                 aria-label="Close"
               >
-                <CloseCircle color="#3474c0" size={24} />
+                <IoMdClose color="#000" size={24} />
               </button>
             </div>
+            <ul className='text-md flex flex-col gap-4 text-black font-[500] text-base'>
+                <li className="font-[600] flex-1 text-left  border-b-2 border-gray-100 pb-4" onClick={handleClose}>Store</li>
+                <li className="font-[600] flex-1 text-left  border-b-2 border-gray-100 pb-4" onClick={handleClose}>Food</li>
+                <li className="font-[600] flex-1 text-left  border-b-2 border-gray-100 pb-4" onClick={handleClose}>Clothing</li>
+                <li className="font-[600] flex-1 text-left  border-b-2 border-gray-100 pb-4" onClick={handleClose}>Accessories</li>
+                <li className="font-[600] flex-1 text-left  border-b-2 border-gray-100 pb-4" onClick={handleClose}>Footwear</li>
+                <li className="font-[600] flex-1 text-left  border-b-2 border-gray-100 pb-4" onClick={handleClose}>For Mum</li>
+            </ul>
           </div>
         </div>
   )
