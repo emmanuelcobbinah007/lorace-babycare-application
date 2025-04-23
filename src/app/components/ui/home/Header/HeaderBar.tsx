@@ -101,30 +101,34 @@ const HeaderBar = () => {
             height={100}
           />
         </div>
-        <div className="hidden md:inline">
-          <ul className="flex gap-8 text-black font-[500] text-base">
-            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
-              Store
+        <div className="hidden md:inline flex-1">
+          <ul className="text-center flex justify-evenly text-black font-[500] text-base">
+            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5] flex flex-col items-center justify-center">
+              Diapering
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
-            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
-              Food
+            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5] flex flex-col items-center justify-center">
+              Feeding
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
-            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
-              Clothing
+            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5] flex flex-col items-center justify-center">
+              Babycare
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
-            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
-              Accessories
+            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5] flex flex-col items-center justify-center">
+              Clothing and Footwear
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
-            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
-              Footwear
+            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5] flex flex-col items-center justify-center">
+              Back to School
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
-            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5]">
-              For Mum
+            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5] flex flex-col items-center justify-center">
+              Maternity and Nursing
+              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
+            </li>
+            <li className="relative hover:cursor-pointer duration-300 group hover:text-[#4fb2e5] flex flex-col items-center justify-center">
+              Sales
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
             </li>
           </ul>

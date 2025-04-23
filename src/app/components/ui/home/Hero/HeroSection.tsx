@@ -17,9 +17,10 @@ import Baby1 from "../../../../../../public/images/babyClothe.jpg"
 import Baby2 from "../../../../../../public/images/babyFood.jpg"
 import Baby3 from "../../../../../../public/images/babyShoes.jpg"
 import Baby4 from "../../../../../../public/images/babyShop.jpg"
-import Baby5 from "../../../../../../public/images/pexels-simple-soul-photogrphy-1100392298-27010370.jpg"
+import Baby5 from "../../../../../../public/images/babyDiapers.jpg"
 import Baby6 from "../../../../../../public/images/babyMum.jpg"
 import Baby7 from "../../../../../../public/images/babyAccessories.jpg"
+import Baby8 from "../../../../../../public/images/babySchool.jpg"
 
 const HeroSection = () => {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
@@ -43,12 +44,13 @@ const HeroSection = () => {
 
 
     const slides = [
-        { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/store', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '60%',},
-        { id: 2, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: '/food', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '0%',},
-        { id: 3, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePosition: 'center' , textPosition: 'right', mobileTextPosition: '60%'},
-        { id: 4, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: '/accessories', mobilePosition: 'right' , textPosition: 'right', mobileTextPosition: '60%'},
-        { id: 5, image: Baby3, main: 'Shoes made for little feet.', tagline: 'Tiny Steps Ahead', slug: '/footwear', mobilePosition: 'center', textPosition: 'left', mobileTextPosition: '90%'},
-        { id: 6, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: '/mama', mobilePosition: 'center' , textPosition: 'left', mobileTextPosition: '70%',},
+        { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/babycare', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '60%',},
+        { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: '/store', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '60%',},
+        { id: 3, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: '/food', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '0%',},
+        { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePosition: 'center' , textPosition: 'right', mobileTextPosition: '60%'},
+        { id: 5, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: '/accessories', mobilePosition: 'right' , textPosition: 'right', mobileTextPosition: '60%'},
+        { id: 6, image: Baby8, main: 'School gear for little achievers', tagline: 'Ready, Set, Learn!', slug: '/back-to-school', mobilePosition: 'center', textPosition: 'left', mobileTextPosition: '60%'},
+        { id: 7, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: '/mama', mobilePosition: 'center' , textPosition: 'left', mobileTextPosition: '70%',},
     ]
 
   return (
