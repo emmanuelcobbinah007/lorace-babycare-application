@@ -45,7 +45,7 @@ const HeroSection = () => {
 
     const slides = [
         { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/babycare', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '60%',},
-        { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: '/store', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '60%',},
+        { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: '/store', mobilePosition: 'center', textPosition: 'right', mobileTextPosition: '30%',},
         { id: 3, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: '/food', mobilePosition: 'right', textPosition: 'left', mobileTextPosition: '0%',},
         { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePosition: 'center' , textPosition: 'right', mobileTextPosition: '60%'},
         { id: 5, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: '/accessories', mobilePosition: 'right' , textPosition: 'right', mobileTextPosition: '60%'},
@@ -59,12 +59,12 @@ const HeroSection = () => {
     <div className="overflow-hidden w-full" ref={emblaRef}>
       <div className="flex">
         {slides.map((slide) => (
-          <div key={slide.id} className="min-w-full relative h-[75vh] md:h-[87vh] flex items-center justify-center hover:cursor-pointer">
+          <div key={slide.id} className="min-w-full relative h-[75vh] md:h-[87vh] flex items-center justify-center">
             <Image
               src={slide.image}
               alt={slide.tagline}
               fill
-              className={`object-cover object-${slide.mobilePosition} md:object-${slide.textPosition} brightness-100`}
+              className={`object-cover object-${slide.mobilePosition} md:object-${slide.mobilePosition} brightness-100`}
               priority
             />
             <div className="absolute inset-0 z-10 flex items-center justify-center">
