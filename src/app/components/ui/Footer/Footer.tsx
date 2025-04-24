@@ -3,6 +3,7 @@ import loraceLogo from '../../../../../public/images/loraceLogo.png';
 import React from 'react'
 import Link from 'next/link'
 import { Patrick_Hand } from 'next/font/google';
+import AuroraLogo from '../../../../../public/HouseKeeping/auroraLogo.png'
 
 const patrickHand = Patrick_Hand({
     subsets: ['latin'],
@@ -77,15 +78,19 @@ const Footer = () => {
     </div>
 
     {/* Footer Bottom */}
-    <div className="border-t border-gray-200 mt-8 pt-6 text-sm text-gray-600">
-      {/* <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+    <div className="border-t border-gray-200 mt-8 pt-6 text-sm text-gray-600 py-20 md:py-8">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">
         <p>© {new Date().getFullYear()} Lorace Babycare. All Rights Reserved.</p>
-        <img src={loraceLogo.src} className="w-[180px]" />
-        <div className="flex space-x-4">
+        <div className="block md:hidden space-x-4">
           <a href="/privacy" className="hover:text-[#b970a0] transition">Privacy Policy</a>
           <a href="/terms" className="hover:text-[#b970a0] transition">Terms of Service</a>
         </div>
-      </div> */}
+        <img src={AuroraLogo.src} className="absolute translate-y-1/2 md:translate-y-0 left-1/2 -translate-x-1/2 w-[150px]" />
+        <div className="hidden md:flex space-x-4">
+          <a href="/privacy" className="hover:text-[#b970a0] transition">Privacy Policy</a>
+          <a href="/terms" className="hover:text-[#b970a0] transition">Terms of Service</a>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
