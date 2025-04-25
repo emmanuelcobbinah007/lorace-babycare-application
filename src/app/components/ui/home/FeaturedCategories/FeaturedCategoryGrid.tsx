@@ -1,12 +1,19 @@
 import React from 'react'
 import Image from 'next/image'
+import { Patrick_Hand } from 'next/font/google'
 
 // importing images
-import Baby1 from "../../../../../../public/images/babyDiapers.jpg"
-import Baby2 from "../../../../../../public/images/babyFood.jpg"
-import Baby3 from "../../../../../../public/images/babyShoes.jpg"
-import Baby4 from "../../../../../../public/images/babyShop.jpg"
+import Baby1 from "../../../../../../public/images/side-view-parent-holding-diaper.jpg"
+import Baby2 from "../../../../../../public/images/flat-lay-bowl-with-baby-food.jpg"
+import Baby3 from "../../../../../../public/images/baby-clothes.jpg"
+import Baby4 from "../../../../../../public/images/black-mother-taking-car-her-child.jpg"
 import Baby5 from "../../../../../../public/images/babyBump.jpg"
+
+const patrickHand = Patrick_Hand({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-patrickHand',
+})
 
 const FeaturedCategoryGrid = () => {
   return (
@@ -24,11 +31,8 @@ const FeaturedCategoryGrid = () => {
     className="transition-transform duration-500 ease-in-out group-hover:scale-110"
   />
 
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
   {/* Text */}
-  <div className="absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium transition-opacity duration-500">
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
     Diapering
   </div>
 </div>
@@ -45,11 +49,8 @@ const FeaturedCategoryGrid = () => {
     className="transition-transform duration-500 ease-in-out group-hover:scale-110"
   />
 
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
   {/* Text */}
-  <div className="absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium transition-opacity duration-500">
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
     Feeding
   </div>
 </div>
@@ -66,11 +67,8 @@ const FeaturedCategoryGrid = () => {
     className="transition-transform duration-500 ease-in-out group-hover:scale-110"
   />
 
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
   {/* Text */}
-  <div className="absolute bottom-4 left-4 bg-white/90 text-lg px-4 py-2 rounded-full font-semibold transition-opacity duration-500">
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
   Maternity and Nursing
   </div>
 </div>
@@ -86,11 +84,8 @@ const FeaturedCategoryGrid = () => {
     className="transition-transform duration-500 ease-in-out group-hover:scale-110"
   />
 
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
   {/* Text */}
-  <div className="absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium  transition-opacity duration-500">
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
     Clothing and Footwear
   </div>
 </div>
@@ -107,11 +102,8 @@ const FeaturedCategoryGrid = () => {
     className="transition-transform duration-500 ease-in-out group-hover:scale-110"
   />
 
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
   {/* Text */}
-  <div className="absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium transition-opacity duration-500">
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
     Babycare
   </div>
 </div>

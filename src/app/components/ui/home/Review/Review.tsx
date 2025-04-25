@@ -4,7 +4,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Image from 'next/image';
 
 import HappyMom1 from '../../../../../../public/images/pexels-william-fortunato-6393377.jpg';
-import HappyMom2 from '../../../../../../public/images/pexels-barbara-olsen-7880604.jpg';
+import HappyMom2 from '../../../../../../public/images/smiley-mother-holding-kid-front-view.jpg';
 import HappyMom3 from '../../../../../../public/images/pexels-shvetsa-11369305.jpg';
 
 const reviews = [

@@ -42,7 +42,7 @@ const Trust = () => {
                             key={i}
                             className="min-w-[calc(50%-0.5rem)] flex-shrink-0 md:min-w-0 flex flex-col items-center text-center"
                         >
-                            <Image src={badge.image} alt={badge.alt} width={80} height={80} />
+                            <Image src={badge.image} alt={badge.alt} width={80} height={80} className='hover:scale-105 duration-500'/>
                             <h3 className="mt-4 text-lg font-semibold">{badge.title}</h3>
                             <p className="text-sm text-gray-600">{badge.description}</p>
                         </div>
