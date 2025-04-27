@@ -28,7 +28,7 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex font-poppins">
+    <div className="fixed inset-0 z-[999] flex font-poppins">
       {/* Overlay */}
       <div
         className={`fixed inset-0 transition-opacity ${

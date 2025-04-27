@@ -43,13 +43,13 @@ const CustomCursors = () => {
       {/* Outer ring with lag */}
       <div
         ref={outerRef}
-        className="fixed top-[-10] left-[-10] z-[9999] pointer-events-none w-8 h-8 rounded-full border-2 border-[#9b7bbd] transition-transform duration-150 ease-out"
+        className="fixed top-[-10] left-[-10] z-[99] pointer-events-none w-8 h-8 rounded-full border-2 border-[#9b7bbd] transition-transform duration-150 ease-out"
       />
       
       {/* Inner dot (follows instantly) */}
       <div
         ref={innerRef}
-        className="fixed top-0 left-0 z-[9999] pointer-events-none w-3 h-3 rounded-full bg-[#9b7bbd] transition-transform duration-75 ease-out"
+        className="fixed top-0 left-0 z-[99] pointer-events-none w-3 h-3 rounded-full bg-[#9b7bbd] transition-transform duration-75 ease-out"
       />
     </>
   );

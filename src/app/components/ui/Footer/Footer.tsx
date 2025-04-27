@@ -71,7 +71,7 @@ const Footer = () => {
             <FaInstagram />
           </a>
           <a href="https://www.pinterest.com/albertalarbi83/" target="_blank" className="hover:text-[#b970a0] text-xl transition">
-            <FaPinterest />
+            <FaPinterest /> 
           </a>
         </div>
       </div>
@@ -80,16 +80,46 @@ const Footer = () => {
     {/* Footer Bottom */}
     <div className="border-t border-gray-200 mt-8 pt-6 text-sm text-gray-600 py-20 md:py-8">
       <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">
-        <p>© {new Date().getFullYear()} Lorace Babycare. All Rights Reserved.</p>
-        <div className="block md:hidden space-x-4">
-          <a href="/privacy" className="hover:text-[#b970a0] transition">Privacy Policy</a>
-          <a href="/terms" className="hover:text-[#b970a0] transition">Terms of Service</a>
-        </div>
-        <img src={AuroraLogo.src} className="absolute translate-y-1/2 md:translate-y-0 left-1/2 -translate-x-1/2 w-[150px]" />
-        <div className="hidden md:flex space-x-4">
-          <a href="/privacy" className="hover:text-[#b970a0] transition">Privacy Policy</a>
-          <a href="/terms" className="hover:text-[#b970a0] transition">Terms of Service</a>
-        </div>
+      <p>© {new Date().getFullYear()} Lorace Babycare. All Rights Reserved.</p>
+      <div className="block md:hidden space-x-4">
+        <a href="/privacy" className="hover:text-[#b970a0] transition">Privacy Policy</a>
+        <a href="/terms" className="hover:text-[#b970a0] transition">Terms of Service</a>
+      </div>
+      <img src={AuroraLogo.src} className="absolute translate-y-1/2 md:translate-y-0 left-1/2 -translate-x-1/2 w-[150px]" />
+      <div className="hidden md:flex space-x-4">
+        <a href="/privacy" className="hover:text-[#b970a0] transition">Privacy Policy</a>
+        <a href="/terms" className="hover:text-[#b970a0] transition">Terms of Service</a>
+      </div>
+      </div>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6">
+      <div className="flex items-center space-x-2">
+        <a
+        href="https://wa.me/1234567890" // Replace with your WhatsApp number
+        target="_blank"
+        className="flex items-center text-[#4fb3e5] hover:text-[#b970a0] transition"
+        >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          className="w-5 h-5"
+        >
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.105 1.516 5.828L0 24l6.172-1.516A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm6.184 17.184c-.256.719-1.484 1.375-2.047 1.453-.563.078-1.094.256-3.719-.781-3.125-1.281-5.094-4.5-5.25-4.719-.156-.219-1.25-1.656-1.25-3.156s.781-2.219 1.094-2.5c.313-.281.688-.344.938-.344.25 0 .469.002.656.012.188.01.469-.078.719.531.25.609.844 2.094.906 2.25.063.156.094.344.031.531-.063.188-.094.344-.188.469-.094.125-.188.281-.281.406-.094.125-.188.219-.094.406.094.188.406.656.875 1.063.594.531 1.094.719 1.313.812.219.094.344.078.469-.063.125-.125.531-.625.656-.844.125-.219.281-.188.469-.125.188.063 1.188.563 1.406.656.219.094.344.125.406.188.063.063.063.719-.188 1.438z" />
+        </svg>
+        <span className="ml-2">WhatsApp</span>
+        </a>
+      </div>
+      <div className="flex items-center space-x-2">
+        <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        className="w-5 h-5 text-[#4fb3e5]"
+        >
+        <path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7zm0 9.5c-1.379 0-2.5-1.121-2.5-2.5S10.621 6.5 12 6.5s2.5 1.121 2.5 2.5-1.121 2.5-2.5 2.5z" />
+        </svg>
+        <span className="text-gray-600">123 Main Street, City, Country</span>
+      </div>
       </div>
     </div>
   </div>
