@@ -32,7 +32,7 @@ const FeaturedCategoryGrid = () => {
   />
 
   {/* Text */}
-  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium transition-opacity duration-500`}>
     Diapering
   </div>
 </div>
@@ -50,7 +50,7 @@ const FeaturedCategoryGrid = () => {
   />
 
   {/* Text */}
-  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium transition-opacity duration-500`}>
     Feeding
   </div>
 </div>
@@ -68,7 +68,7 @@ const FeaturedCategoryGrid = () => {
   />
 
   {/* Text */}
-  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-md px-3 py-1 rounded-full font-medium transition-opacity duration-500`}>
   Maternity and Nursing
   </div>
 </div>
@@ -85,7 +85,7 @@ const FeaturedCategoryGrid = () => {
   />
 
   {/* Text */}
-  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium transition-opacity duration-500`}>
     Clothing and Footwear
   </div>
 </div>
@@ -103,7 +103,7 @@ const FeaturedCategoryGrid = () => {
   />
 
   {/* Text */}
-  <div className={`absolute bottom-2 left-2 bg-white/90 text-xl px-3 py-1 rounded-full font-medium transition-opacity duration-500 ${patrickHand.className}`}>
+  <div className={`absolute bottom-2 left-2 bg-white/90 text-sm px-3 py-1 rounded-full font-medium transition-opacity duration-500`}>
     Babycare
   </div>
 </div>
