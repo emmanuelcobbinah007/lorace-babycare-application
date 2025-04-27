@@ -58,7 +58,7 @@ const HeroSection = () => {
     <div className="overflow-hidden w-full" ref={emblaRef}>
       <div className="flex">
         {slides.map((slide) => (
-          <div key={slide.id} className="min-w-full relative h-[75vh] md:h-[87vh] flex items-center justify-center">
+          <div key={slide.id} className="min-w-full relative h-[60vh] md:h-[87vh] flex items-center justify-center">
             <Image
               src={slide.image}
               alt={slide.tagline}
