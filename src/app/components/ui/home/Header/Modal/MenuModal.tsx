@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
-import { ArrowDown2, ArrowRight2, ArrowUp2 } from "iconsax-reactjs";
+import { ArrowDown2, ArrowRight2 } from "iconsax-reactjs";
 
 interface MenuModalProps {
   handleClose: () => void;

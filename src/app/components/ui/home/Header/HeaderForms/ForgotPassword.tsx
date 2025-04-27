@@ -7,7 +7,7 @@ interface ForgotPasswordProps {
   showForgotPassword: () => void;
 }
 
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({ showLoginForm, showForgotPassword }) => {
+const ForgotPassword: React.FC<ForgotPasswordProps> = ({ showLoginForm }) => {
   return (
     <div>
         <p className="text-sm mb-4 text-gray-600">Forgot your password? No worries! Just enter the email linked to your account, and we’ll send you a link to reset it and get you back in.</p>

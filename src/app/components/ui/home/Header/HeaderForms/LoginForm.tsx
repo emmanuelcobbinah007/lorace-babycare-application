@@ -96,7 +96,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showLoginForm, showForgotPassword
           showLoginForm();
         }}
       >
-        You're new around here? Create an account.
+        You&apos;re new around here? Create an account.
       </p>
     </div>
   );

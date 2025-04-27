@@ -15,7 +15,6 @@ const patrickHand = Patrick_Hand({
 // importing images
 import Baby1 from "../../../../../../public/images/babyClothe.jpg"
 import Baby2 from "../../../../../../public/images/babyFood.jpg"
-import Baby3 from "../../../../../../public/images/babyShoes.jpg"
 import Baby4 from "../../../../../../public/images/babyShop.jpg"
 import Baby5 from "../../../../../../public/images/babyDiapers.jpg"
 import Baby6 from "../../../../../../public/images/babyMum.jpg"

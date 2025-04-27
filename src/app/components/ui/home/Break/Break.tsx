@@ -1,14 +1,4 @@
-// import React from 'react'
-
-// const Break = () => {
-//   return (
-//     <div>Break</div>
-//   )
-// }
-
-// export default Break
-
-import { FaTruck, FaLock, FaBaby, FaHeadset } from "react-icons/fa";
+import { FaHeadset } from "react-icons/fa";
 import { LuBaby } from "react-icons/lu";
 import { Truck, Lock1 } from "iconsax-reactjs";
 

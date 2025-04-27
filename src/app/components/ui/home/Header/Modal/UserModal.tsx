@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import SignUpForm from "../HeaderForms/SignUpForm";
 import LoginForm from "../HeaderForms/LoginForm";

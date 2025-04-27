@@ -2,8 +2,6 @@ import React from "react";
 import { Patrick_Hand } from "next/font/google";
 import Image from "next/image";
 
-import Backpack from "../../../../../../public/images/featuredProducts/backpack.jpg";
-import Dress from "../../../../../../public/images/featuredProducts/dress.jpg";
 import Socks from "../../../../../../public/images/featuredProducts/socks.jpg";
 import Towels from "../../../../../../public/images/featuredProducts/towels.jpg";
 import Yum from "../../../../../../public/images/featuredProducts/yum.jpg";

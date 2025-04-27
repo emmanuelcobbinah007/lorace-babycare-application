@@ -1,5 +1,4 @@
 import { FaFacebookF, FaInstagram, FaPinterest } from "react-icons/fa";
-import loraceLogo from '../../../../../public/images/loraceLogo.png';
 import React from 'react'
 import Link from 'next/link'
 import { Patrick_Hand } from 'next/font/google';

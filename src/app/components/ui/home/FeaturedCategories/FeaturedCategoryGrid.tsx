@@ -1,6 +1,5 @@
 import React from 'react'
 import Image from 'next/image'
-import { Patrick_Hand } from 'next/font/google'
 
 // importing images
 import Baby1 from "../../../../../../public/images/side-view-parent-holding-diaper.jpg"
@@ -8,12 +7,6 @@ import Baby2 from "../../../../../../public/images/flat-lay-bowl-with-baby-food.
 import Baby3 from "../../../../../../public/images/baby-clothes.jpg"
 import Baby4 from "../../../../../../public/images/black-mother-taking-car-her-child.jpg"
 import Baby5 from "../../../../../../public/images/babyBump.jpg"
-
-const patrickHand = Patrick_Hand({
-  subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-patrickHand',
-})
 
 const FeaturedCategoryGrid = () => {
   return (

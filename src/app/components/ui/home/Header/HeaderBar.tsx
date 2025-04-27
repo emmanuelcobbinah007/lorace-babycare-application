@@ -8,19 +8,12 @@ import {
   ShoppingCart,
   HamburgerMenu,
 } from "iconsax-reactjs";
-import { Poppins } from "next/font/google";
 
 import Logo from "../../../../../../public/images/loraceLogo.png";
 import CartModal from "./Modal/CartModal";
 import UserModal from "./Modal/UserModal";
 import MenuModal from "./Modal/MenuModal";
 import SearchModal from "./Modal/SearchModal";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
-});
 
 const categories = [
   { name: "Diapering", subItems: ["Diapers", "Wipes", "Changing Pads"] },
