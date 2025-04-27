@@ -67,7 +67,7 @@ const HeroSection = () => {
               priority
             />
             <div className="absolute inset-0 z-10 flex items-center justify-center">
-              <div className={`absolute ${slide.textPosition}-4 md:${slide.textPosition}-10 text-center text-white px-4 translate-y-[${slide.mobileTextPosition}] md:translate-y-0`}>
+              <div className={`absolute ${slide.textPosition}-4 md ${slide.textPosition}-10 text-center text-white px-4 translate-y-[${slide.mobileTextPosition}] md:translate-y-0`}>
               <p className="text-md md:text-lg font-[500] text-black">{slide.tagline}</p>
               <h2 className={`text-3xl md:text-5xl font-bold text-black my-2 ${patrickHand.className}`}>{slide.main}</h2>
               <a

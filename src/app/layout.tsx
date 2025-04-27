@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`antialiased cursor-none`} >
-        <CustomCursor />
+        <CustomCursor/>
         <ClientLayout>
         {children}
         </ClientLayout>
