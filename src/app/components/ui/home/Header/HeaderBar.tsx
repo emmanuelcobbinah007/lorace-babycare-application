@@ -67,7 +67,7 @@ const HeaderBar = () => {
         }`}
       >
         <div className={`font-poppins w-[90%] mx-auto flex justify-between items-center py-4`}>
-          <div className="inline md:hidden">
+          <div className="flex gap-3 items-center md:hidden">
             <HamburgerMenu size="30" color="#000" onClick={() => openModal(setShowMenuModal)} />
           </div>
 

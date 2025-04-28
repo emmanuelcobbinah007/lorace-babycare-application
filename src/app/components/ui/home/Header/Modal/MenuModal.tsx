@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 import { ArrowDown2, ArrowRight2 } from "iconsax-reactjs";
+import { User } from "iconsax-reactjs";
+
+import UserModal from './UserModal';
 
 interface MenuModalProps {
   handleClose: () => void;
@@ -9,6 +12,8 @@ interface MenuModalProps {
 
 const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+    const [animatedModal, setAnimatedModal] = useState(false);
+     const [showUserModal, setShowUserModal] = useState(false);
 
   const categories = [
     { name: "Diapering", subCategories: ["Diapers", "Wipes", "Changing Pads"] },
@@ -23,6 +28,16 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
   const handleCategoryClick = (category: string) => {
     setActiveCategory(prev => (prev === category ? null : category));
   };
+
+   const openModal = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
+      setter(true);
+      setTimeout(() => setAnimatedModal(true), 10);
+    };
+
+     const closeModal = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
+        setAnimatedModal(false);
+        setTimeout(() => setter(false), 300);
+      };
 
   return (
     <div className="fixed inset-0 z-[999] flex font-poppins">
@@ -42,6 +57,14 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
       >
         <div className="flex justify-between items-center mb-4 w-full border-b-2 border-gray-100 pb-4">
           <h2 className="text-xl font-[400] flex-1 text-left">Menu</h2>
+          <button>
+          <User
+                          size="20"
+                          color='#000'
+                          onClick={() => openModal(setShowUserModal)}
+                          className="inline text-black hover:text-[#b970a0] hover:scale-110 transition-all duration-300"
+                        />
+          </button>
           <button
             onClick={handleClose}
             className="p-1 rounded-full hover:bg-gray-200 transition duration-200"
@@ -94,6 +117,12 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
           })}
         </ul>
       </div>
+      
+      {/* User Modal */}
+      {showUserModal && (
+        <UserModal handleClose={() => closeModal(setShowUserModal)} animateModal={animatedModal} />
+      )}
+
     </div>
   );
 };
