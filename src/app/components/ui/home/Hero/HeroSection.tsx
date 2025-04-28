@@ -49,7 +49,7 @@ const HeroSection = () => {
         { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePositionClass: 'object-center' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[30%] md:translate-y-0'},
         { id: 5, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: '/accessories', mobilePositionClass: 'object-right' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[10%] md:translate-y-0'},
         { id: 6, image: Baby8, main: 'School gear for little achievers', tagline: 'Ready, Set, Learn!', slug: '/back-to-school', mobilePositionClass: 'object-center', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[30%] md:translate-y-0'},
-        { id: 7, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: '/mama', mobilePositionClass: 'object-center' , textPositionClass: 'left', mobileTextPositionClass: 'translate-y-[0%] md:translate-y-0',},
+        { id: 7, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: '/mama', mobilePositionClass: 'object-center' , textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[0%] md:translate-y-0',},
     ]
 
   return (
