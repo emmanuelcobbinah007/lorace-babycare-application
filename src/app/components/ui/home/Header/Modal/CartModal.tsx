@@ -30,7 +30,7 @@ const CartModal: React.FC<CartModalProps> = ({handleClose, animateModal}) => {
     { id: 3, name: "Baby Food", price: 4.99, quantity: 3, size: "Large", image: Yum },
   ];
   // Set the sample cart items to state
-  React.useEffect(() => {
+  useEffect(() => {
     setCartItems(sampleCartItems);
   }, []);
 
