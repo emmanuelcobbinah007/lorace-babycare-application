@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoMdClose } from "react-icons/io";
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import { Trash } from 'iconsax-reactjs';
 
 import Socks from "../../../../../../../public/images/featuredProducts/socks.jpg";
@@ -13,13 +13,26 @@ interface CartModalProps {
 }
 
 const CartModal: React.FC<CartModalProps> = ({handleClose, animateModal}) => {
-  const [emptyCart, setEmptyCart] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    // Example cart items
-    { id: 1, name: "Product 1", price: 29.99, quantity: 1, size: "M", image: Socks },
-    { id: 2, name: "Product 2", price: 19.99, quantity: 1, size: "N/A", image: Towels },
-    { id: 3, name: "Product 3", price: 39.99, quantity: 2, size: "L", image: Yum },
-  ]);
+  interface CartItem {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+    size: string;
+    image: StaticImageData;
+  }
+
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  // Sample cart items for demonstration
+  const sampleCartItems = [
+    { id: 1, name: "Baby Socks", price: 9.99, quantity: 2, size: "Small", image: Socks },
+    { id: 2, name: "Baby Towels", price: 15.00, quantity: 1, size: "Medium", image: Towels },
+    { id: 3, name: "Baby Food", price: 4.99, quantity: 3, size: "Large", image: Yum },
+  ];
+  // Set the sample cart items to state
+  React.useEffect(() => {
+    setCartItems(sampleCartItems);
+  }, []);
 
   // Calculate the total price
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);

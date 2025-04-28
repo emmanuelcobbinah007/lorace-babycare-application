@@ -1,5 +1,4 @@
 import React from "react";
-import { CloseCircle } from "iconsax-reactjs";
 import { IoMdClose } from "react-icons/io";
 
 interface SearchModalProps {
