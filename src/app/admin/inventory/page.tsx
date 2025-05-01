@@ -1,12 +1,13 @@
-import React from 'react'
-import AdminLayout from '../../layouts/AdminLayout'
+import React from "react";
+import AdminLayout from "../../layouts/AdminLayout";
+import InventoryPage from "@/app/components/ui/admin/inventory/InventoryPage";
 
 const page = () => {
   return (
     <AdminLayout>
-    <div>This is the Inventory page</div>
+      <InventoryPage />
     </AdminLayout>
-  )
-}
+  );
+};
 
-export default page
+export default page;

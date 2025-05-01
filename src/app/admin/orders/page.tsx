@@ -5,10 +5,11 @@ const page = () => {
   return (
     <>
         <AdminLayout>
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-                <h1 className="text-4xl font-bold text-gray-800">Admin Orders Page</h1>
-                <p className="mt-4 text-lg text-gray-600">Manage your orders here.</p>
-            </div>
+        <div>
+        <div className="my-8 mx-auto w-[90%] flex justify-between items-center">
+          <h1 className="text-xl font-semibold text-gray-800">Orders & Fulfillment</h1>
+        </div>
+      </div>
         </AdminLayout>
     </>
   )
