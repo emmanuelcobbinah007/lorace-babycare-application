@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+  output          = "../src/generated/prisma"
 }
 
 datasource db {
@@ -74,6 +75,7 @@ model Product {
   featuredProduct  FeaturedProduct?
   cartItems        CartItem[]
   orderItems       OrderItem[]
+  salePercent      Float            @default(0.0)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
 }

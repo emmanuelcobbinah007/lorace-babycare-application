@@ -1599,6 +1599,10 @@ export namespace Prisma {
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
     /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory | null
+    /**
      * Global configuration for omitting model fields by default.
      * 
      * @example
@@ -5253,11 +5257,13 @@ export namespace Prisma {
   export type ProductAvgAggregateOutputType = {
     price: number | null
     stock: number | null
+    salePercent: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     price: number | null
     stock: number | null
+    salePercent: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -5272,6 +5278,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType | null
     categoryId: string | null
     subCategoryId: string | null
+    salePercent: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5288,6 +5295,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType | null
     categoryId: string | null
     subCategoryId: string | null
+    salePercent: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5304,6 +5312,7 @@ export namespace Prisma {
     sizingType: number
     categoryId: number
     subCategoryId: number
+    salePercent: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5313,11 +5322,13 @@ export namespace Prisma {
   export type ProductAvgAggregateInputType = {
     price?: true
     stock?: true
+    salePercent?: true
   }
 
   export type ProductSumAggregateInputType = {
     price?: true
     stock?: true
+    salePercent?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -5332,6 +5343,7 @@ export namespace Prisma {
     sizingType?: true
     categoryId?: true
     subCategoryId?: true
+    salePercent?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5348,6 +5360,7 @@ export namespace Prisma {
     sizingType?: true
     categoryId?: true
     subCategoryId?: true
+    salePercent?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5364,6 +5377,7 @@ export namespace Prisma {
     sizingType?: true
     categoryId?: true
     subCategoryId?: true
+    salePercent?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5467,6 +5481,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType
     categoryId: string
     subCategoryId: string
+    salePercent: number
     createdAt: Date
     updatedAt: Date
     _count: ProductCountAggregateOutputType | null
@@ -5502,6 +5517,7 @@ export namespace Prisma {
     sizingType?: boolean
     categoryId?: boolean
     subCategoryId?: boolean
+    salePercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -5524,6 +5540,7 @@ export namespace Prisma {
     sizingType?: boolean
     categoryId?: boolean
     subCategoryId?: boolean
+    salePercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -5542,6 +5559,7 @@ export namespace Prisma {
     sizingType?: boolean
     categoryId?: boolean
     subCategoryId?: boolean
+    salePercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -5560,11 +5578,12 @@ export namespace Prisma {
     sizingType?: boolean
     categoryId?: boolean
     subCategoryId?: boolean
+    salePercent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "descriptionShort" | "descriptionLong" | "imageUrl" | "price" | "stock" | "isHidden" | "sizingType" | "categoryId" | "subCategoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "descriptionShort" | "descriptionLong" | "imageUrl" | "price" | "stock" | "isHidden" | "sizingType" | "categoryId" | "subCategoryId" | "salePercent" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     subCategory?: boolean | SubCategoryDefaultArgs<ExtArgs>
@@ -5603,6 +5622,7 @@ export namespace Prisma {
       sizingType: $Enums.SizingType
       categoryId: string
       subCategoryId: string
+      salePercent: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["product"]>
@@ -6044,6 +6064,7 @@ export namespace Prisma {
     readonly sizingType: FieldRef<"Product", 'SizingType'>
     readonly categoryId: FieldRef<"Product", 'String'>
     readonly subCategoryId: FieldRef<"Product", 'String'>
+    readonly salePercent: FieldRef<"Product", 'Float'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
   }
@@ -13123,6 +13144,7 @@ export namespace Prisma {
     sizingType: 'sizingType',
     categoryId: 'categoryId',
     subCategoryId: 'subCategoryId',
+    salePercent: 'salePercent',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13513,6 +13535,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFilter<"Product"> | $Enums.SizingType
     categoryId?: UuidFilter<"Product"> | string
     subCategoryId?: UuidFilter<"Product"> | string
+    salePercent?: FloatFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -13534,6 +13557,7 @@ export namespace Prisma {
     sizingType?: SortOrder
     categoryId?: SortOrder
     subCategoryId?: SortOrder
+    salePercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     category?: CategoryOrderByWithRelationInput
@@ -13558,6 +13582,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFilter<"Product"> | $Enums.SizingType
     categoryId?: UuidFilter<"Product"> | string
     subCategoryId?: UuidFilter<"Product"> | string
+    salePercent?: FloatFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -13579,6 +13604,7 @@ export namespace Prisma {
     sizingType?: SortOrder
     categoryId?: SortOrder
     subCategoryId?: SortOrder
+    salePercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -13603,6 +13629,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeWithAggregatesFilter<"Product"> | $Enums.SizingType
     categoryId?: UuidWithAggregatesFilter<"Product"> | string
     subCategoryId?: UuidWithAggregatesFilter<"Product"> | string
+    salePercent?: FloatWithAggregatesFilter<"Product"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
@@ -14164,6 +14191,7 @@ export namespace Prisma {
     stock: number
     isHidden?: boolean
     sizingType: $Enums.SizingType
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -14185,6 +14213,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType
     categoryId: string
     subCategoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     featuredProduct?: FeaturedProductUncheckedCreateNestedOneWithoutProductInput
@@ -14202,6 +14231,7 @@ export namespace Prisma {
     stock?: IntFieldUpdateOperationsInput | number
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -14223,6 +14253,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     categoryId?: StringFieldUpdateOperationsInput | string
     subCategoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     featuredProduct?: FeaturedProductUncheckedUpdateOneWithoutProductNestedInput
@@ -14242,6 +14273,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType
     categoryId: string
     subCategoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14256,6 +14288,7 @@ export namespace Prisma {
     stock?: IntFieldUpdateOperationsInput | number
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14272,6 +14305,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     categoryId?: StringFieldUpdateOperationsInput | string
     subCategoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14934,6 +14968,7 @@ export namespace Prisma {
     sizingType?: SortOrder
     categoryId?: SortOrder
     subCategoryId?: SortOrder
+    salePercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14941,6 +14976,7 @@ export namespace Prisma {
   export type ProductAvgOrderByAggregateInput = {
     price?: SortOrder
     stock?: SortOrder
+    salePercent?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -14955,6 +14991,7 @@ export namespace Prisma {
     sizingType?: SortOrder
     categoryId?: SortOrder
     subCategoryId?: SortOrder
+    salePercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14971,6 +15008,7 @@ export namespace Prisma {
     sizingType?: SortOrder
     categoryId?: SortOrder
     subCategoryId?: SortOrder
+    salePercent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14978,6 +15016,7 @@ export namespace Prisma {
   export type ProductSumOrderByAggregateInput = {
     price?: SortOrder
     stock?: SortOrder
+    salePercent?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -16323,6 +16362,7 @@ export namespace Prisma {
     stock: number
     isHidden?: boolean
     sizingType: $Enums.SizingType
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     subCategory: SubCategoryCreateNestedOneWithoutProductsInput
@@ -16342,6 +16382,7 @@ export namespace Prisma {
     isHidden?: boolean
     sizingType: $Enums.SizingType
     subCategoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     featuredProduct?: FeaturedProductUncheckedCreateNestedOneWithoutProductInput
@@ -16416,6 +16457,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFilter<"Product"> | $Enums.SizingType
     categoryId?: UuidFilter<"Product"> | string
     subCategoryId?: UuidFilter<"Product"> | string
+    salePercent?: FloatFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
   }
@@ -16476,6 +16518,7 @@ export namespace Prisma {
     stock: number
     isHidden?: boolean
     sizingType: $Enums.SizingType
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -16495,6 +16538,7 @@ export namespace Prisma {
     isHidden?: boolean
     sizingType: $Enums.SizingType
     categoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     featuredProduct?: FeaturedProductUncheckedCreateNestedOneWithoutProductInput
@@ -16873,6 +16917,7 @@ export namespace Prisma {
     stock: number
     isHidden?: boolean
     sizingType: $Enums.SizingType
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -16893,6 +16938,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType
     categoryId: string
     subCategoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
@@ -16925,6 +16971,7 @@ export namespace Prisma {
     stock?: IntFieldUpdateOperationsInput | number
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -16945,6 +16992,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     categoryId?: StringFieldUpdateOperationsInput | string
     subCategoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
@@ -17088,6 +17136,7 @@ export namespace Prisma {
     stock: number
     isHidden?: boolean
     sizingType: $Enums.SizingType
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -17108,6 +17157,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType
     categoryId: string
     subCategoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     featuredProduct?: FeaturedProductUncheckedCreateNestedOneWithoutProductInput
@@ -17165,6 +17215,7 @@ export namespace Prisma {
     stock?: IntFieldUpdateOperationsInput | number
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -17185,6 +17236,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     categoryId?: StringFieldUpdateOperationsInput | string
     subCategoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     featuredProduct?: FeaturedProductUncheckedUpdateOneWithoutProductNestedInput
@@ -17330,6 +17382,7 @@ export namespace Prisma {
     stock: number
     isHidden?: boolean
     sizingType: $Enums.SizingType
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -17350,6 +17403,7 @@ export namespace Prisma {
     sizingType: $Enums.SizingType
     categoryId: string
     subCategoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     featuredProduct?: FeaturedProductUncheckedCreateNestedOneWithoutProductInput
@@ -17409,6 +17463,7 @@ export namespace Prisma {
     stock?: IntFieldUpdateOperationsInput | number
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -17429,6 +17484,7 @@ export namespace Prisma {
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     categoryId?: StringFieldUpdateOperationsInput | string
     subCategoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     featuredProduct?: FeaturedProductUncheckedUpdateOneWithoutProductNestedInput
@@ -17504,6 +17560,7 @@ export namespace Prisma {
     isHidden?: boolean
     sizingType: $Enums.SizingType
     subCategoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17525,6 +17582,7 @@ export namespace Prisma {
     stock?: IntFieldUpdateOperationsInput | number
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subCategory?: SubCategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -17544,6 +17602,7 @@ export namespace Prisma {
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     subCategoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     featuredProduct?: FeaturedProductUncheckedUpdateOneWithoutProductNestedInput
@@ -17562,6 +17621,7 @@ export namespace Prisma {
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     subCategoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17600,6 +17660,7 @@ export namespace Prisma {
     isHidden?: boolean
     sizingType: $Enums.SizingType
     categoryId: string
+    salePercent?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17614,6 +17675,7 @@ export namespace Prisma {
     stock?: IntFieldUpdateOperationsInput | number
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -17633,6 +17695,7 @@ export namespace Prisma {
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     categoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     featuredProduct?: FeaturedProductUncheckedUpdateOneWithoutProductNestedInput
@@ -17651,6 +17714,7 @@ export namespace Prisma {
     isHidden?: BoolFieldUpdateOperationsInput | boolean
     sizingType?: EnumSizingTypeFieldUpdateOperationsInput | $Enums.SizingType
     categoryId?: StringFieldUpdateOperationsInput | string
+    salePercent?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

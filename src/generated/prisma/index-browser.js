@@ -156,6 +156,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   sizingType: 'sizingType',
   categoryId: 'categoryId',
   subCategoryId: 'subCategoryId',
+  salePercent: 'salePercent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
