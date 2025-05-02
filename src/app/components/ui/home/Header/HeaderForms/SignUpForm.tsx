@@ -4,7 +4,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 
-
 interface SignUpFormProps {
   showLoginForm: () => void;
 }
@@ -54,19 +53,20 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm }) => {
                   draggable: true,
                   progress: undefined,
                 });
-              } else if (response.status === 409) {
-                toast.error("Email is in use", {
-                  position: "top-right",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                });
-              }
+              } 
             } catch (err) {
-              console.error("Signup error:", err);
+            if (axios.isAxiosError(err) && err.response?.status === 409) {
+              toast.error("Email already exists", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+            } else {
+              console.log(err);
               toast.error("An error occurred during signup", {
                 position: "top-right",
                 autoClose: 3000,
@@ -76,7 +76,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm }) => {
                 draggable: true,
                 progress: undefined,
               });
-
+            }
             }
           };
 
