@@ -1,20 +1,69 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import SignUpForm from "../HeaderForms/SignUpForm";
 import LoginForm from "../HeaderForms/LoginForm";
 import ForgotPassword from "../HeaderForms/ForgotPassword";
+import UserProfile from "../HeaderForms/UserProfile";
 
 interface UserModalProps {
   handleClose: () => void;
   animateModal: boolean;
 }
 
+interface User {
+  id: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+  role: string;
+  isVerified: boolean;
+  verificationToken: string | null;
+  createdAt: string;
+}
+
+const NEXT_PUBLIC_ROOT_URL =
+  process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+
 const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
   const [loginForm, setLoginForm] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          `${NEXT_PUBLIC_ROOT_URL}/api/auth/me`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.data.user.role === "ADMIN") {
+          router.push("/admin");
+          return;
+        } 
+        
+        setUser(response.data.user);
+        setLoggedIn(true);
+        setLoginForm(false);
+      } catch (error) {
+        
+      }
+    }
+
+    fetchUser();
+  }, [])
+
+  // when we open the menu, we check whether we're logged in, if not we show the signup form, if yes we show the user profile
 
   const showLoginForm = () => {
     setForgotPassword(false);
@@ -50,6 +99,8 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
                 ? "Register"
                 : forgotPassword
                 ? "Forgot Password"
+                : loggedIn
+                ? "User Profile"
                 : "Sign In"}
             </h2>
             <button
@@ -63,7 +114,7 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
             <div className="relative">
             <div
               className={`absolute inset-0 transition-opacity duration-500 ${
-              loginForm || forgotPassword ? "opacity-0 pointer-events-none" : "opacity-100"
+              loginForm || forgotPassword || loggedIn ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
             >
               <SignUpForm showLoginForm={showLoginForm} />
@@ -73,7 +124,7 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
               loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
-              <LoginForm showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
+              <LoginForm setLoggedIn={setLoggedIn} showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
             </div>
             <div
               className={`absolute inset-0 transition-opacity duration-500 ${
@@ -81,6 +132,13 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
               }`}
             >
               <ForgotPassword showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
+            </div>
+            <div
+              className={`absolute inset-0 transition-opacity duration-500 ${
+              loggedIn && !loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <UserProfile user={user} />
             </div>
             </div>
         </div>

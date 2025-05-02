@@ -1,13 +1,18 @@
 import React from "react";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 interface LoginFormProps {
+  setLoggedIn: (loggedIn: boolean) => void;
   showLoginForm: () => void;
   showForgotPassword: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ showLoginForm, showForgotPassword }) => {
+const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+
+const LoginForm: React.FC<LoginFormProps> = ({ setLoggedIn, showLoginForm, showForgotPassword }) => {
   return (
     <div>
       <Formik
@@ -23,8 +28,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ showLoginForm, showForgotPassword
             .required("Password is required")
             .min(6, "Password must be at least 6 characters"),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log("Form data", values);
+        onSubmit={async (values, { setSubmitting }) => {
+          // console.log("Form data", values);
+
+          const user = {
+            email: values.email,
+            password: values.password,
+          };
+
+          const makeRequest = async () => {
+            try {
+              const response = await axios.post(`${NEXT_PUBLIC_ROOT_URL}/api/auth/login`, user);
+              console.log(response);
+            } catch (error) {
+              console.error("Error during login:", error);
+            }
+          }
+
+          await makeRequest();
           setSubmitting(false);
         }}
       >

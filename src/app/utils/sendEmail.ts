@@ -1,3 +1,5 @@
+// TODO: After getting the domain name registered, change the email to the domain name email
+
 import { Resend } from 'resend';
 
 const resend = new Resend('re_HzN7A3un_D4cCHTaTGD88WTPyEaVn6WnL');
