@@ -2,6 +2,7 @@ import React from 'react'
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 interface SignUpFormProps {
@@ -13,6 +14,7 @@ const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localho
 const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm }) => {
   return (
     <div>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
       <Formik
         initialValues={{
           firstname: "",
@@ -42,12 +44,50 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm }) => {
             try {
               const response = await axios.post(`${NEXT_PUBLIC_ROOT_URL}/api/auth/signup`, user);
               console.log(response);
+              if (response.status === 201) {
+                toast.success("User registered successfully", {
+                  position: "top-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                });
+              } else if (response.status === 409) {
+                toast.error("Email is in use", {
+                  position: "top-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                });
+              }
             } catch (err) {
               console.error("Signup error:", err);
+              toast.error("An error occurred during signup", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+
             }
           };
 
           await makeRequest();
+
+          // Reset form values after submission
+          values.firstname = "";
+          values.lastname = "";
+          values.email = "";
+          values.password = "";
+
           setSubmitting(false);
         }}
       >
@@ -109,9 +149,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-black text-white py-2 px-4 rounded-2xl hover:bg-[#b970a0] focus:outline-none focus:ring-2 focus:ring-[#b970a0] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4"
+                className={`w-full ${isSubmitting ? 'bg-[#dcaed0]' : 'bg-black'} text-white py-2 px-4 rounded-2xl hover:bg-[#b970a0] focus:outline-none focus:ring-2 focus:ring-[#b970a0] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4`}
               >
-                Register
+                {isSubmitting ? "Registering..." : "Register"}
               </button>
             </div>
           </Form>
