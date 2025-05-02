@@ -2,6 +2,7 @@ import React from "react";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from 'axios';
+import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 
 interface LoginFormProps {
@@ -13,6 +14,9 @@ interface LoginFormProps {
 const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
 
 const LoginForm: React.FC<LoginFormProps> = ({ setLoggedIn, showLoginForm, showForgotPassword }) => {
+
+  const router = useRouter();
+
   return (
     <div>
       <Formik
@@ -39,6 +43,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoggedIn, showLoginForm, showF
           const makeRequest = async () => {
             try {
               const response = await axios.post(`${NEXT_PUBLIC_ROOT_URL}/api/auth/login`, user);
+              
+              if (response.data.user.role === "ADMIN") {
+                router.push("/admin");
+                return;
+
+              }
+
               console.log(response);
             } catch (error) {
               console.error("Error during login:", error);
@@ -47,6 +58,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoggedIn, showLoginForm, showF
 
           await makeRequest();
           setSubmitting(false);
+          setLoggedIn(true);
         }}
       >
         {({ isSubmitting }) => (

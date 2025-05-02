@@ -138,7 +138,7 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
               loggedIn && !loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
-              <UserProfile user={user} />
+              <UserProfile setLoggedIn={setLoggedIn} user={user} setUser={setUser} />
             </div>
             </div>
         </div>
