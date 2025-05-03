@@ -5,8 +5,9 @@ import { MdOutlineEmail } from "react-icons/md";
 const page = () => {
   return (
     <AdminLayout>
-    <div>
-        <div className="my-8 mx-auto w-[90%] flex justify-between items-center">
+    <div className='flex'>
+        <div className='w-[22.5%] bg-amber-950'></div>
+        <div className="my-8 mx-auto px-8 w-[90%] flex justify-between items-center">
               <h1 className="text-xl font-semibold text-gray-800">
                 Email List
               </h1>
