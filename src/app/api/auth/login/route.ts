@@ -16,8 +16,8 @@ export async function POST(request: NextRequest) {
 
     if (!user)
       return NextResponse.json(
-        { message: "This user does not exist" },
-        { status: 200 }
+        { error: "This user does not exist" },
+        { status: 404 }
       );
 
     const isValid = await bcrypt.compare(password, user.password);
@@ -46,10 +46,11 @@ export async function POST(request: NextRequest) {
         user: {
           id: user.id,
           email: user.email,
-          name: user.firstname,
+          firstname: user.firstname,
           lastname: user.lastname,
           role: user.role,
-          isVerified: user.isVerified,
+          emailIsVerified: user.emailIsVerified,
+          phoneIsVerified: user.phoneIsVerified,
         }
       });
 

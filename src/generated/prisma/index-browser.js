@@ -125,10 +125,13 @@ exports.Prisma.UserScalarFieldEnum = {
   firstname: 'firstname',
   lastname: 'lastname',
   email: 'email',
+  phone: 'phone',
   password: 'password',
   role: 'role',
-  isVerified: 'isVerified',
-  verificationToken: 'verificationToken',
+  emailIsVerified: 'emailIsVerified',
+  emailVerificationToken: 'emailVerificationToken',
+  phoneIsVerified: 'phoneIsVerified',
+  phoneVerificationToken: 'phoneVerificationToken',
   createdAt: 'createdAt'
 };
 
@@ -151,7 +154,6 @@ exports.Prisma.ProductScalarFieldEnum = {
   name: 'name',
   descriptionShort: 'descriptionShort',
   descriptionLong: 'descriptionLong',
-  imageUrl: 'imageUrl',
   price: 'price',
   stock: 'stock',
   isHidden: 'isHidden',
@@ -161,6 +163,12 @@ exports.Prisma.ProductScalarFieldEnum = {
   salePercent: 'salePercent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProductImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  productId: 'productId'
 };
 
 exports.Prisma.EmailListScalarFieldEnum = {
@@ -244,6 +252,7 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   SubCategory: 'SubCategory',
   Product: 'Product',
+  ProductImage: 'ProductImage',
   EmailList: 'EmailList',
   FeaturedProduct: 'FeaturedProduct',
   Cart: 'Cart',

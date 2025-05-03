@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 
 interface LoginFormProps {
+  setUser: (user: any) => void;
   setLoggedIn: (loggedIn: boolean) => void;
   showLoginForm: () => void;
   showForgotPassword: () => void;
@@ -13,12 +14,24 @@ interface LoginFormProps {
 
 const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
 
-const LoginForm: React.FC<LoginFormProps> = ({ setLoggedIn, showLoginForm, showForgotPassword }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ setUser, setLoggedIn, showLoginForm, showForgotPassword }) => {
 
   const router = useRouter();
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Formik
         initialValues={{
           email: "",
@@ -47,18 +60,32 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoggedIn, showLoginForm, showF
               if (response.data.user.role === "ADMIN") {
                 router.push("/admin");
                 return;
-
               }
+
+              await setUser(response.data.user);
+              setLoggedIn(true);
 
               console.log(response);
             } catch (error) {
+              if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data.error || "An error occurred";
+                toast.error(errorMessage, {
+                  position: "top-right",
+                  autoClose: 3000,
+                });
+              } else {
+                toast.error("An unexpected error occurred", {
+                  position: "top-right",
+                  autoClose: 3000,
+                });
+              }
               console.error("Error during login:", error);
             }
           }
 
           await makeRequest();
           setSubmitting(false);
-          setLoggedIn(true);
+          showLoginForm();
         }}
       >
         {({ isSubmitting }) => (

@@ -8,7 +8,7 @@ import { sendVerificationEmail } from "@/app/utils/sendEmail";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { firstname, lastname, email, password } = body;
+    const { firstname, lastname, email, phone, password } = body;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -22,17 +22,22 @@ export async function POST(request: NextRequest) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = generateToken(32);
+    
+    //TODO: we will be abstracting this process to an entire seperate process
+    //const verificationToken = generateToken(32);
 
     const user = await prisma.user.create({
       data: {
         firstname,
         lastname,
         email,
+        phone,
         password: hashedPassword,
         role: "USER",
-        verificationToken,
-        isVerified: false,
+        emailIsVerified: false,
+        emailVerificationToken: "",
+        phoneIsVerified: false,
+        phoneVerificationToken: "",
       },
     });
 

@@ -21,8 +21,10 @@ interface User {
   firstname: string;
   lastname: string;
   role: string;
-  isVerified: boolean;
-  verificationToken: string | null;
+  emailIsVerified: boolean;
+  emailVerificationToken: string | null;
+  phoneIsVerified: boolean;
+  phoneVerificationToken: string | null;
   createdAt: string;
 }
 
@@ -52,7 +54,18 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
           return;
         } 
         
-        setUser(response.data.user);
+        setUser({
+          id: response.data.user.id,
+          email: response.data.user.email,
+          firstname: response.data.user.firstname,
+          lastname: response.data.user.lastname,
+          role: response.data.user.role,
+          emailIsVerified: response.data.user.emailIsVerified,
+          emailVerificationToken: response.data.user.emailVerificationToken,
+          phoneIsVerified: response.data.user.phoneIsVerified,
+          phoneVerificationToken: response.data.user.phoneVerificationToken,
+          createdAt: response.data.user.createdAt,
+        });
         setLoggedIn(true);
         setLoginForm(false);
       } catch (error) {
@@ -95,13 +108,13 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
         <div>
           <div className="flex justify-between items-center mb-4 w-full border-b-2 border-gray-100 pb-4">
             <h2 className="text-lg font-[500] flex-1 text-left">
-              {!loginForm
-                ? "Register"
+              {loginForm
+                ? "Sign In"
                 : forgotPassword
                 ? "Forgot Password"
                 : loggedIn
                 ? "User Profile"
-                : "Sign In"}
+                : "Register"}
             </h2>
             <button
               onClick={handleClose}
@@ -117,14 +130,14 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
               loginForm || forgotPassword || loggedIn ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
             >
-              <SignUpForm showLoginForm={showLoginForm} />
+              <SignUpForm showLoginForm={showLoginForm} setLoggedIn={setLoggedIn} setUser={setUser} />
             </div>
             <div
               className={`absolute inset-0 transition-opacity duration-500 ${
               loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
-              <LoginForm setLoggedIn={setLoggedIn} showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
+              <LoginForm setUser={setUser} setLoggedIn={setLoggedIn} showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
             </div>
             <div
               className={`absolute inset-0 transition-opacity duration-500 ${
@@ -138,7 +151,7 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
               loggedIn && !loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
-              <UserProfile setLoggedIn={setLoggedIn} user={user} setUser={setUser} />
+              <UserProfile setLoggedIn={setLoggedIn} user={user} setUser={(user) => setUser(user)} />
             </div>
             </div>
         </div>
