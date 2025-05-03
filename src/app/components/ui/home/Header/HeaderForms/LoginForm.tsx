@@ -142,9 +142,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setUser, setLoggedIn, showLoginFo
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-black text-white py-2 px-4 rounded-2xl hover:bg-[#4fb3e5] focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4"
+                className={`w-full ${isSubmitting ? "bg-[#b3def2]" : "bg-black"} text-white py-2 px-4 rounded-2xl hover:bg-[#4fb3e5] focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4`}
               >
-                Sign In
+                {isSubmitting ? "Signing In..." : "Sign In"}
               </button>
             </div>
           </Form>

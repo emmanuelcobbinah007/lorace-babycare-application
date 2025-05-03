@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import axios from "axios";
+import { FadeLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 
 import SignUpForm from "../HeaderForms/SignUpForm";
@@ -36,6 +37,7 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
@@ -70,6 +72,10 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
         setLoginForm(false);
       } catch (error) {
         
+      }
+
+      finally {
+        setLoading(false);
       }
     }
 
@@ -124,36 +130,42 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
               <IoMdClose color="#000" size={24} />
             </button>
           </div>
-            <div className="relative">
-            <div
-              className={`absolute inset-0 transition-opacity duration-500 ${
-              loginForm || forgotPassword || loggedIn ? "opacity-0 pointer-events-none" : "opacity-100"
-              }`}
-            >
-              <SignUpForm showLoginForm={showLoginForm} setLoggedIn={setLoggedIn} setUser={setUser} />
-            </div>
-            <div
-              className={`absolute inset-0 transition-opacity duration-500 ${
-              loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
-            >
-              <LoginForm setUser={setUser} setLoggedIn={setLoggedIn} showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
-            </div>
-            <div
-              className={`absolute inset-0 transition-opacity duration-500 ${
-              forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
-            >
-              <ForgotPassword showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
-            </div>
-            <div
-              className={`absolute inset-0 transition-opacity duration-500 ${
-              loggedIn && !loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
-            >
-              <UserProfile setLoggedIn={setLoggedIn} user={user} setUser={(user) => setUser(user)} />
-            </div>
-            </div>
+            { loading ? (
+                <div className="flex items-center justify-center h-[80vh]">
+                  <FadeLoader color="#dcaed0" height={10} width={5} />
+                </div>
+            ) : (
+              <div className="relative">
+              <div
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                loginForm || forgotPassword || loggedIn ? "opacity-0 pointer-events-none" : "opacity-100"
+                }`}
+              >
+                <SignUpForm showLoginForm={showLoginForm} setLoggedIn={setLoggedIn} setUser={setUser} />
+              </div>
+              <div
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+              >
+                <LoginForm setUser={setUser} setLoggedIn={setLoggedIn} showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
+              </div>
+              <div
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+              >
+                <ForgotPassword showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
+              </div>
+              <div
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                loggedIn && !loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+              >
+                <UserProfile setLoggedIn={setLoggedIn} user={user} setUser={(user) => setUser(user)} />
+              </div>
+              </div>
+            )}
         </div>
       </div>
     </div>
