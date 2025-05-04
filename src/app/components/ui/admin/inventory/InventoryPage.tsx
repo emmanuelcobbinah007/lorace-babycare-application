@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-//import AddProductModal from "./AddProductModal";
+import AddProductModal from "./AddProductModal";
 
 const InventoryPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -116,14 +116,13 @@ const InventoryPage = () => {
       </div>
 
       {showModal && (
-        // <AddProductModal
-        //   setShowModal={setShowModal}
-        //   animateModal={animateModal}
-        //   setAnimateModal={setAnimateModal}
-        //   editing={editing}
-        //   setEditing={setEditing}
-        // />
-        <div>hi</div>
+        <AddProductModal
+          setShowModal={setShowModal}
+          animateModal={animateModal}
+          setAnimateModal={setAnimateModal}
+          editing={editing}
+          setEditing={setEditing}
+        />
       )}
     </div>
   );
