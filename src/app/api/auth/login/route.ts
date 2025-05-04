@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 import prisma from "../../../libs/prisma";
 import { serialize } from "cookie";
 import { generateAccessToken } from "@/app/utils/jwt";

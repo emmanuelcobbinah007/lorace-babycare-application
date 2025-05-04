@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { serialize } from "cookie";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const cookie = serialize("token", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

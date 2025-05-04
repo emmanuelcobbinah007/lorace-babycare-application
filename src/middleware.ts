@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verifyToken } from "./app/utils/jwt";
 import axios from "axios";
 
 export function middleware(req: NextRequest) {

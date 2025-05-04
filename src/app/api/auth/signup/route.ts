@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 import prisma from "../../../libs/prisma";
-import generateToken from "@/app/utils/generateToken";
 
-import { sendVerificationEmail } from "@/app/utils/sendEmail";
+// import { sendVerificationEmail } from "@/app/utils/sendEmail";
 
 export async function POST(request: NextRequest) {
   try {
