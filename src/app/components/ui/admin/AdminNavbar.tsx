@@ -5,14 +5,14 @@ import Image from "next/image";
 import Navlink from "next/link";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User } from "iconsax-reactjs"
+import { User } from "iconsax-reactjs";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 import loraceLogo from "../../../../../public/images/loraceLogo.png";
 
 const NEXT_PUBLIC_ROOT_URL =
-process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
 
 const AdminNavbar = () => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const AdminNavbar = () => {
     lastname: string;
     email: string;
   }
-  
+
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,8 +36,7 @@ const AdminNavbar = () => {
       setLoading(false);
 
       console.log(res.data.user);
-      
-    }
+    };
     retrieveUser();
   }, []);
 
@@ -51,13 +50,12 @@ const AdminNavbar = () => {
   ];
 
   const initLogout = async () => {
-    await axios.get(`${NEXT_PUBLIC_ROOT_URL}/api/auth/logout`,
-      {
-        withCredentials: true,
-      });
+    await axios.get(`${NEXT_PUBLIC_ROOT_URL}/api/auth/logout`, {
+      withCredentials: true,
+    });
 
     router.push("/");
-  }
+  };
 
   return (
     <div className="w-[20%] h-screen fixed flex flex-col justify-between bg-[#f2fbfe] border border-r-[#4fb3e5] ">
@@ -75,7 +73,9 @@ const AdminNavbar = () => {
           {links.map(({ href, label }) => {
             return (
               <Navlink key={label} href={href}>
-                <li className={`${pathname === href ? 'text-[#b970a0]' : ''} hover:scale-105 hover:text-[#b970a0] duration-300 hover:cursor-none`}>
+                <li
+                  className={`${pathname === href ? "text-[#b970a0]" : ""} hover:scale-105 hover:text-[#b970a0] duration-300 hover:cursor-none`}
+                >
                   {label}
                 </li>
               </Navlink>
@@ -85,22 +85,31 @@ const AdminNavbar = () => {
       </div>
       <div>
         <div className="flex mx-auto items-center gap-4 w-[90%]">
-            <User
-                          size="35"
-                          className="ml-3 p-1 h-8 scale-115 text-black bg-white rounded-full"
-                        />
-            <div>
+          <User
+            size="35"
+            className="ml-3 p-1 h-8 scale-115 text-black bg-white rounded-full"
+          />
+          <div>
             <p className="text-black text-sm">
-                { loading ? 'Fullname Loading...' : `${user?.firstname} ${user?.lastname}`}
-                {/* Grace Domfeh */}
+              {loading
+                ? "Fullname Loading..."
+                : `${user?.firstname} ${user?.lastname}`}
+              {/* Grace Domfeh */}
             </p>
             <p className="text-gray-500 text-xs">
-                {loading ? 'Email Loading...' : user?.email.length > 20 ? `${user.email.slice(0, 20)}...` : user?.email}
-                {/* loracebabycare@gmail.com */}
+              {loading
+                ? "Email Loading..."
+                : (user?.email ?? "").length > 20
+                  ? `${(user?.email ?? "").slice(0, 20)}...`
+                  : user?.email}
+              {/* loracebabycare@gmail.com */}
             </p>
-            </div>
+          </div>
         </div>
-        <button onClick={initLogout} className="w-[80%] mx-[10%] bg-[#4fb3e5] text-white rounded-full py-2 my-6 hover:cursor-none hover:bg-[#3da5d6] transition duration-300">
+        <button
+          onClick={initLogout}
+          className="w-[80%] mx-[10%] bg-[#4fb3e5] text-white rounded-full py-2 my-6 hover:cursor-none hover:bg-[#3da5d6] transition duration-300"
+        >
           Logout
         </button>
       </div>
