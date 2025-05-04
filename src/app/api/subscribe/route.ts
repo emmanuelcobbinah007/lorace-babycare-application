@@ -24,6 +24,8 @@ export async function POST(request: NextRequest) {
                },
         });
 
+        // TODO: Send an email to the new subscriber
+
         return NextResponse.json(
             { message: "Subscribed successfully", subscription: newSubscription },
             { status: 200 }

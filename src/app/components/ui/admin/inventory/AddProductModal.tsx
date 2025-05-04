@@ -24,14 +24,15 @@ const AddProductModal = ({
       const [subCategoryID, setSubCategoryID] = useState("");
       const [sizingType, setSizingType] = useState('');
       const [isHidden, setIsHidden] = useState(true);
-      const [productImageUrl, setProductImageUrl] = useState<string | null>(null);
+      const [productImageUrl, setProductImageUrl] = useState<File | null>(null);
 
   const categories = [
     { id: '1', name: 'Category 1' },
     { id: '2', name: 'Category 2' },
     { id: '3', name: 'Category 3' },
   ];
-
+  
+  // TODO: types
     interface ProductFormValues {
         productName: string;
         productDescriptionShort: string;
@@ -103,6 +104,7 @@ const AddProductModal = ({
               </button>
             </div>
             <Formik
+            // TODO:
               initialValues={{
                 productName,
                 productDescriptionShort,
@@ -303,7 +305,7 @@ const AddProductModal = ({
                     </label>
                     {values.productImageUrl && (
                       <img
-                        src={URL.createObjectURL(values.productImageUrl)}
+                        src={values.productImageUrl instanceof File ? URL.createObjectURL(values.productImageUrl) : ""}
                         alt="Product"
                         className="w-full h-auto mb-4 rounded-md shadow"
                       />
