@@ -75,16 +75,16 @@ const AddProductModal = ({
 
   return (
     <div>
-        <div className="fixed inset-0 z-50 flex font-poppins">
-          {/* Overlay */}
-          <div
-            className={`fixed inset-0 transition-opacity duration-300 ${
-              animateModal
-                ? "bg-white/30 backdrop-blur-md"
-                : "bg-transparent backdrop-blur-0"
-            }`}
-            onClick={handleClose}
-          ></div>
+      <div className="fixed inset-0 z-50 flex font-poppins">
+        {/* Overlay */}
+        <div
+          className={`fixed inset-0 transition-opacity duration-300 ${
+            animateModal
+              ? "bg-white/30 backdrop-blur-md"
+              : "bg-transparent backdrop-blur-0"
+          }`}
+          onClick={handleClose}
+        ></div>
 
           {/* Sidebar */}
           <div

@@ -1,3 +1,6 @@
+// TODO: Make design responsive
+// TODO: Add Implementation for send email functionality
+
 "use client";
 
 import React, { useState, useEffect } from "react";
