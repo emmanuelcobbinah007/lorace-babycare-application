@@ -1,6 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/libs/prisma";
 
+export async function GET(request: NextRequest) {
+  try {
+    const subCategories = await prisma.subCategory.findMany({
+      include: {
+      category: {
+        select: {
+        name: true,
+        },
+      },
+      },
+    });
+
+    return NextResponse.json(subCategories, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: "Server Error",
+        error: error,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { name, categoryId } = await request.json();

@@ -10,13 +10,21 @@ import {toast, ToastContainer} from "react-toastify";
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000"
 
 const AddSubCategoryModal = ({
+  editing,
+  editId,
+  setEditing,
   setShowModal,
   animateModal,
   setAnimateModal,
+  setSubCategories,
 }: {
+  editing: boolean;
+  editId: string;
+  setEditing: (show: boolean) => void;
   setShowModal: (show: boolean) => void;
   animateModal: boolean;
   setAnimateModal: (animate: boolean) => void;
+  setSubCategories: React.Dispatch<React.SetStateAction<any[]>>;
 }) => {
   interface SubCategoryFormValues {
     subCategoryName: string;
@@ -26,57 +34,91 @@ const AddSubCategoryModal = ({
   const [subCategoryName, setSubCategoryName] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (editing && editId) {
+      const fetchSubCategory = async () => {
+        try {
+          const res = await axios.get(
+            `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${editId}`
+          );
+          const subCategory = res.data;
+          setSubCategoryName(subCategory.name);
+          setCategoryId(subCategory.categoryId);
+          // console.log(subCategory);
+        } catch (error) {
+          console.log("Error fetching subcategory:", error);
+        }
+      };
+
+      fetchSubCategory();
+    }
+  }, [editing, editId]);
 
   useEffect(() => {
     const fetchCategories = async () => {
-        try {
-            const res = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/category`);
-            setCategories(res.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+      try {
+        const res = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/category`);
+        setCategories(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
     fetchCategories();
-  }, [])
+  }, []);
 
   const handleClose = () => {
     setAnimateModal(false);
+    setEditing(false);
     setTimeout(() => setShowModal(false), 300);
   };
 
   const handleSubmit = async (values: SubCategoryFormValues) => {
+    setSubmitting(true);
     const subCategoryItem = {
-        name: values.subCategoryName.trim(),
-        categoryId: values.categoryId,
+      name: values.subCategoryName.trim(),
+      categoryId: values.categoryId,
     };
 
     try {
-        const res = await axios.post(`${NEXT_PUBLIC_BASE_URL}/api/subcategories`, subCategoryItem);
+      const res = await axios.post(
+        `${NEXT_PUBLIC_BASE_URL}/api/subcategories`,
+        subCategoryItem
+      );
 
-        if (res.status === 201) {
-            toast.success("Subcategory created successfully");
-            handleClose();
-        } else {
-            toast.error(res.status === 409 
-                ? "Subcategory already exists under the selected category" 
-                : "Unexpected error occurred. Please try again."
-            );
-        }
-    } catch (error: any) {
-        toast.error(error.response?.status === 409 
-            ? "Subcategory already exists under the selected category" 
-            : "Server error. Please try again later."
+      if (res.status === 201) {
+        const response = await axios.get(
+          `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${res.data.id}`
         );
-    } finally {
-        values.subCategoryName = "";
-        values.categoryId = "";
-    }
+        const subCategory = response.data;
+        setSubCategories((prev: any) => [...prev, subCategory]);
 
+        handleClose();
+      } else {
+        toast.error(
+          res.status === 409
+            ? "Subcategory already exists under the selected category"
+            : "Unexpected error occurred. Please try again."
+        );
+      }
+    } catch (error: any) {
+      toast.error(
+        error.response?.status === 409
+          ? "Subcategory already exists under the selected category"
+          : "Server error. Please try again later."
+      );
+    } finally {
+      values.subCategoryName = "";
+      values.categoryId = "";
+      setSubmitting(false);
+    }
   };
 
   return (
     <div>
+      <ToastContainer />
       <div className="fixed inset-0 z-50 flex font-poppins">
         {/* Overlay */}
         <div
@@ -96,7 +138,7 @@ const AddSubCategoryModal = ({
         >
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-gray-800">
-              Add Subcategory
+              {editing ? "Edit Subcategory" : "Add Subcategory"}
             </h2>
             <button
               onClick={handleClose}
@@ -106,6 +148,7 @@ const AddSubCategoryModal = ({
             </button>
           </div>
           <Formik
+          enableReinitialize
             initialValues={{
               subCategoryName,
               categoryId,
@@ -183,9 +226,16 @@ const AddSubCategoryModal = ({
                 <div className="flex justify-center">
                   <button
                     type="submit"
-                    className="px-4 py-2 my-2 bg-[#4fb3e5] w-full text-white rounded-2xl shadow-md hover:bg-[#3a92c5] transition duration-300"
+                    disabled={submitting}
+                    className={`px-4 py-2 my-2 ${
+                      submitting
+                        ? "bg-[#aee3f9]"
+                        : "bg-[#4fb3e5] hover:bg-[#3a92c5]"
+                    }  w-full text-white rounded-2xl shadow-md transition duration-300`}
                   >
-                    Add Subcategory
+                    {submitting
+                      ? "Creating Subcategory..."
+                      : "Create Subcategory"}
                   </button>
                 </div>
               </Form>

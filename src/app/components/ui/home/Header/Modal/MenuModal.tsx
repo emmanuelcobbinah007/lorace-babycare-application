@@ -19,7 +19,7 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
     { name: "Diapering", subCategories: ["Diapers", "Wipes", "Changing Pads"] },
     { name: "Feeding", subCategories: ["Bottles", "Breast Pumps", "High Chairs"] },
     { name: "Babycare", subCategories: ["Skincare", "Bathing", "Health"] },
-    { name: "Clothing and Feeding", subCategories: ["Onesies", "Shoes", "Accessories"] },
+    { name: "Clothing and Footwear", subCategories: ["Onesies", "Shoes", "Accessories"] },
     { name: "Back to School", subCategories: ["Backpacks", "Lunch Boxes", "Stationery"] },
     { name: "Maternity and Nursing", subCategories: ["Maternity Wear", "Nursing Pads", "Pillows"] },
     { name: "Sales", subCategories: ["Discounted Items", "Clearance", "Special Offers"] },

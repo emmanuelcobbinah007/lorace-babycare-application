@@ -26,7 +26,7 @@ const categories = [
   { name: "Diapering", subItems: ["Diapers", "Wipes", "Changing Pads"] },
   { name: "Feeding", subItems: ["Bottles", "Breast Pumps", "High Chairs"] },
   { name: "Babycare", subItems: ["Skincare", "Bathing", "Health"] },
-  { name: "Clothing and Feeding", subItems: ["Onesies", "Shoes", "Accessories"] },
+  { name: "Clothing and Footwear", subItems: ["Onesies", "Shoes", "Accessories"] },
   { name: "Back to School", subItems: ["Backpacks", "Lunch Boxes", "Stationery"] },
   { name: "Maternity and Nursing", subItems: ["Maternity Wear", "Nursing Pads", "Pillows"] },
   { name: "Sales", subItems: ["Discounted Items", "Clearance", "Special Offers"] },

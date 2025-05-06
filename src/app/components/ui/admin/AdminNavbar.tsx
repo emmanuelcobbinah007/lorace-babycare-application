@@ -34,8 +34,6 @@ const AdminNavbar = () => {
 
       setUser(res.data.user);
       setLoading(false);
-
-      console.log(res.data.user);
     };
     retrieveUser();
   }, []);
