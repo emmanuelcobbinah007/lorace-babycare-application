@@ -82,37 +82,64 @@ const AddSubCategoryModal = ({
       categoryId: values.categoryId,
     };
 
-    try {
-      const res = await axios.post(
-        `${NEXT_PUBLIC_BASE_URL}/api/subcategories`,
-        subCategoryItem
-      );
+    if(editing) {
 
-      if (res.status === 201) {
-        const response = await axios.get(
-          `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${res.data.id}`
+      try {
+        const response = await axios.put(
+          `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${editId}`,
+          subCategoryItem,
+          { withCredentials: true }
         );
-        const subCategory = response.data;
-        setSubCategories((prev: any) => [...prev, subCategory]);
-
+        toast.success(response.data.message);
         handleClose();
-      } else {
-        toast.error(
-          res.status === 409
-            ? "Subcategory already exists under the selected category"
-            : "Unexpected error occurred. Please try again."
-        );
+        const updatedSubCategories = (prev: any[]) =>
+          prev.map((subCategory) =>
+            subCategory.id === editId ? { ...subCategory, ...subCategoryItem } : subCategory
+          );
+        setSubCategories(updatedSubCategories);
+      } catch (error) {
+        toast.error("An error occurred, please try again");
+      } finally {
+        values.subCategoryName = "";
+        values.categoryId = "";
+        setSubmitting(false);
       }
-    } catch (error: any) {
-      toast.error(
-        error.response?.status === 409
-          ? "Subcategory already exists under the selected category"
-          : "Server error. Please try again later."
-      );
-    } finally {
-      values.subCategoryName = "";
-      values.categoryId = "";
-      setSubmitting(false);
+
+    } else {
+
+      try {
+        const res = await axios.post(
+          `${NEXT_PUBLIC_BASE_URL}/api/subcategories`,
+          subCategoryItem
+        );
+  
+        if (res.status === 201) {
+          const response = await axios.get(
+            `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${res.data.id}`
+          );
+          const subCategory = response.data;
+          setSubCategories((prev: any) => [...prev, subCategory]);
+  
+          handleClose();
+        } else {
+          toast.error(
+            res.status === 409
+              ? "Subcategory already exists under the selected category"
+              : "Unexpected error occurred. Please try again."
+          );
+        }
+      } catch (error: any) {
+        toast.error(
+          error.response?.status === 409
+            ? "Subcategory already exists under the selected category"
+            : "Server error. Please try again later."
+        );
+      } finally {
+        values.subCategoryName = "";
+        values.categoryId = "";
+        setSubmitting(false);
+      }
+
     }
   };
 

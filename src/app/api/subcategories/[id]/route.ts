@@ -39,6 +39,33 @@ export async function GET(request: NextRequest, {params}: {params: {id: string}}
   }
 }
 
+// to handle updating a category
+export async function PUT(req: NextRequest,  context: any) {
+    const { id } = context.params;
+
+    try {
+        const body = await req.json();
+        const { name, categoryId } = body;
+
+        const category = await prisma.subCategory.update({
+            where: {
+                id: String(id),
+            },
+            data: {
+                name: name,
+                categoryId: categoryId,
+            },
+        });
+
+        return NextResponse.json({
+            message: "Subcategory updated successfully!",
+            category,
+        });
+    } catch (error) {
+        return NextResponse.json({ error: error instanceof Error ? error.message : "An unknown error occurred" }, { status: 500 });
+    }
+}
+
 // to handle visibility
 export async function PATCH(req: NextRequest, context: any) {
     const { id } = context.params;
