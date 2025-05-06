@@ -1,8 +1,8 @@
 import {NextRequest, NextResponse} from 'next/server';
 import prisma from '@/app/libs/prisma';
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function DELETE(request: NextRequest, context: any) {
+  const { id } = context.params;
   try {
     const email = await prisma.emailList.delete({
       where: {

@@ -273,8 +273,8 @@ const AddSubCategoryModal = ({
                     }  w-full text-white rounded-2xl shadow-md transition duration-300`}
                   >
                     {submitting
-                      ? "Creating Subcategory..."
-                      : "Create Subcategory"}
+                      ? "Saving Subcategory..."
+                      : "Save Subcategory"}
                   </button>
                 </div>
               </Form>
