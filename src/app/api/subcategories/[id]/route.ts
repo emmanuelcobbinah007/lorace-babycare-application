@@ -2,9 +2,9 @@ import {NextRequest, NextResponse} from "next/server";
 import prisma from "@/app/libs/prisma";
 
 // To handle fetching a single subcategory
-export async function GET(request: NextRequest, {params}: {params: {id: string}}) {
+export async function GET(request: NextRequest, context: any) {
   try {
-    const {id} = params;
+    const {id} = context.params;
     const subCategory = await prisma.subCategory.findUnique({
       where: {
         id: id,
