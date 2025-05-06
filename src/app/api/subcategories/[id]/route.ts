@@ -47,7 +47,7 @@ export async function PUT(req: NextRequest,  context: any) {
         const body = await req.json();
         const { name, categoryId } = body;
 
-        const category = await prisma.subCategory.update({
+        const subCategory = await prisma.subCategory.update({
             where: {
                 id: String(id),
             },
@@ -59,7 +59,7 @@ export async function PUT(req: NextRequest,  context: any) {
 
         return NextResponse.json({
             message: "Subcategory updated successfully!",
-            category,
+            subCategory,
         });
     } catch (error) {
         return NextResponse.json({ error: error instanceof Error ? error.message : "An unknown error occurred" }, { status: 500 });

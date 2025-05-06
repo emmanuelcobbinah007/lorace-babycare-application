@@ -9,6 +9,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { SearchNormal } from 'iconsax-reactjs'
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
+import { FadeLoader } from "react-spinners";
 
 import AddSubCategoryModal from "@/app/components/ui/admin/subCategory/AddSubCategoryModal";
 
@@ -195,7 +196,7 @@ const page = () => {
         <div className="w-[22.5%] bg-amber-950"></div>
           <ToastContainer />
         <div className="mx-auto w-[90%]">
-        <div className="my-8 mx-auto px-8 w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="my-8 mx-auto w-[90%] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
   <h1 className="text-xl font-semibold text-gray-800">Subcategories</h1>
 
   {/* Search Bar */}
@@ -234,95 +235,102 @@ const page = () => {
             />
           </div> */}
 
-          <div>
-            {filteredSubCategories.length > 0 ? (
-              <div className="w-[90%] mx-auto mt-10">
-                <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-200">
-                  <table className="w-full min-w-[600px] table-auto text-sm text-left border-collapse">
-                    <thead className="bg-[#f9f9f9] text-gray-700">
-                      <tr>
-                        <th className="px-6 py-4 text-center font-semibold">
-                          Subcategory
-                        </th>
-                        <th className="px-6 py-4 text-center font-semibold">
-                          Category
-                        </th>
-                        <th className="px-6 py-4 text-center font-semibold">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {filteredSubCategories.map((subCategory) => (
-                        <tr
-                          key={subCategory.id}
-                          className={`transition-colors ${
-                            subCategory.isHidden
-                              ? "bg-gray-50 text-gray-400"
-                              : "hover:bg-gray-100"
-                          }`}
-                        >
-                          <td className="px-6 py-2 text-center font-medium">
-                            {subCategory.name}
-                          </td>
-                          <td className="px-6 py-2 text-center font-medium">
-                            {subCategory.category.name}
-                          </td>
-                          <td className="px-6 py-2">
-                            <div className="flex items-center justify-center gap-2">
-                              {subCategory.isHidden ? (
-                                <FaRegEye
-                                  className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
-                                  title="Unhide"
-                                  onClick={() => initUnHide(subCategory)}
-                                />
-                              ) : (
-                                <FaRegEyeSlash
-                                  className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
-                                  title="Hide"
-                                  onClick={() => initHide(subCategory)}
-                                />
-                              )}
-                              <button
-                                className="p-2 rounded-lg bg-white border border-gray-300 shadow-sm hover:bg-gray-100 transition-transform hover:scale-105"
-                                title="Edit"
-                                onClick={() => initEdit(subCategory.id)}
-                              >
-                                <MdOutlineEdit
-                                  size={18}
-                                  className="text-[#4fb3e5]"
-                                />
-                              </button>
-                              <button
-                                className="p-2 rounded-lg bg-red-500 text-white shadow-sm hover:bg-red-600 transition-transform hover:scale-105"
-                                title="Delete"
-                                onClick={() => initDelete(subCategory)}
-                              >
-                                <MdOutlineDeleteOutline size={18} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+          <div> {
+            loading ? (
+              <div className="flex items-center justify-center h-[80vh]">
+                <FadeLoader color="#dcaed0" height={10} width={5} />
               </div>
             ) : (
-              <div className="w-[90%] mx-auto mt-8">
-                <h2 className="text-md font-semibold text-gray-800">
-                  No Subcategories Found
-                </h2>
-                <p className="text-gray-500">
-                  Try adjusting your search criteria.
-                </p>
-              </div>
+              filteredSubCategories.length > 0 ? (
+                <div className="w-[90%] mx-auto mt-10">
+                  <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-200">
+                    <table className="w-full min-w-[600px] table-auto text-sm text-left border-collapse">
+                      <thead className="bg-[#f9f9f9] text-gray-700">
+                        <tr>
+                          <th className="px-6 py-4 text-center font-semibold">
+                            Subcategory
+                          </th>
+                          <th className="px-6 py-4 text-center font-semibold">
+                            Category
+                          </th>
+                          <th className="px-6 py-4 text-center font-semibold">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {filteredSubCategories.map((subCategory) => (
+                          <tr
+                            key={subCategory.id}
+                            className={`transition-colors ${
+                              subCategory.isHidden
+                                ? "bg-gray-50 text-gray-400"
+                                : "hover:bg-gray-100"
+                            }`}
+                          >
+                            <td className="px-6 py-2 text-center font-medium">
+                              {subCategory.name}
+                            </td>
+                            <td className="px-6 py-2 text-center font-medium">
+                              {subCategory.category.name}
+                            </td>
+                            <td className="px-6 py-2">
+                              <div className="flex items-center justify-center gap-2">
+                                {subCategory.isHidden ? (
+                                  <FaRegEye
+                                    className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
+                                    title="Unhide"
+                                    onClick={() => initUnHide(subCategory)}
+                                  />
+                                ) : (
+                                  <FaRegEyeSlash
+                                    className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
+                                    title="Hide"
+                                    onClick={() => initHide(subCategory)}
+                                  />
+                                )}
+                                <button
+                                  className="p-2 rounded-lg bg-white border border-gray-300 shadow-sm hover:bg-gray-100 transition-transform hover:scale-105"
+                                  title="Edit"
+                                  onClick={() => initEdit(subCategory.id)}
+                                >
+                                  <MdOutlineEdit
+                                    size={18}
+                                    className="text-[#4fb3e5]"
+                                  />
+                                </button>
+                                <button
+                                  className="p-2 rounded-lg bg-red-500 text-white shadow-sm hover:bg-red-600 transition-transform hover:scale-105"
+                                  title="Delete"
+                                  onClick={() => initDelete(subCategory)}
+                                >
+                                  <MdOutlineDeleteOutline size={18} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-[90%] mx-auto mt-8">
+                  <h2 className="text-md font-semibold text-gray-800">
+                    No Subcategories Found
+                  </h2>
+                  <p className="text-gray-500">
+                    Try adjusting your search criteria.
+                  </p>
+                </div>
+              )
             )}
           </div>
         </div>
 
         {showModal && (
           <AddSubCategoryModal
+          subCategories={subCategories}
             editing={editing}
             editId={editId}
             setEditing={setEditing}
@@ -330,6 +338,7 @@ const page = () => {
             animateModal={animateModal}
             setAnimateModal={setAnimateModal}
             setSubCategories={setSubCategories}
+            setFilteredSubCategories={setFilteredSubCategories}
           />
         )}
       </div>

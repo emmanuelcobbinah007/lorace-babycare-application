@@ -10,6 +10,7 @@ import {toast, ToastContainer} from "react-toastify";
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000"
 
 const AddSubCategoryModal = ({
+  subCategories,
   editing,
   editId,
   setEditing,
@@ -17,7 +18,9 @@ const AddSubCategoryModal = ({
   animateModal,
   setAnimateModal,
   setSubCategories,
+  setFilteredSubCategories
 }: {
+  subCategories: any[];
   editing: boolean;
   editId: string;
   setEditing: (show: boolean) => void;
@@ -25,6 +28,7 @@ const AddSubCategoryModal = ({
   animateModal: boolean;
   setAnimateModal: (animate: boolean) => void;
   setSubCategories: React.Dispatch<React.SetStateAction<any[]>>;
+  setFilteredSubCategories: React.Dispatch<React.SetStateAction<any[]>>;
 }) => {
   interface SubCategoryFormValues {
     subCategoryName: string;
@@ -92,11 +96,17 @@ const AddSubCategoryModal = ({
         );
         toast.success(response.data.message);
         handleClose();
-        const updatedSubCategories = (prev: any[]) =>
-          prev.map((subCategory) =>
-            subCategory.id === editId ? { ...subCategory, ...subCategoryItem } : subCategory
-          );
+
+        const res = await axios.get(
+          `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${response.data.subCategory.id}`
+        );
+
+        const updatedSubCategory = res.data;
+        const updatedSubCategories = subCategories.map((subCategory) => 
+          subCategory.id === editId ? updatedSubCategory : subCategory
+        );
         setSubCategories(updatedSubCategories);
+        setFilteredSubCategories(updatedSubCategories);
       } catch (error) {
         toast.error("An error occurred, please try again");
       } finally {
@@ -117,8 +127,10 @@ const AddSubCategoryModal = ({
           const response = await axios.get(
             `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${res.data.id}`
           );
-          const subCategory = response.data;
-          setSubCategories((prev: any) => [...prev, subCategory]);
+          const newSubCategory = response.data;
+          const updatedSubCategories = [...subCategories, newSubCategory];
+          setSubCategories(updatedSubCategories);
+          setFilteredSubCategories(updatedSubCategories);
   
           handleClose();
         } else {
