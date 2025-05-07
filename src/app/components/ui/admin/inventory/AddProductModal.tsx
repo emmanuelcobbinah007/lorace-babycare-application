@@ -1,9 +1,22 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoClose } from "react-icons/io5";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+
+interface ProductFormValues {
+  productName: string;
+  productDescriptionShort: string;
+  productDescriptionLong: string;
+  productPrice: number | string;
+  productStock: number | string;
+  subCategoryID: string;
+  sizingType: string;
+}
+
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const AddProductModal = ({
     setShowModal, animateModal, setAnimateModal, editing, setEditing
@@ -20,41 +33,47 @@ const AddProductModal = ({
       const [productDescriptionLong, setProductDescriptionLong] = useState("");
       const [productPrice, setProductPrice] = useState(0.0);
       const [productStock, setProductStock] = useState(0);
-      const [categoryID, setcategoryID] = useState("");
       const [subCategoryID, setSubCategoryID] = useState("");
       const [sizingType, setSizingType] = useState('');
       const [isHidden, setIsHidden] = useState(true);
-      const [productImageUrl, setProductImageUrl] = useState<File | null>(null);
-
-  const categories = [
-    { id: '1', name: 'Category 1' },
-    { id: '2', name: 'Category 2' },
-    { id: '3', name: 'Category 3' },
-  ];
+      const [submitting, setSubmitting] = useState(false);
+      const [subCategories, setSubCategories] = useState<{ id: string; name: string; categoryId: string }[]>([]);
   
-  // TODO: types
-    interface ProductFormValues {
-        productName: string;
-        productDescriptionShort: string;
-        productDescriptionLong: string;
-        productPrice: number | string;
-        productStock: number | string;
-        categoryID: string;
-        subCategoryID: string;
-        sizingType: string;
-        productImageUrl: File | null;
-    }
+  useEffect(() => {
+    // Fetch subcategories based on selected categoryID
+    const fetchSubCategories = async () => {
+        try {
+          const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/subcategories`);
+          setSubCategories(response.data);
+        } catch (error) {
+          console.error("Error fetching subcategories:", error);
+        }
+    };
 
-    const handleSubmit = (values: ProductFormValues): void => {
+    fetchSubCategories();
+  }, [])
+    
+
+    const handleSubmit = async (values: ProductFormValues) => {
         // Handle form submission logic here
+        const selectedSubCategory = subCategories.find(
+            (subCategory) => subCategory.id === values.subCategoryID
+        );
+
         const product = {
             ...values,
             isHidden,
+            categoryID: selectedSubCategory ? selectedSubCategory.categoryId : "",
+            salePercent: 0.0,
+        };
 
-        }
-        console.log(values);
+        const response = await axios.post(`${NEXT_PUBLIC_BASE_URL}/api/products`, product, {
+          withCredentials: true
+        })
+
+        console.log(response);
         // Close the modal after submission
-        handleClose();
+        //handleClose();
     }
 
     const handleClose = () => {
@@ -66,9 +85,7 @@ const AddProductModal = ({
         setProductDescriptionLong("");
         setProductPrice(0.0);
         setProductStock(0);
-        setcategoryID("");
         setSubCategoryID("");
-        setProductImageUrl(null);
         setSizingType('');
         setIsHidden(false);
       };
@@ -111,17 +128,17 @@ const AddProductModal = ({
                 productDescriptionLong,
                 productPrice,
                 productStock,
-                categoryID,
                 subCategoryID,
                 sizingType,
-                productImageUrl,
               }}
               validationSchema={Yup.object({
                 productName: Yup.string().required('Product name is required'),
                 productDescriptionShort: Yup.string().required('Provide a brief product description'),
+                productDescriptionLong: Yup.string().required('Provide a product description'),
                 productPrice: Yup.number().required('Price is required').positive('Price must be positive'),
                 productStock: Yup.number().required('Stock is required').min(0, 'Stock cannot be negative'),
-                categoryID: Yup.string().required('Category is required'),
+                subCategoryID: Yup.string().required('SubCategory is required'),
+                sizingType: Yup.string().required('Sizing type is required'),
               })}
               onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
@@ -159,7 +176,7 @@ const AddProductModal = ({
                       as="textarea"
                       id="productDescriptionShort"
                       name="productDescriptionShort"
-                      rows="3"
+                      rows="2"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513] sm:text-sm"
                       placeholder="Enter brief product description"
                     />
@@ -227,32 +244,6 @@ const AddProductModal = ({
                   </div>
                   <div className="mb-4">
                     <label
-                      htmlFor="categoryID"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Category
-                    </label>
-                    <Field
-                      as="select"
-                      id="categoryID"
-                      name="categoryID"
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513] sm:text-sm"
-                    >
-                      <option value="" disabled>
-                        Select a category
-                      </option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </Field>
-                    {errors.categoryID && touched.categoryID && (
-                      <div className="text-red-500 text-sm">{errors.categoryID}</div>
-                    )}
-                  </div>
-                  <div className="mb-4">
-                    <label
                       htmlFor="subCategoryID"
                       className="block text-sm font-medium text-gray-700"
                     >
@@ -267,9 +258,9 @@ const AddProductModal = ({
                       <option value="" disabled>
                         Select a sub-category
                       </option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
+                      {subCategories.map((subCategory) => (
+                        <option key={subCategory.id} value={subCategory.id} data-category-id={subCategory.categoryId}>
+                          {subCategory.name}
                         </option>
                       ))}
                     </Field>
@@ -296,7 +287,7 @@ const AddProductModal = ({
                       <option value="n/a">N/A</option>
                     </Field>
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <label
                       htmlFor="productImage"
                       className="block text-sm font-medium text-gray-700"
@@ -321,13 +312,17 @@ const AddProductModal = ({
                       }}
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513] sm:text-sm"
                     />
-                  </div>
+                  </div> */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full mx-auto text-white px-4 py-2 rounded-md shadow  focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#4fb3e5] hover:cursor-none hover:bg-[#874f7a] duration-300  md:w-auto flex items-center space-x-2"
+                    className={`px-4 py-2 my-2 ${
+                      submitting
+                        ? "bg-[#aee3f9]"
+                        : "bg-[#4fb3e5] hover:bg-[#3a92c5]"
+                    }  w-full text-white rounded-2xl shadow-md transition duration-300`}
                   >
-                    Save Product
+                    Save, Proceed to Images
                   </button>
                 </Form>
               )}

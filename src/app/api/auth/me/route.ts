@@ -12,13 +12,13 @@ export async function GET(request: NextRequest) {
         const token = request.cookies.get("token")?.value;
 
         if (!token)
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       
           // Verify the token
           const decoded = verifyToken(token) as JwtPayload;
       
           if (!decoded)
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
           // Find the user
     const user = await prisma.user.findFirst({
@@ -40,11 +40,11 @@ export async function GET(request: NextRequest) {
       });
 
       if (!user)
-        return NextResponse.json({ error: "User not found" }, { status: 404 });
+        return NextResponse.json({ message: "User not found" }, { status: 404 });
   
       return NextResponse.json({ user });
 
     } catch (error) {
-        return NextResponse.json({ error: error }, { status: 500 });
+        return NextResponse.json({ message: "Server Error" }, { status: 500 });
     }
 }
