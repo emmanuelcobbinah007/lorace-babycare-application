@@ -72,6 +72,8 @@ const AddProductModal = ({
         })
 
         console.log(response);
+        // store the productid, we'll need it to upload images
+        const productId = response.data.product.id;
         // Close the modal after submission
         //handleClose();
     }
@@ -281,9 +283,9 @@ const AddProductModal = ({
                       name="sizingType"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513] sm:text-sm"
                     >
-                      <option value="clothing">Clothing</option>
-                      <option value="footwear">Footwear</option>
-                      <option value="diapers">Diapers</option>
+                      <option value="Clothing">Clothing</option>
+                      <option value="Footwear">Footwear</option>
+                      <option value="Diapers">Diapers</option>
                       <option value="n/a">N/A</option>
                     </Field>
                   </div>

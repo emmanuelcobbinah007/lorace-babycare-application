@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     try {
+        
         const product = await prisma.product.create({
             data: {
                 name: productName,
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
                 price: productPrice,
                 stock: productStock,
                 isHidden,
-                sizingType,
+                sizingType, // maybe here, string but an enum in the db
                 categoryId: categoryID,
                 subCategoryId: subCategoryID,
                 salePercent,
