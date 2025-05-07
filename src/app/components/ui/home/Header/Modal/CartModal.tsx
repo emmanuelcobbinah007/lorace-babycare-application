@@ -33,9 +33,12 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
   useEffect(() => {
     const initCart = async () => {
       try {
-        const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/auth/me`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${NEXT_PUBLIC_BASE_URL}/api/auth/me`,
+          {
+            withCredentials: true,
+          }
+        );
 
         if (response.status === 200) {
           const userData = response.data.user;
@@ -94,7 +97,9 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
       );
 
       if (response.status === 200) {
-        setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+        setCartItems((prevItems) =>
+          prevItems.filter((item) => item.id !== itemId)
+        );
         toast.success("Item removed from cart", {
           position: "top-right",
           autoClose: 3000,
@@ -145,18 +150,22 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
         <div className="flex flex-col gap-4 items-center justify-center">
           {notLoggedIn ? (
             <div className="flex flex-col items-center justify-center h-[80vh] text-center text-gray-500 gap-2">
-              <p className="text-sm md:text-base">Please log in to view your cart.</p>
+              <p className="text-sm md:text-base">
+                Please log in to view your cart.
+              </p>
               <button className="px-4 py-2 bg-black text-white rounded-full hover:bg-[#b970a0] transition duration-300">
                 Log In
               </button>
             </div>
           ) : loading ? (
             <div className="flex items-center justify-center h-[80vh]">
-                              <FadeLoader color="#dcaed0" height={10} width={5} />
-                            </div>
+              <FadeLoader color="#dcaed0" height={10} width={5} />
+            </div>
           ) : cartItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[80vh] text-center text-gray-500 gap-2">
-              <p className="text-sm md:text-base">Your cart is currently empty.</p>
+              <p className="text-sm md:text-base">
+                Your cart is currently empty.
+              </p>
               <button className="px-4 py-2 bg-black text-white rounded-full hover:bg-[#b970a0] transition duration-300">
                 Browse Products
               </button>
@@ -177,12 +186,18 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
                       className="rounded-2xl w-16 h-16 object-cover mr-4"
                     />
                     <div className="flex flex-col">
-                      <h3 className="text-md md:text-lg font-semibold">{item.name}</h3>
+                      <h3 className="text-md md:text-lg font-semibold">
+                        {item.name}
+                      </h3>
                       <p className="text-xs md:text-gray-500">
                         Price: ${item.price.toFixed(2)}
                       </p>
-                      <p className="text-xs md:text-gray-500">Size: {item.size}</p>
-                      <p className="text-xs md:text-gray-500">Quantity: {item.quantity}</p>
+                      <p className="text-xs md:text-gray-500">
+                        Size: {item.size}
+                      </p>
+                      <p className="text-xs md:text-gray-500">
+                        Quantity: {item.quantity}
+                      </p>
                     </div>
                   </div>
                   <button
