@@ -28,7 +28,7 @@ const categories = [
   { name: "Babycare", subItems: ["Skincare", "Bathing", "Health"] },
   { name: "Clothing and Footwear", subItems: ["Onesies", "Shoes", "Accessories"] },
   { name: "Back to School", subItems: ["Backpacks", "Lunch Boxes", "Stationery"] },
-  { name: "Maternity and Nursing", subItems: ["Maternity Wear", "Nursing Pads", "Pillows"] },
+  { name: "Maternity", subItems: ["Maternity Wear", "Nursing Pads", "Pillows"] },
   { name: "Sales", subItems: ["Discounted Items", "Clearance", "Special Offers"] },
 ];
 

@@ -32,6 +32,20 @@ export async function POST(request: NextRequest) {
             }
         })
 
+        // const product = {
+        //     id: `${productName}${productPrice}${productStock}`,
+        //     name: productName,
+        //     descriptionShort: productDescriptionShort,
+        //     descriptionLong: productDescriptionLong,
+        //     price: productPrice,
+        //     stock: productStock,
+        //     isHidden,
+        //     sizingType, // maybe here, string but an enum in the db
+        //     categoryId: categoryID,
+        //     subCategoryId: subCategoryID,
+        //     salePercent,
+        // }
+
         return NextResponse.json({
             message: "Product created successfully",
             product,
