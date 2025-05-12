@@ -5,10 +5,10 @@ import { Truck, Lock1 } from "iconsax-reactjs";
 const Break = () => {
   return (
     <section className="py-10 h-auto flex items-center justify-center">
-      <div className="w-[90%] mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div className="w-[80%] mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <div className="flex flex-col items-center gap-2">
           <div className="bg-[#f2fbfe] p-4 rounded-full hover:scale-105 transition-transform ease-in-out duration-300">
-          <Truck size='35'  className="text-[#4fb3e5]" />
+          <Truck size='35' className="text-[#4fb3e5]" />
           </div>
           <p className="text-sm font-medium text-gray-700 my-2">Free & Fast Shipping</p>
         </div>

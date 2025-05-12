@@ -43,13 +43,13 @@ const HeroSection = () => {
 
 
     const slides = [
-        { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/babycare', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[10%] md:translate-y-0',},
-        { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: '/store', mobilePositionClass: 'object-center', textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[35%] md:translate-y-0',},
-        { id: 3, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: '/food', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[0%] md:translate-y-0',},
-        { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePositionClass: 'object-center' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[30%] md:translate-y-0'},
-        { id: 5, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: '/accessories', mobilePositionClass: 'object-right' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[10%] md:translate-y-0'},
-        { id: 6, image: Baby8, main: 'School gear for little achievers', tagline: 'Ready, Set, Learn!', slug: '/back-to-school', mobilePositionClass: 'object-center', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[30%] md:translate-y-0'},
-        { id: 7, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: '/mama', mobilePositionClass: 'object-center' , textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[0%] md:translate-y-0',},
+        { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/babycare', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
+        { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: '/store', mobilePositionClass: 'object-center', textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
+        { id: 3, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: '/food', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
+        { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePositionClass: 'object-center' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
+        { id: 5, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: '/accessories', mobilePositionClass: 'object-right' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
+        { id: 6, image: Baby8, main: 'School gear for little achievers', tagline: 'Ready, Set, Learn!', slug: '/back-to-school', mobilePositionClass: 'object-center', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
+        { id: 7, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: '/mama', mobilePositionClass: 'object-center' , textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
     ]
 
   return (
@@ -58,7 +58,7 @@ const HeroSection = () => {
     <div className="overflow-hidden w-full" ref={emblaRef}>
       <div className="flex">
         {slides.map((slide) => (
-          <div key={slide.id} className="min-w-full relative h-[60vh] md:h-[87vh] flex items-center justify-center">
+          <div key={slide.id} className="min-w-full relative h-[55vh] md:h-[70vh] flex items-center justify-center">
             <Image
               src={slide.image}
               alt={slide.tagline}
