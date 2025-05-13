@@ -74,14 +74,14 @@ const Page = () => {
 
   return (
     <AdminLayout>
-      <div className="flex">
+      <div className="block md:flex w-full h-screen bg-[#f2fbfe]">
         <ToastContainer />
-        <div className="w-[22.5%] bg-amber-950"></div>
-        <div className="w-[90%]">
-          <div className="my-8 mx-auto px-8 w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <h1 className="text-xl font-semibold text-gray-800">Email List</h1>
+        <div className="w-[22.5%] bg-amber-950 hidden md:block"></div>
+        <div className="w-[100%] md:w-[90%]">
+          <div className="my-8 mx-auto px-8 w-full flex flex-row md:items-center justify-between gap-4">
+            <h1 className="pl-8 text-xl font-semibold text-gray-800">Email List</h1>
 
-            <div className="relative w-full md:w-[40%]">
+            <div className="hidden relative md:block w-full md:w-[40%]">
               <input
                 type="text"
                 placeholder="Search emails..."
@@ -96,9 +96,19 @@ const Page = () => {
             </div>
 
             <button className="bg-[#b970a0] hover:bg-[#874f7a] duration-300 text-white px-3 py-2 rounded-md shadow flex items-center space-x-2">
-              <MdOutlineEmail className="sm:mr-1 text-lg font-bold" />
+              <MdOutlineEmail className="mx-auto md:mr-1 text-lg font-bold" />
               <span className="hidden sm:inline">Draft Email</span>
             </button>
+          </div>
+
+          <div className="block relative md:hidden w-[82%] mx-auto mb-6">
+            <input
+              type="text"
+              placeholder="Search emails..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] text-gray-700 placeholder-gray-400"
+            />
           </div>
 
           <div>

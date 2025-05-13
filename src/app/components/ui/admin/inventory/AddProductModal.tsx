@@ -70,7 +70,7 @@ const AddProductModal = ({
   const [productStock, setProductStock] = useState(0);
   const [subCategoryID, setSubCategoryID] = useState("");
   const [sizingType, setSizingType] = useState("");
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [subCategories, setSubCategories] = useState<
     { id: string; name: string; categoryId: string }[]
@@ -380,7 +380,7 @@ const AddProductModal = ({
                     <option value="Clothing">Clothing</option>
                     <option value="Footwear">Footwear</option>
                     <option value="Diapers">Diapers</option>
-                    <option value="n/a">N/A</option>
+                    <option value="na">N/A</option>
                   </Field>
                 </div>
                 <button
