@@ -94,7 +94,8 @@ const AddProductModal = ({
 
   const handleSubmit = async (values: ProductFormValues) => {
     // Handle form submission logic here
-    const selectedSubCategory = subCategories.find(
+    try {
+      const selectedSubCategory = subCategories.find(
       (subCategory) => subCategory.id === values.subCategoryID
     );
 
@@ -119,12 +120,24 @@ const AddProductModal = ({
       toast.error("Error creating product");
     }
     
-    // store the productid, we'll need it to upload images
     setProduct(response.data.product);
     setAnimateModal2(true);
     setShowImagesModal(true);
-    // Close the modal after submission
-    //handleClose();
+
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 400) {
+          toast.error("Product already exists");
+        } else if (error.response.status === 401) {
+          toast.error("Unauthorized");
+        } else if (error.response.status === 500) {
+          toast.error("Server error");
+        }
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+      
+    }
   };
 
   const handleClose = () => {
@@ -380,7 +393,7 @@ const AddProductModal = ({
                     <option value="Clothing">Clothing</option>
                     <option value="Footwear">Footwear</option>
                     <option value="Diapers">Diapers</option>
-                    <option value="na">N/A</option>
+                    <option value="NA">N/A</option>
                   </Field>
                 </div>
                 <button

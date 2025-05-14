@@ -310,7 +310,7 @@ const page = () => {
                   No Subcategories Found
                 </h2>
                 <p className="text-gray-500">
-                  Try adjusting your search criteria.
+                  Please add a search category.
                 </p>
               </div>
             )}

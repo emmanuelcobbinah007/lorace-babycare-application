@@ -42,6 +42,21 @@ export async function POST(request: NextRequest) {
 
     try {
         
+        // Check if the product already exists
+        const existingProduct = await prisma.product.findFirst({
+            where: {
+                name: productName,
+            },
+        });
+
+        if (existingProduct) {
+            return NextResponse.json({
+                message: "Product already exists",
+            }, {
+                status: 400,
+            });
+        }
+
         const product = await prisma.product.create({
             data: {
                 name: productName,
