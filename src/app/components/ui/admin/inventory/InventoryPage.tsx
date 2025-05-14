@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { IoMdAdd } from "react-icons/io";
+import { SearchNormal } from "iconsax-reactjs"; // Adjust the import path if necessary
 import axios from "axios";
 import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
@@ -50,6 +51,8 @@ const InventoryPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 //   const [productName, setProductName] = useState("");
 //   const [productDescription, setProductDescription] = useState("");
 //   const [productPrice, setProductPrice] = useState(0.0);
@@ -65,6 +68,7 @@ const InventoryPage = () => {
       try {
         const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/products`);
         setFetchedProducts(response.data);
+        setFilteredProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -74,6 +78,18 @@ const InventoryPage = () => {
 
     fetchProducts();
   }, [])
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value.toLowerCase();
+      setSearchTerm(value);
+  
+      const filtered = fetchedProducts.filter(
+        (fetchedProduct) =>
+          fetchedProduct.name.toLowerCase().includes(value)
+      );
+  
+      setFilteredProducts(filtered);
+    };
 
   const handleOpen = () => {
     setShowModal(true);
@@ -86,7 +102,7 @@ const InventoryPage = () => {
       <div className='w-[22.5%] bg-amber-950'></div>
       <div className="my-4 mx-auto w-full">
         <div className="mt-4 mb-8 mx-auto w-[90%] flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-gray-800">Inventory</h1>
+          <h1 className="pl-10 md:pl-0 text-xl font-semibold text-gray-800">Inventory</h1>
         </div>
         <div className="my-4 mx-auto w-[90%] flex justify-between items-center">
           <h1 className="text-lg font-semibold text-gray-800">
@@ -95,6 +111,20 @@ const InventoryPage = () => {
         </div>
         <div className="my-8 mx-auto w-[90%] flex justify-between items-center">
           <h1 className="text-lg font-semibold text-gray-800">Products</h1>
+          {/* Search Bar */}
+                      <div className="hidden relative md:block w-full md:w-[40%]">
+                        <input
+                          type="text"
+                          placeholder="Search by subcategory or category..."
+                          value={searchTerm}
+                          onChange={handleSearch}
+                          className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] transition"
+                        />
+                        <SearchNormal
+                          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                          size={20}
+                        />
+                      </div>
           <button
             onClick={handleOpen}
             className="bg-[#b970a0] hover:cursor-none hover:bg-[#874f7a] duration-300 text-white px-3 py-2 rounded-md shadow md:w-auto flex items-center space-x-2"
@@ -103,6 +133,16 @@ const InventoryPage = () => {
             <span className="hidden sm:inline">Add Product</span>
           </button>
         </div>
+        {/* Search Bar */}
+            <div className="block md:hidden w-[90%] mx-auto">
+            <input
+              type="text"
+              placeholder="Search by product name..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] text-gray-700 placeholder-gray-400"
+            />
+            </div>
         <div className="w-[90%] mx-auto mt-10">
   <div className="overflow-x-auto rounded-2xl shadow-md">
     <table className="w-full min-w-[700px] table-auto text-sm text-left border-collapse">
@@ -116,7 +156,7 @@ const InventoryPage = () => {
         </tr>
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
-        {fetchedProducts.map((product) => (
+        {filteredProducts.map((product) => (
           <tr
             key={product.id}
             className={`transition-colors ${

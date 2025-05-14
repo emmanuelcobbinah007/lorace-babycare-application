@@ -225,7 +225,7 @@ const page = () => {
 
           {/* Search Bar */}
           {/*TODO: Uncomment this out for mobile view */}
-          {/* <div className="w-[90%] mx-auto mb-6">
+          <div className="block md:hidden w-[90%] mx-auto mb-6">
             <input
               type="text"
               placeholder="Search by subcategory or category..."
@@ -233,7 +233,7 @@ const page = () => {
               onChange={handleSearch}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] text-gray-700 placeholder-gray-400"
             />
-          </div> */}
+          </div>
 
           <div>
             {" "}
@@ -244,7 +244,7 @@ const page = () => {
             ) : filteredSubCategories.length > 0 ? (
               <div className="w-[90%] mx-auto mt-10">
                 <div className="overflow-x-auto rounded-2xl shadow-md">
-                  <table className="w-full min-w-[600px] table-auto text-sm text-left border-collapse">
+                  <table className="w-full min-w-[400px] table-auto text-sm text-left border-collapse">
                     <thead className="bg-gray-100 text-gray-700">
                       <tr>
                         <th className="px-4 py-3 text-center w-[25%]">Subcategory</th>
