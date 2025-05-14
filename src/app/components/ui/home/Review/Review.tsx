@@ -38,7 +38,7 @@ const Review = () => {
     };
 
     return (
-        <div className="mx-auto w-full md:w-[90%] py-10 font-poppins overflow-hidden">
+        <div className="mx-auto w-full md:w-[80%] py-10 font-poppins overflow-hidden">
             <div className="relative flex items-center justify-between">
                 <button
                     onClick={prev}

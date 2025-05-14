@@ -14,10 +14,30 @@ const patrickHand = Patrick_Hand({
 
 const FeaturedProducts = () => {
   const products = [
-    { src: Socks, alt: "Socks", description: "Cozy cotton socks for little feet", price: "$9.99" },
-    { src: Socks, alt: "Socks", description: "Playful colorful socks", price: "$8.50" },
-    { src: Towels, alt: "Towels", description: "Soft and absorbent bath towels", price: "$15.00" },
-    { src: Yum, alt: "Yum", description: "Delicious organic baby food", price: "$4.99" },
+    {
+      src: Socks,
+      alt: "Socks",
+      description: "Cozy cotton socks for little feet",
+      price: "$9.99",
+    },
+    {
+      src: Socks,
+      alt: "Socks",
+      description: "Playful colorful socks",
+      price: "$8.50",
+    },
+    {
+      src: Towels,
+      alt: "Towels",
+      description: "Soft and absorbent bath towels",
+      price: "$15.00",
+    },
+    {
+      src: Yum,
+      alt: "Yum",
+      description: "Delicious organic baby food",
+      price: "$4.99",
+    },
   ];
 
   return (
@@ -35,28 +55,38 @@ const FeaturedProducts = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="mx-auto w-[90%] py-6 md:py-14">
+      <div className="mx-auto w-[85%] md:w-[80%] py-6 md:py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
           {products.map((product, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl border border-[#4fb3e5] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group"
+              className="group relative bg-white rounded-2xl overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-xl hover:border-[#4fb3e5] border-1 border-transparent"
             >
-              <div className="overflow-hidden">
+              <div className="relative">
                 <Image
                   src={product.src}
                   alt={product.alt}
-                  className="h-36 md:h-48 w-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                  className="h-40 md:h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
+                <div className="absolute top-2 left-2 bg-[#4fb3e5] text-white text-xs font-semibold rounded-sm px-2 py-1">
+                  Featured
+                </div>
               </div>
-              <div className="p-3 md:p-4 flex flex-col items-center text-center">
-                <h2 className="text-sm md:text-lg font-semibold text-gray-800">
+              <div className="px-4 py-3 flex flex-col space-y-1">
+                <h3 className="text-sm md:text-lg font-semibold text-gray-900 truncate">
                   {product.alt}
-                </h2>
-                <p className="text-xs md:text-sm text-gray-600 mt-1">{product.description}</p>
-                <p className="text-[#b970a0] font-bold text-sm md:text-base mt-2">
-                  {product.price}
+                </h3>
+                <p className="text-xs md:text-sm text-gray-700 line-clamp-2">
+                  {product.description}
                 </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-[#b970a0] font-bold text-sm md:text-base">
+                    {product.price}
+                  </p>
+                  <button className="bg-transparent border border-[#4fb3e5] text-[#4fb3e5] hover:bg-[#4fb3e5] hover:text-white text-xs font-semibold rounded-md px-3 py-1 transition-colors duration-200">
+                    View
+                  </button>
+                </div>
               </div>
             </div>
           ))}

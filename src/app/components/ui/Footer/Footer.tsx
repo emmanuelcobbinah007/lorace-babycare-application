@@ -86,7 +86,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#f2fbfe] text-black pt-10 font-poppins border-t border-[#e0e0e0]">
-      <div className="w-[85%] mx-auto text-center">
+      <div className="w-[85%] md:w-[80%] mx-auto text-center">
         <ToastContainer
           position="top-right"
           autoClose={3000}

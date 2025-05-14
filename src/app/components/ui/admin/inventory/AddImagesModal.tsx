@@ -103,6 +103,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       handleClose();
       setAnimateModal(false);
       setTimeout(() => setShowModal(false), 300);
+      window.location.reload()
     } catch (error) {
       toast.error("Error saving images, please try again")
       console.error("Error saving images:", error);

@@ -96,34 +96,33 @@ const AddProductModal = ({
     // Handle form submission logic here
     try {
       const selectedSubCategory = subCategories.find(
-      (subCategory) => subCategory.id === values.subCategoryID
-    );
+        (subCategory) => subCategory.id === values.subCategoryID
+      );
 
-    const product = {
-      ...values,
-      isHidden,
-      categoryID: selectedSubCategory ? selectedSubCategory.categoryId : "",
-      salePercent: 0.0,
-    };
+      const product = {
+        ...values,
+        isHidden,
+        categoryID: selectedSubCategory ? selectedSubCategory.categoryId : "",
+        salePercent: 0.0,
+      };
 
-    const response = await axios.post(
-      `${NEXT_PUBLIC_BASE_URL}/api/products`,
-      product,
-      {
-        withCredentials: true,
+      const response = await axios.post(
+        `${NEXT_PUBLIC_BASE_URL}/api/products`,
+        product,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success("Product saved successfully");
+      } else {
+        toast.error("Error creating product");
       }
-    );
 
-    if (response.status === 201) {
-      toast.success("Product saved successfully");
-    } else {
-      toast.error("Error creating product");
-    }
-    
-    setProduct(response.data.product);
-    setAnimateModal2(true);
-    setShowImagesModal(true);
-
+      setProduct(response.data.product);
+      setAnimateModal2(true);
+      setShowImagesModal(true);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === 400) {
@@ -136,7 +135,6 @@ const AddProductModal = ({
       } else {
         console.error("An unexpected error occurred:", error);
       }
-      
     }
   };
 
@@ -166,7 +164,8 @@ const AddProductModal = ({
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light" />
+        theme="light"
+      />
       <div className="fixed inset-0 z-50 flex font-poppins">
         {/* Overlay */}
         <div
@@ -180,7 +179,7 @@ const AddProductModal = ({
 
         {/* Sidebar */}
         <div
-          className={`fixed right-0 top-0 h-full bg-white w-[300px] md:w-[400px] shadow-lg p-6 overflow-y-auto z-10 transform transition-transform duration-300 ease-in-out ${
+          className={`fixed right-0 top-0 h-full bg-white w-[300px] md:w-[400px] shado</div>w-lg p-6 overflow-y-auto z-10 transform transition-transform duration-300 ease-in-out ${
             animateModal ? "translate-x-0 opacity-100" : "translate-x-full"
           }`}
         >
@@ -412,7 +411,15 @@ const AddProductModal = ({
           </Formik>
         </div>
 
-        {showImagesModal && <AddImagesModal handleClose={handleClose} animateModal={animateModal2} setAnimateModal={setAnimateModal2} product={product} setShowModal={setShowImagesModal}/>}
+        {showImagesModal && (
+          <AddImagesModal
+            handleClose={handleClose}
+            animateModal={animateModal2}
+            setAnimateModal={setAnimateModal2}
+            product={product}
+            setShowModal={setShowImagesModal}
+          />
+        )}
       </div>
     </div>
   );
