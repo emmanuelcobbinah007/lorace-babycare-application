@@ -9,6 +9,7 @@ import {
   HamburgerMenu,
 } from "iconsax-reactjs";
 import { Poppins } from "next/font/google";
+import Link from "next/link";
 
 import Logo from "../../../../../../public/images/loraceLogo.png";
 import CartModal from "./Modal/CartModal";
@@ -72,7 +73,9 @@ const HeaderBar = () => {
           </div>
 
           <div className="md:static absolute left-1/2 -translate-x-1/2 md:translate-x-0">
-            <Image src={Logo.src} alt="Lorace Babycare Logo" width={100} height={100} />
+           <Link href="/">
+             <Image src={Logo.src} alt="Lorace Babycare Logo" width={100} height={100} />
+           </Link>
           </div>
 
           <div className="hidden md:inline flex-1">

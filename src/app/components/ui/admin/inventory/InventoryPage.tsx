@@ -191,13 +191,13 @@ const InventoryPage = () => {
                           {product.isHidden ? (
                             <FaRegEye
                               // onClick={() => handleUnHide(product.id)}
-                              className="text-[#8B4513] cursor-pointer hover:scale-110 transition-transform"
+                              className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
                               title="Unhide"
                             />
                           ) : (
                             <FaRegEyeSlash
                               // onClick={() => handleHide(product.id)}
-                              className="text-[#8B4513] cursor-pointer hover:scale-110 transition-transform"
+                              className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
                               title="Hide"
                             />
                           )}
@@ -208,7 +208,7 @@ const InventoryPage = () => {
                           >
                             <MdOutlineEdit
                               size={18}
-                              className="text-[#8B4513]"
+                              className="text-[#4fb3e5]"
                             />
                           </button>
                           <button

@@ -1,6 +1,7 @@
 import React from "react";
 import { Patrick_Hand } from "next/font/google";
 import Image from "next/image";
+import Link from "next/link";
 
 import Socks from "../../../../../../public/images/featuredProducts/socks.jpg";
 import Towels from "../../../../../../public/images/featuredProducts/towels.jpg";
@@ -94,9 +95,9 @@ const FeaturedProducts = () => {
 
         {/* View All Products Button */}
         <div className="flex justify-center mt-8 md:mt-12">
-          <button className="w-[80%] md:w-[50%] px-5 py-2.5 md:px-6 md:py-3 bg-[#b970a0] text-white rounded-full font-semibold text-sm md:text-base hover:bg-[#9a5a8c] transition duration-300">
+           <Link href="/products" className="flex justify-center w-[80%] md:w-[50%] px-5 py-2.5 md:px-6 md:py-3 bg-[#b970a0] text-white rounded-full font-semibold text-sm md:text-base hover:bg-[#9a5a8c] transition duration-300">
             View All Products
-          </button>
+         </Link>
         </div>
       </div>
     </div>

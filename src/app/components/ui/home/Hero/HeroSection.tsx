@@ -43,7 +43,7 @@ const HeroSection = () => {
 
 
     const slides = [
-        { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/babycare', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
+        { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/products', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
         { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: '/store', mobilePositionClass: 'object-center', textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
         { id: 3, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: '/food', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
         { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePositionClass: 'object-center' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
