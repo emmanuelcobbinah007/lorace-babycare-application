@@ -84,9 +84,9 @@ const Products: React.FC<ProductsProps> = ({
                 alt={product.name}
                 className="h-40 md:h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute top-2 left-2 bg-[#4fb3e5] text-white text-xs font-semibold rounded-sm px-2 py-1">
+              {/* <div className="absolute top-2 left-2 bg-[#4fb3e5] text-white text-xs font-semibold rounded-sm px-2 py-1">
                 Featured
-              </div>
+              </div> */}
             </div>
             <div className="px-4 py-3 flex flex-col space-y-1">
               <h3 className="text-sm md:text-lg font-semibold text-gray-900 truncate">

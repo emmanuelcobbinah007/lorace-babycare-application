@@ -66,9 +66,10 @@ const page = () => {
         );
         setProducts(response.data);
         setFilteredProducts(response.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -93,7 +94,7 @@ const page = () => {
       <div className="w-[85%] mx-auto h-[85vh] py-6">
         <div className="flex justify-between items-center mb-6">
           <h1
-            className={`text-4xl font-semibold text-[#333] ${patrickHand.className}`}
+            className={`md:text-4xl text-3xl font-semibold text-[#333] ${patrickHand.className}`}
           >
             All Products
           </h1>
@@ -114,7 +115,7 @@ const page = () => {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center h-[60vh]">
+          <div className="flex items-center justify-center h-full">
             <FadeLoader color="#dcaed0" height={10} width={5} />
           </div>
         ) : filteredProducts.length === 0 ? (
