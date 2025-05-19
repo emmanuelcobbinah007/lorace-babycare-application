@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/libs/prisma";
 
-export async function DELETE (req: NextRequest, context: { params: { id: string } }) {
-  const { params } = context;
-  const { id } = await params;
+export async function DELETE (req: NextRequest, context: any) {
+  const { id } = context.params;
 
   try {
     await prisma.productImage.deleteMany({
