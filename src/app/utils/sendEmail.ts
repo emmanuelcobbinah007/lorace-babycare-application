@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend('re_HzN7A3un_D4cCHTaTGD88WTPyEaVn6WnL');
 
-const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL || 'http://localhost:3000';
+const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 export async function sendVerificationEmail(email: string, token: string) {
   const verifyUrl = `${NEXT_PUBLIC_ROOT_URL}/verify-email?token=${token}`;

@@ -15,7 +15,7 @@ export function middleware(req: NextRequest) {
 
     // Verify token by calling your API using axios
     return axios
-      .get(`${process.env.NEXT_PUBLIC_ROOT_URL}/api/auth/me`, {
+      .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/me`, {
         headers: { Cookie: `token=${token}` },
       })
       .then((response) => {

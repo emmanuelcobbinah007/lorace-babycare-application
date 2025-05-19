@@ -11,7 +11,7 @@ interface CartModalProps {
   animateModal: boolean;
 }
 
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_ROOT_URL;
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
   interface CartItem {

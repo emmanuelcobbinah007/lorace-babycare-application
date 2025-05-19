@@ -14,7 +14,7 @@ interface SignUpFormProps {
 }
 
 const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm, setLoggedIn, setUser }) => {
   return (

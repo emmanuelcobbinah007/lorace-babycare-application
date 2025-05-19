@@ -12,7 +12,7 @@ interface LoginFormProps {
   showForgotPassword: () => void;
 }
 
-const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const LoginForm: React.FC<LoginFormProps> = ({ setUser, setLoggedIn, showLoginForm, showForgotPassword }) => {
 

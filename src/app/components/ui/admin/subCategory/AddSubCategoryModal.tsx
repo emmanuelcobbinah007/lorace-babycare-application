@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import {toast, ToastContainer} from "react-toastify";
 
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000"
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
 
 const AddSubCategoryModal = ({
   subCategories,

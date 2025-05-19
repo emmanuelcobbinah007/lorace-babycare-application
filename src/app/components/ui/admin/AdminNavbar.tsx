@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import loraceLogo from "../../../../../public/images/loraceLogo.png";
 
 const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const AdminNavbar = () => {
   const router = useRouter();

@@ -30,7 +30,7 @@ interface User {
 }
 
 const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
   const [loginForm, setLoginForm] = useState(false);
