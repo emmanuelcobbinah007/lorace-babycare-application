@@ -65,6 +65,7 @@ const InventoryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [featuredProducts, setFeaturedProducts] = useState<FeaturedProduct[]>([]);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   //   const [productName, setProductName] = useState("");
   //   const [productDescription, setProductDescription] = useState("");
   //   const [productPrice, setProductPrice] = useState(0.0);
@@ -238,6 +239,12 @@ const InventoryPage = () => {
       toast.error("Failed to unhide product");
     }
   };
+  const initEdit = (product: Product) => {
+    setEditingProduct(product);
+    setEditing(true);
+    setShowModal(true);
+    setTimeout(() => setAnimateModal(true), 10);
+  }
 
   return (
     <div>
@@ -416,7 +423,7 @@ const InventoryPage = () => {
                               />
                             )}
                             <button
-                              // onClick={() => initEdit(product)}
+                              onClick={() => initEdit(product)}
                               className="p-2 rounded-lg bg-white border border-gray-200 shadow-sm hover:bg-gray-100 transition-transform hover:scale-105"
                               title="Edit"
                             >
@@ -458,6 +465,7 @@ const InventoryPage = () => {
           setAnimateModal={setAnimateModal}
           editing={editing}
           setEditing={setEditing}
+          editingProduct={editingProduct}
         />
       )}
     </div>

@@ -92,7 +92,7 @@ const Products: React.FC<ProductsProps> = ({
                   <span className="text-[#e44d7b] font-bold text-base sm:text-lg md:text-xl">
                     {product.salePercent > 0
                       ? `GH₵${((1 - (product.salePercent ?? 0)) * product.price).toFixed(2)}`
-                      : `GH₵${product.price}.toFixed(2)}`}
+                      : `GH₵${(product.price).toFixed(2)}`}
                     
                   </span>
                   {product.salePercent > 0 && (

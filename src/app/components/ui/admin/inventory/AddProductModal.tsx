@@ -19,6 +19,40 @@ interface ProductFormValues {
   sizingType: string;
 }
 
+interface Product {
+    id: string;
+    name: string;
+    descriptionShort: string;
+    descriptionLong: string;
+    price: number;
+    stock: number;
+    isHidden: boolean;
+    categoryId: string;
+    category: {
+      id: string;
+      name: string;
+      createdAt: string;
+      isHidden: boolean;
+    };
+    subCategoryId: string;
+    subCategory: {
+      id: string;
+      name: string;
+      categoryId: string;
+      createdAt: string;
+      isHidden: boolean;
+    };
+    images: {
+      id: string;
+      url: string;
+      productId: string;
+    }[];
+    salePercent: number;
+    sizingType: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+
 const NEXT_PUBLIC_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -28,12 +62,14 @@ const AddProductModal = ({
   setAnimateModal,
   editing,
   setEditing,
+  editingProduct,
 }: {
   setShowModal: (show: boolean) => void;
   animateModal: boolean;
   setAnimateModal: (animate: boolean) => void;
   editing: boolean;
   setEditing: (editing: boolean) => void;
+  editingProduct: Product | null;
 }) => {
   const [showImagesModal, setShowImagesModal] = useState(false);
   const [product, setProduct] = useState<{
@@ -74,9 +110,7 @@ const AddProductModal = ({
   const [submitting, setSubmitting] = useState(false);
   const [subCategories, setSubCategories] = useState<
     { id: string; name: string; categoryId: string }[]
-  >([]);
-
-  useEffect(() => {
+  >([]);  useEffect(() => {
     // Fetch subcategories based on selected categoryID
     const fetchSubCategories = async () => {
       try {
@@ -90,39 +124,92 @@ const AddProductModal = ({
     };
 
     fetchSubCategories();
-  }, []);
-
+    
+    // Pre-fill form if in edit mode
+    if (editing && editingProduct) {
+      // Update state variables to match editing product
+      setProductName(editingProduct.name);
+      setProductDescriptionShort(editingProduct.descriptionShort);
+      setProductDescriptionLong(editingProduct.descriptionLong);
+      setProductPrice(editingProduct.price);
+      setProductStock(editingProduct.stock);
+      setSubCategoryID(editingProduct.subCategoryId);
+      setSizingType(editingProduct.sizingType);
+      setIsHidden(editingProduct.isHidden);
+      
+      // Set product for image handling
+      setProduct({
+        id: editingProduct.id,
+        name: editingProduct.name,
+        descriptionShort: editingProduct.descriptionShort,
+        descriptionLong: editingProduct.descriptionLong,
+        price: editingProduct.price,
+        stock: editingProduct.stock,
+        isHidden: editingProduct.isHidden,
+        sizingType: editingProduct.sizingType,
+        categoryId: editingProduct.categoryId,
+        subCategoryId: editingProduct.subCategoryId,
+        salePercent: editingProduct.salePercent,
+      });
+    }
+  }, [editing, editingProduct]);
   const handleSubmit = async (values: ProductFormValues) => {
     // Handle form submission logic here
     try {
+      setSubmitting(true);
       const selectedSubCategory = subCategories.find(
         (subCategory) => subCategory.id === values.subCategoryID
       );
 
-      const product = {
+      const productData = {
         ...values,
         isHidden,
         categoryID: selectedSubCategory ? selectedSubCategory.categoryId : "",
         salePercent: 0.0,
       };
 
-      const response = await axios.post(
-        `${NEXT_PUBLIC_BASE_URL}/api/products`,
-        product,
-        {
-          withCredentials: true,
+      let response;
+
+      if (editing && editingProduct) {
+        // Update existing product
+        response = await axios.patch(
+          `${NEXT_PUBLIC_BASE_URL}/api/products/${editingProduct.id}`,
+          productData,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          toast.success("Product updated successfully");
+          // Close the modal after successful update
+          setTimeout(() => {
+            handleClose();
+            // Reload the page to reflect changes
+            window.location.reload();
+          }, 2000);
+        } else {
+          toast.error("Error updating product");
         }
-      );
-
-      if (response.status === 201) {
-        toast.success("Product saved successfully");
       } else {
-        toast.error("Error creating product");
-      }
+        // Create new product
+        response = await axios.post(
+          `${NEXT_PUBLIC_BASE_URL}/api/products`,
+          productData,
+          {
+            withCredentials: true,
+          }
+        );
 
-      setProduct(response.data.product);
-      setAnimateModal2(true);
-      setShowImagesModal(true);
+        if (response.status === 201) {
+          toast.success("Product saved successfully");
+          setProduct(response.data.product);
+          setAnimateModal2(true);
+          setShowImagesModal(true);
+        } else {
+          toast.error("Error creating product");
+        }
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === 400) {
@@ -135,6 +222,8 @@ const AddProductModal = ({
       } else {
         console.error("An unexpected error occurred:", error);
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -193,17 +282,16 @@ const AddProductModal = ({
             >
               <IoClose size={24} />
             </button>
-          </div>
-          <Formik
-            // TODO:
+          </div>          <Formik
+            enableReinitialize
             initialValues={{
-              productName,
-              productDescriptionShort,
-              productDescriptionLong,
-              productPrice,
-              productStock,
-              subCategoryID,
-              sizingType,
+              productName: editing && editingProduct ? editingProduct.name : productName,
+              productDescriptionShort: editing && editingProduct ? editingProduct.descriptionShort : productDescriptionShort,
+              productDescriptionLong: editing && editingProduct ? editingProduct.descriptionLong : productDescriptionLong,
+              productPrice: editing && editingProduct ? editingProduct.price : productPrice,
+              productStock: editing && editingProduct ? editingProduct.stock : productStock,
+              subCategoryID: editing && editingProduct ? editingProduct.subCategoryId : subCategoryID,
+              sizingType: editing && editingProduct ? editingProduct.sizingType : sizingType,
             }}
             validationSchema={Yup.object({
               productName: Yup.string().required("Product name is required"),
@@ -394,8 +482,7 @@ const AddProductModal = ({
                     <option value="Diapers">Diapers</option>
                     <option value="NA">N/A</option>
                   </Field>
-                </div>
-                <button
+                </div>                <button
                   type="submit"
                   disabled={isSubmitting}
                   className={`px-4 py-2 my-2 ${
@@ -404,8 +491,34 @@ const AddProductModal = ({
                       : "bg-[#4fb3e5] hover:bg-[#3a92c5]"
                   }  w-full text-white rounded-2xl shadow-md transition duration-300`}
                 >
-                  Save, Proceed to Images
+                  {editing ? "Save Changes" : "Save, Proceed to Images"}
                 </button>
+                
+                {editing && editingProduct && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProduct({
+                        id: editingProduct.id,
+                        name: editingProduct.name,
+                        descriptionShort: editingProduct.descriptionShort,
+                        descriptionLong: editingProduct.descriptionLong,
+                        price: editingProduct.price,
+                        stock: editingProduct.stock,
+                        isHidden: editingProduct.isHidden,
+                        sizingType: editingProduct.sizingType,
+                        categoryId: editingProduct.categoryId,
+                        subCategoryId: editingProduct.subCategoryId,
+                        salePercent: editingProduct.salePercent,
+                      });
+                      setAnimateModal2(true);
+                      setShowImagesModal(true);
+                    }}
+                    className="px-4 py-2 my-2 bg-[#b970a0] hover:bg-[#a05d8c] w-full text-white rounded-2xl shadow-md transition duration-300"
+                  >
+                    Manage Product Images
+                  </button>
+                )}
               </Form>
             )}
           </Formik>

@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { string } from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { FaTrashAlt } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 interface AddImagesModalProps {
   handleClose: () => void;
@@ -24,6 +26,13 @@ interface AddImagesModalProps {
   };
   setShowModal: (value: boolean) => void;
 }
+
+interface ProductImage {
+  id: string;
+  url: string;
+  productId: string;
+}
+
 const NEXT_PUBLIC_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -38,6 +47,28 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
   const [productImageUrl1, setProductImageUrl1] = useState<string | null>(null);
   const [productImageUrl2, setProductImageUrl2] = useState<string | null>(null);
   const [productImageUrl3, setProductImageUrl3] = useState<string | null>(null);
+  const [existingImages, setExistingImages] = useState<ProductImage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch existing images
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await axios.get(
+          `${NEXT_PUBLIC_BASE_URL}/api/products/images/${product.id}`
+        );
+        setExistingImages(response.data);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (product?.id) {
+      fetchImages();
+    }
+  }, [product.id]);
 
   interface CloudinaryResponse {
     secure_url: string;
@@ -76,17 +107,32 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       }
 
       const data: CloudinaryResponse = await response.json();
-      console.log("Upload success:", data);
       setImageUrl(data.secure_url);
-      imageList.push(data.secure_url);
-      console.log("Image List: ", imageList);
+      setImageList([...imageList, data.secure_url]);
     } catch (error) {
       console.error("Error uploading image:", error);
+      toast.error("Error uploading image. Please try again.");
+    }
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    try {
+      await axios.delete(`${NEXT_PUBLIC_BASE_URL}/api/products/images/${imageId}`);
+      setExistingImages(existingImages.filter(img => img.id !== imageId));
+      toast.success("Image deleted successfully");
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      toast.error("Failed to delete image");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (imageList.length === 0) {
+      toast.info("No new images to upload");
+      return;
+    }
 
     const id = product.id;
 
@@ -100,12 +146,19 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       );
       
       toast.success(response.data.message);
+      setImageList([]);
+      setProductImageUrl1(null);
+      setProductImageUrl2(null);
+      setProductImageUrl3(null);
+      
+      // Refresh the list of images
+      const imagesResponse = await axios.get(
+        `${NEXT_PUBLIC_BASE_URL}/api/products/images/${product.id}`
+      );
+      setExistingImages(imagesResponse.data);
       handleClose();
-      setAnimateModal(false);
-      setTimeout(() => setShowModal(false), 300);
-      window.location.reload()
     } catch (error) {
-      toast.error("Error saving images, please try again")
+      toast.error("Error saving images, please try again");
       console.error("Error saving images:", error);
     }
   };
@@ -125,13 +178,62 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover/>
+        pauseOnHover
+      />
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">
-          Add Images for {product.name}
+          Manage Images for {product.name}
         </h2>
+        <button
+          onClick={() => {
+            setAnimateModal(false);
+            setTimeout(() => setShowModal(false), 300);
+          }}
+          className="text-gray-500 hover:text-gray-800"
+        >
+          <IoClose size={24} />
+        </button>
       </div>
 
+      {/* Existing Images Section */}
+      <div className="mb-8">
+        <h3 className="font-medium text-lg mb-4 text-gray-700 border-b pb-2">
+          Current Images
+        </h3>
+        {isLoading ? (
+          <p className="text-gray-500 text-sm">Loading images...</p>
+        ) : existingImages.length === 0 ? (
+          <p className="text-gray-500 text-sm">No images uploaded yet</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            {existingImages.map((image) => (
+              <div key={image.id} className="relative">
+                <img
+                  src={image.url}
+                  alt="Product"
+                  className="w-full h-auto rounded-lg shadow-md mb-2"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImage(image.id)}
+                  className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-md"
+                  title="Delete Image"
+                >
+                  <FaTrashAlt size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Divider */}
+      <div className="my-6 border-t border-gray-200"></div>
+
+      {/* Add New Images Section */}
+      <h3 className="font-medium text-lg mb-4 text-gray-700">
+        Add New Images
+      </h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
@@ -149,7 +251,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
           )}
           <input
             type="file"
-            id="productImage"
+            id="productImage1"
             accept="image/*"
             onChange={(e) =>
               handleImageChange({ e, setImageUrl: setProductImageUrl1 })
@@ -173,7 +275,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
           )}
           <input
             type="file"
-            id="productImage"
+            id="productImage2"
             accept="image/*"
             onChange={(e) =>
               handleImageChange({ e, setImageUrl: setProductImageUrl2 })
@@ -197,7 +299,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
           )}
           <input
             type="file"
-            id="productImage"
+            id="productImage3"
             accept="image/*"
             onChange={(e) =>
               handleImageChange({ e, setImageUrl: setProductImageUrl3 })
@@ -209,19 +311,8 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
           type="submit"
           className="w-full bg-[#4fb3e5] hover:bg-[#3a92c5] text-white px-4 py-2 rounded-2xl shadow focus:outline-none focus:ring-2 focus:ring-offset-2"
         >
-          Save Images
+          Upload New Images
         </button>
-        {/* <button
-                  type="submit"
-                  //disabled={isSubmitting}
-                  className={`px-4 py-2 my-2 ${
-                    submitting
-                      ? "bg-[#aee3f9]"
-                      : "bg-[#4fb3e5] hover:bg-[#3a92c5]"
-                  }  w-full text-white rounded-2xl shadow-md transition duration-300`}
-                >
-                  Save, Proceed to Images
-                </button> */}
       </form>
     </div>
   );
