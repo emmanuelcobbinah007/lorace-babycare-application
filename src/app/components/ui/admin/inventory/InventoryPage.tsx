@@ -167,6 +167,36 @@ const InventoryPage = () => {
     }
   };
 
+  const initDelete = (product: Product) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(
+            `${NEXT_PUBLIC_BASE_URL}/api/products/${product.id}`
+          );
+          setFetchedProducts((prev) =>
+            prev.filter((p) => p.id !== product.id)
+          );
+          setFilteredProducts((prev) =>
+            prev.filter((p) => p.id !== product.id)
+          );
+          toast.success("Product deleted successfully");
+        } catch (error) {
+          console.error("Error deleting product:", error);
+          toast.error("Failed to delete product");
+        }
+      }
+    })
+  }
+
   return (
     <div>
       <div className="flex">
@@ -354,7 +384,7 @@ const InventoryPage = () => {
                               />
                             </button>
                             <button
-                              // onClick={() => initDelete(product)}
+                              onClick={() => initDelete(product)}
                               className="p-2 rounded-lg bg-red-500 text-white shadow-sm hover:bg-red-600 transition-transform hover:scale-105"
                               title="Delete"
                             >
