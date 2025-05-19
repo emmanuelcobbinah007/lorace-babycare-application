@@ -115,9 +115,9 @@ const page = () => {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center h-full">
-            <FadeLoader color="#dcaed0" height={10} width={5} />
-          </div>
+          <div className="flex h-[75vh] justify-center items-center mt-0 md:mt-10">
+                  <FadeLoader color="#b970a0" />
+                </div>
         ) : filteredProducts.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-500">No products found.</p>

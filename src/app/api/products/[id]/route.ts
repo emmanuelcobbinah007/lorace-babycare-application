@@ -1,6 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/libs/prisma";
 
+export async function GET(req: NextRequest, context: any) {
+    const { id } = context.params;
+
+    try {
+        if (!id) {
+            return NextResponse.json({error: "Please attach an id"}, {status: 401})
+        }
+
+        const product = await prisma.product.findFirst({
+            where: { id },
+            include: {
+                images: true,
+                category: true,
+                subCategory: true,
+            }
+        })
+
+        return NextResponse.json({message: "Product retrieved successfully.", product}, {status: 200});
+    } catch (error) {
+        return NextResponse.json({error: "Failed to get product"}, {status: 500})
+    }
+}
+
 export async function PATCH(req: NextRequest, context: any) {
   const { id } = context.params;
   try {

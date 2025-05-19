@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -46,12 +46,19 @@ const Products: React.FC<ProductsProps> = ({
   products,
   setFilteredProducts,
 }) => {
+
+  const handleAddToCart = async (product: Product, quantity: number) => {
+
+    console.log(product.id, quantity)
+  }
+
   return (
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
         {products.map((product: Product) => (
-          <div
+          <Link href={`products/${product.id}`}
             key={product.id}
+            onClick={() =>  console.log("Card Clicked!")}
             className="group relative bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl border border-gray-200 flex flex-col min-h-[340px] sm:min-h-[370px] md:min-h-[420px]"
           >
             <div className="relative">
@@ -63,7 +70,7 @@ const Products: React.FC<ProductsProps> = ({
               />
               {product.salePercent > 0 && (
                 <div className="absolute top-2 left-2 bg-[#fdd8e4] text-[#e44d7b] text-xs font-bold rounded-full px-2 py-0.5 shadow-sm border border-white animate-bounce">
-                  -{product.salePercent}%
+                  -{(product.salePercent)*100}%
                 </div>
               )}
               {product.stock === 0 && (
@@ -102,6 +109,7 @@ const Products: React.FC<ProductsProps> = ({
                   )}
                 </div>
                 <button
+                onClick={(e) => { e.stopPropagation(); handleAddToCart(product, 1); }}
                   className={`bg-[#4fb3e5] hover:bg-[#b970a0] text-white rounded-full p-2 sm:p-2.5 transition-colors duration-200 flex items-center justify-center shadow-md border border-white ${
                     product.stock === 0 ? "opacity-50 cursor-not-allowed" : ""
                   }`}
@@ -125,7 +133,7 @@ const Products: React.FC<ProductsProps> = ({
                 </button>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
