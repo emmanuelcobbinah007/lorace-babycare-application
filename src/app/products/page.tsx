@@ -15,8 +15,7 @@ const patrickHand = Patrick_Hand({
   variable: "--font-patrickHand",
 });
 
-const NEXT_PUBLIC_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 interface Product {
   id: string;
@@ -91,25 +90,25 @@ const page = () => {
   return (
     <div>
       <div className="py-[30px] md:py-[40px] bg-white"></div>
-      <div className="w-[85%] mx-auto h-[85vh] py-6">
-        <div className="flex justify-between items-center mb-6">
+      <div className="w-[85%] md:w-[80%] mx-auto py-6">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-10 gap-6 md:gap-0">
           <h1
-            className={`md:text-4xl text-3xl font-semibold text-[#333] ${patrickHand.className}`}
+            className={`md:text-5xl text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#e44d7b] via-[#b970a0] to-[#4fb3e5] drop-shadow-lg tracking-tight ${patrickHand.className}`}
           >
             All Products
           </h1>
           {/* Search Bar */}
-          <div className="hidden relative md:block w-full md:w-[40%]">
+          <div className="relative w-full md:w-[40%] flex items-center">
             <input
               type="text"
               placeholder="Search by subcategory or category..."
               value={searchTerm}
               onChange={handleSearch}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] transition"
+              className="w-full pl-12 pr-4 py-3 text-base border-2 border-[#b970a0] rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] transition bg-white/80 backdrop-blur placeholder:text-[#b970a0] text-[#4fb3e5] font-semibold"
             />
             <SearchNormal
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={20}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#b970a0]"
+              size={24}
             />
           </div>
         </div>
@@ -126,7 +125,7 @@ const page = () => {
           <Products
             products={filteredProducts}
             setFilteredProducts={setFilteredProducts}
-            />
+          />
         )}
       </div>
     </div>
