@@ -64,7 +64,8 @@ const page = () => {
           `${NEXT_PUBLIC_BASE_URL}/api/products`
         );
         setProducts(response.data);
-        setFilteredProducts(response.data);
+        const visibleProducts = response.data.filter((product: Product) => !product.isHidden);
+        setFilteredProducts(visibleProducts);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {

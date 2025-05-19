@@ -90,11 +90,14 @@ const Products: React.FC<ProductsProps> = ({
               <div className="flex items-end justify-between mt-auto">
                 <div>
                   <span className="text-[#e44d7b] font-bold text-base sm:text-lg md:text-xl">
-                    GHC{product.price.toFixed(2)}
+                    {product.salePercent > 0
+                      ? `GH₵${((1 - (product.salePercent ?? 0)) * product.price).toFixed(2)}`
+                      : `GH₵${product.price}.toFixed(2)}`}
+                    
                   </span>
                   {product.salePercent > 0 && (
                     <span className="hidden md:inline ml-2 text-gray-400 line-through text-xs sm:text-sm">
-                      GHC{(product.price / (1 - product.salePercent / 100)).toFixed(2)}
+                      GHC{(product.price).toFixed(2)}
                     </span>
                   )}
                 </div>

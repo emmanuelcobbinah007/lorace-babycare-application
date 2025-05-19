@@ -197,6 +197,48 @@ const InventoryPage = () => {
     })
   }
 
+  const handleHide = async (productId: string) => {
+    try {
+      await axios.patch(`${NEXT_PUBLIC_BASE_URL}/api/products/${productId}`, {
+        isHidden: true,
+      });
+      setFetchedProducts((prev) =>
+        prev.map((product) =>
+          product.id === productId ? { ...product, isHidden: true } : product
+        )
+      );
+      setFilteredProducts((prev) =>
+        prev.map((product) =>
+          product.id === productId ? { ...product, isHidden: true } : product
+        )
+      );
+      toast.success("Product hidden");
+    } catch (error) {
+      toast.error("Failed to hide product");
+    }
+  };
+
+  const handleUnHide = async (productId: string) => {
+    try {
+      await axios.patch(`${NEXT_PUBLIC_BASE_URL}/api/products/${productId}`, {
+        isHidden: false,
+      });
+      setFetchedProducts((prev) =>
+        prev.map((product) =>
+          product.id === productId ? { ...product, isHidden: false } : product
+        )
+      );
+      setFilteredProducts((prev) =>
+        prev.map((product) =>
+          product.id === productId ? { ...product, isHidden: false } : product
+        )
+      );
+      toast.success("Product unhidden");
+    } catch (error) {
+      toast.error("Failed to unhide product");
+    }
+  };
+
   return (
     <div>
       <div className="flex">
@@ -362,13 +404,13 @@ const InventoryPage = () => {
                           <div className="flex items-center justify-center gap-2">
                             {product.isHidden ? (
                               <FaRegEye
-                                // onClick={() => handleUnHide(product.id)}
+                                onClick={() => handleUnHide(product.id)}
                                 className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
                                 title="Unhide"
                               />
                             ) : (
                               <FaRegEyeSlash
-                                // onClick={() => handleHide(product.id)}
+                                onClick={() => handleHide(product.id)}
                                 className="text-[#4fb3e5] cursor-pointer hover:scale-110 transition-transform"
                                 title="Hide"
                               />
