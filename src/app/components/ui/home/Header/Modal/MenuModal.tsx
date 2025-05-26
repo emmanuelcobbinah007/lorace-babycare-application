@@ -8,9 +8,25 @@ import UserModal from './UserModal';
 interface MenuModalProps {
   handleClose: () => void;
   animateModal: boolean;
+  fetchedCategories: fetchedCategories[];
+  loading: boolean;
 }
 
-const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
+interface SubCategory {
+  categoryId: string;
+  createdAt: string;
+  id: string;
+  isHidden: boolean;
+  name: string;
+}
+interface fetchedCategories {
+  createdAt: string;
+  id: string;
+  name: string;
+  subCategories: SubCategory[];
+}
+
+const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal, fetchedCategories, loading }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [animatedModal, setAnimatedModal] = useState(false);
      const [showUserModal, setShowUserModal] = useState(false);
@@ -22,7 +38,6 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
     { name: "Clothing and Footwear", subCategories: ["Onesies", "Shoes", "Accessories"] },
     { name: "Back to School", subCategories: ["Backpacks", "Lunch Boxes", "Stationery"] },
     { name: "Maternity", subCategories: ["Maternity Wear", "Nursing Pads", "Pillows"] },
-    { name: "Sales", subCategories: ["Discounted Items", "Clearance", "Special Offers"] },
   ];
 
   const handleCategoryClick = (category: string) => {
@@ -75,7 +90,8 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
         </div>
 
         <ul className="text-md flex flex-col gap-4 text-black font-[500] text-base">
-          {categories.map((category) => {
+          {loading ? 
+          categories.map((category) => {
             const isActive = activeCategory === category.name;
             return (
               <li key={category.name} className="flex flex-col">
@@ -114,7 +130,61 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal }) => {
                 </ul>
               </li>
             );
-          })}
+          }) : fetchedCategories.map((category) => {
+            const isActive = activeCategory === category.name;
+            return (
+              <li key={category.id} className="flex flex-col">
+                <div
+                  className="font-[600] text-left border-b-2 border-gray-100 pb-4 cursor-pointer"
+                  onClick={() => handleCategoryClick(category.name)}
+                >
+                  {category.name}
+                  <span>
+                  <span className="absolute right-5">
+                        {isActive ? <ArrowDown2 size="18" color="#b970a0" /> : <ArrowRight2 size="18" color="#b970a0" />}
+                      </span>
+                  </span>
+                </div>
+
+                {/* Always render the dropdown */}
+                <ul
+                  className="pl-4 overflow-hidden transition-all duration-300 ease-in-out"
+                  style={{
+                    maxHeight: isActive ? `${category.subCategories.length * 3}rem` : "0",
+                    opacity: isActive ? 1 : 0,
+                  }}
+                >
+                  {category.subCategories.map((subCategory) => (
+                    <li
+                      key={subCategory.id}
+                      className="py-2 cursor-pointer hover:text-gray-900 transition-all duration-300"
+                      onClick={handleClose}
+                    >
+                     <a href={`/subcategory/${subCategory.id}`}> {subCategory.name}</a>
+                      <span className="absolute right-5">
+                        <ArrowRight2 size="14" color="#4fb3e5" /> 
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })
+          }
+          <li>
+            <div
+                  className="font-[600] text-left border-b-2 border-gray-100 pb-4 cursor-pointer"
+                >
+                  <a href="/sales" className="flex items-center justify-between">
+                    Sales
+                  </a>
+                  <span>
+                  <span className="absolute right-5">
+                        <ArrowRight2 size="18" color="#b970a0" />
+                      </span>
+                  </span>
+                </div>
+                </li>
         </ul>
       </div>
       

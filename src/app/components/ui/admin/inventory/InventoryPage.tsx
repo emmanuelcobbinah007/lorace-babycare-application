@@ -297,10 +297,10 @@ const InventoryPage = () => {
                           {product.descriptionShort}
                         </p>
                         <div className="flex items-center justify-between mt-2">
-                          <span className="text-[#4fb3e5] font-semibold text-base">
+                          <span className="text-[#4fb3e5] font-semibold text-lg md:text-base">
                             GH₵{product.price}
                           </span>
-                          <span className="bg-[#b970a0] text-white text-xs px-2 py-1 rounded-full font-semibold">
+                          <span className="hidden md:block bg-[#b970a0] text-white text-xs px-2 py-1 rounded-full font-semibold">
                             Featured
                           </span>
                         </div>

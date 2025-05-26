@@ -10,6 +10,7 @@ import {
 } from "iconsax-reactjs";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
+import axios from "axios";
 
 import Logo from "../../../../../../public/images/loraceLogo.png";
 import CartModal from "./Modal/CartModal";
@@ -33,6 +34,23 @@ const categories = [
   { name: "Sales", subItems: ["Discounted Items", "Clearance", "Special Offers"] },
 ];
 
+interface SubCategory {
+  categoryId: string;
+  createdAt: string;
+  id: string;
+  isHidden: boolean;
+  name: string;
+}
+interface fetchedCategories {
+  createdAt: string;
+  id: string;
+  name: string;
+  subCategories: SubCategory[];
+}
+
+const NEXT_PUBLIC_BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
 const HeaderBar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
@@ -40,6 +58,8 @@ const HeaderBar = () => {
   const [showUserModal, setShowUserModal] = useState(false);
   const [showMenuModal, setShowMenuModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
+  const [fetchedCategories, setFetchedCategories] = useState<fetchedCategories[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,6 +69,24 @@ const HeaderBar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+
+  // we're about to fetch categories from the server joined with the subcategories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/categories`);
+        setFetchedCategories(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log("Error fetching Categories:", error)
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCategories();
+  }, [])
 
   const openModal = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(true);
@@ -80,17 +118,16 @@ const HeaderBar = () => {
 
           <div className="hidden md:inline flex-1">
             <ul className="text-center flex justify-evenly text-black font-[500] text-base">
-              {categories.map((category) => (
-                <li
-                  key={category.name}
-                  className="relative group flex flex-col items-center justify-center"
-                >
-                  <div className="hover:text-[#4fb2e5] duration-300">
-                    {category.name}
-                    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
-                  </div>
-
-                  {category.subItems && (
+              {loading ? (
+                categories.map((category) => (
+                  <li
+                    key={category.name}
+                    className="relative group flex flex-col items-center justify-center"
+                  >
+                    <div className="hover:text-[#4fb2e5] duration-300">
+                      {category.name}
+                      <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
+                    </div>
                     <ul className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-md opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 z-50">
                       {category.subItems.map((subItem) => (
                         <li
@@ -101,9 +138,39 @@ const HeaderBar = () => {
                         </li>
                       ))}
                     </ul>
+                  </li>
+                ))
+              ) : 
+              fetchedCategories.map((category) => (
+                <li
+                  key={category.name}
+                  className="relative group flex flex-col items-center justify-center"
+                >
+                  <a href={`/category/${category.id}`} className="hover:text-[#4fb2e5] duration-300">
+                    {category.name}
+                    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
+                  </a>
+
+                  {category.subCategories && (
+                    <ul className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-md opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 z-50">
+                      {category.subCategories.map((subItem: SubCategory) => (
+                      <li
+                        key={subItem.id}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-left"
+                      >
+                        <a href={`/subcategory/${subItem.id}`}>{subItem.name}</a>
+                      </li>
+                      ))}
+                    </ul>
                   )}
                 </li>
               ))}
+              <li className="relative group flex flex-col items-center justify-center">
+                <div className="hover:text-[#4fb2e5] duration-300">
+                  <a href="/sales">Sales</a>
+                </div>
+                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#4fb2e5] transition-all duration-300 group-hover:w-full"></span>
+              </li>
             </ul>
           </div>
 
@@ -138,7 +205,7 @@ const HeaderBar = () => {
         <UserModal handleClose={() => closeModal(setShowUserModal)} animateModal={animateModal} />
       )}
       {showMenuModal && (
-        <MenuModal handleClose={() => closeModal(setShowMenuModal)} animateModal={animateModal} />
+        <MenuModal handleClose={() => closeModal(setShowMenuModal)} animateModal={animateModal} fetchedCategories={fetchedCategories} loading={loading}/>
       )}
     </>
   );

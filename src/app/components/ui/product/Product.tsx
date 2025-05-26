@@ -93,15 +93,6 @@ const Product = () => {
     // Here you would add the actual cart functionality
   };
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    if (!isFavorite) {
-      toast.success(`${product?.name} added to favorites!`);
-    } else {
-      toast.info(`${product?.name} removed from favorites!`);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex h-[75vh] justify-center items-center mt-0 md:mt-10">
@@ -129,51 +120,70 @@ const Product = () => {
     : product.price;
 
   return (
-    <div className="w-[90%] md:w-[85%] mx-auto py-8">
-      <ToastContainer position="top-right" autoClose={3000} />
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+      <ToastContainer 
+        position="top-right" 
+        autoClose={3000}
+        toastClassName="backdrop-blur-md bg-white/80"
+      />
       
       {/* Breadcrumb navigation */}
-      <div className="mb-6 flex items-center text-sm text-gray-500">
-        <button onClick={() => router.push('/')} className="hover:text-[#b970a0]">Home</button>
-        <span className="mx-2">/</span>
-        <button onClick={() => router.push(`/category/${product.categoryId}`)} className="hover:text-[#b970a0]">
-          {product.category.name}
-        </button>
-        <span className="mx-2">/</span>
-        <button onClick={() => router.push(`/subcategory/${product.subCategoryId}`)} className="hover:text-[#b970a0]">
-          {product.subCategory.name}
-        </button>
-        <span className="mx-2">/</span>
-        <span className="font-medium text-gray-700">{product.name}</span>
+      <div className="w-[90%] md:w-[85%] mx-auto pt-8">
+        <nav className="flex items-center space-x-2 text-sm text-gray-500 overflow-x-auto whitespace-nowrap pb-4">
+          <button onClick={() => router.push('/')} 
+            className="hover:text-[#b970a0] transition-colors duration-200 flex items-center">
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            Home
+          </button>
+          <span className="text-gray-400">/</span>
+          <button onClick={() => router.push(`/category/${product.categoryId}`)} 
+            className="hover:text-[#b970a0] transition-colors duration-200">
+            {product.category.name}
+          </button>
+          <span className="text-gray-400">/</span>
+          <button onClick={() => router.push(`/subcategory/${product.subCategoryId}`)} 
+            className="hover:text-[#b970a0] transition-colors duration-200">
+            {product.subCategory.name}
+          </button>
+          <span className="text-gray-400">/</span>
+          <span className="font-medium text-gray-700">{product.name}</span>
+        </nav>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left side - Product images */}
-        <div className="flex flex-col space-y-4">
-          {/* Main image */}
-          <div className="w-full aspect-square relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-            {selectedImage ? (
-              <img 
-                src={selectedImage} 
-                alt={product.name}
-                className="w-full h-full object-contain"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-gray-400">
-                No image available
-              </div>
-            )}
-            
-            {product.salePercent > 0 && (
-              <div className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
-                -{(product.salePercent)*100}%
-              </div>
-            )}
-          </div>
+      <div className="w-[90%] md:w-[85%] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 py-8">
+          {/* Left side - Product images */}
+          <div className="flex flex-col space-y-6">
+            {/* Main image */}
+            <div className="aspect-square mx-auto md:w-[80%] md:h-[80%] relative rounded-2xl overflow-hidden bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
+              {selectedImage ? (
+                <div className="w-full h-full relative group">
+                  <img 
+                    src={selectedImage} 
+                    alt={product.name}
+                    className="w-full h-full object-contain transition-opacity duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity duration-300"/>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  <svg className="w-16 h-16 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              )}
+              
+              {product.salePercent > 0 && (
+                <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                  -{(product.salePercent)*100}% OFF
+                </div>
+              )}
+            </div>
           
           {/* Thumbnail images */}
           {product.images && product.images.length > 0 && (
-            <div className="flex space-x-2 overflow-x-auto">
+            <div className="flex md:w-[80%] mx-auto space-x-2 overflow-x-auto">
               {product.images.map((image) => (
                 <div 
                   key={image.id} 
@@ -251,75 +261,90 @@ const Product = () => {
           <div className="mb-6">
             <h3 className="text-sm font-medium text-gray-700 mb-2">Quantity</h3>
             <div className="flex items-center">
-              <button 
-                onClick={() => handleQuantityChange(-1)}
-                className="w-8 h-8 rounded-l-md bg-gray-200 flex items-center justify-center hover:bg-gray-300"
-                disabled={quantity <= 1}
-              >
-                -
-              </button>
-              <span className="w-12 h-8 flex items-center justify-center border-t border-b border-gray-200 bg-white">
-                {quantity}
-              </span>
-              <button 
-                onClick={() => handleQuantityChange(1)}
-                className="w-8 h-8 rounded-r-md bg-gray-200 flex items-center justify-center hover:bg-gray-300"
-                disabled={quantity >= product.stock}
-              >
-                +
-              </button>
+                <div className="flex items-center bg-gray-100 rounded-lg shadow-inner overflow-hidden">
+                <button
+                  onClick={() => handleQuantityChange(-1)}
+                  className={`w-10 h-10 flex items-center justify-center text-xl font-bold transition-colors duration-150 ${
+                  quantity <= 1
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-white hover:bg-[#f3e6f2] text-[#b970a0]"
+                  }`}
+                  disabled={quantity <= 1}
+                  aria-label="Decrease quantity"
+                >
+                  –
+                </button>
+                <span className="w-12 h-10 flex items-center justify-center text-lg font-semibold bg-white border-x border-gray-200 select-none">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => handleQuantityChange(1)}
+                  className={`w-10 h-10 flex items-center justify-center text-xl font-bold transition-colors duration-150 ${
+                  quantity >= product.stock
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-white hover:bg-[#f3e6f2] text-[#b970a0]"
+                  }`}
+                  disabled={quantity >= product.stock}
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+                </div>
             </div>
           </div>
           
           {/* Add to cart and wishlist buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <button
+          <div className="flex flex-col sm:flex-row gap-4 mb-8">            <button
               onClick={handleAddToCart}
               disabled={product.stock === 0}
               className={`flex-1 px-6 py-3 rounded-lg flex items-center justify-center ${
                 product.stock > 0 
-                  ? 'bg-[#b970a0] hover:bg-[#a55f91] text-white' 
+                  ? 'bg-[#b970a0] hover:bg-[#a55f91] text-white transition-colors duration-200' 
                   : 'bg-gray-300 cursor-not-allowed text-gray-500'
               }`}
             >
               <FaShoppingCart className="mr-2" />
               {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
             </button>
+
+            {product.stock > 0 && (
+              <button
+                onClick={() => {
+                  handleAddToCart();
+                  // Additional buy now logic here
+                  router.push('/checkout');
+                }}
+                className="flex-1 px-6 py-3 rounded-lg flex items-center justify-center bg-gradient-to-r from-[#4fb3e5] to-[#3a92c5] hover:from-[#3a92c5] hover:to-[#2d7ba8] text-white shadow-md transition-all duration-200 hover:shadow-lg"
+              >
+                Buy Now
+              </button>
+            )}
             
-            <button
-              onClick={toggleFavorite}
-              className="w-12 h-12 rounded-lg border border-gray-300 flex items-center justify-center hover:border-[#b970a0]"
-              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            >
-              {isFavorite ? (
-                <IoMdHeart className="text-[#b970a0] text-xl" />
-              ) : (
-                <IoMdHeartEmpty className="text-gray-700 text-xl" />
-              )}
-            </button>
           </div>
           
           {/* Product categories */}
-          <div className="mb-6">
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">Category:</span>{' '}
-              <button 
+            <div className="mb-8">
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <div className="flex items-center bg-pink-50 rounded-full px-4 py-2 shadow-sm">
+              <span className="font-semibold text-gray-700 mr-1">Category:</span>
+              <button
                 onClick={() => router.push(`/category/${product.categoryId}`)}
-                className="text-[#b970a0] hover:underline"
+                className="text-[#b970a0] hover:underline font-medium transition-colors duration-150"
               >
                 {product.category.name}
               </button>
-            </div>
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">Subcategory:</span>{' '}
-              <button 
+              </div>
+              <div className="flex items-center bg-blue-50 rounded-full px-4 py-2 shadow-sm">
+              <span className="font-semibold text-gray-700 mr-1">Subcategory:</span>
+              <button
                 onClick={() => router.push(`/subcategory/${product.subCategoryId}`)}
-                className="text-[#b970a0] hover:underline"
+                className="text-[#4fb3e5] hover:underline font-medium transition-colors duration-150"
               >
                 {product.subCategory.name}
               </button>
+              </div>
             </div>
-          </div>
+            </div>
         </div>
       </div>
       
@@ -331,6 +356,7 @@ const Product = () => {
                dangerouslySetInnerHTML={{ __html: product.descriptionLong || product.descriptionShort }} />
         </div>
       </div>
+    </div>
     </div>
   );
 };
