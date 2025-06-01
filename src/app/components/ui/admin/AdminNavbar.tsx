@@ -1,44 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Navlink from "next/link";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { User } from "iconsax-reactjs";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 
 import loraceLogo from "../../../../../public/images/loraceLogo.png";
-
-const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+import { useCurrentUser, useLogout } from "../../../hooks/useAuth";
 
 const AdminNavbar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  interface UserType {
-    firstname: string;
-    lastname: string;
-    email: string;
-  }
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const retrieveUser = async () => {
-      const res = await axios.get(`${NEXT_PUBLIC_ROOT_URL}/api/auth/me`, {
-        withCredentials: true,
-      });
-
-      setUser(res.data.user);
-      setLoading(false);
-    };
-    retrieveUser();
-  }, []);
+    const { data: authData, isLoading: loading } = useCurrentUser();
+  const logoutMutation = useLogout();
+  
+  const user = authData?.user;
 
   const links = [
     { href: "/admin", label: "Dashboard" },
@@ -48,13 +29,13 @@ const AdminNavbar = () => {
     { href: "/admin/manage-sales", label: "Manage Sales" },
     { href: "/admin/email-list", label: "Email List" },
   ];
-
-  const initLogout = async () => {
-    await axios.get(`${NEXT_PUBLIC_ROOT_URL}/api/auth/logout`, {
-      withCredentials: true,
-    });
-
-    router.push("/");
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const toggleMenu = () => {
@@ -121,12 +102,12 @@ const AdminNavbar = () => {
                     : user?.email}
                 </p>
               </div>
-            </div>
-            <button
-              onClick={initLogout}
-              className="w-[80%] mx-[10%] bg-[#4fb3e5] text-white rounded-full py-2 my-6 hover:bg-[#3da5d6] transition duration-300"
+            </div>            <button
+              onClick={handleLogout}
+              disabled={logoutMutation.isPending}
+              className="w-[80%] mx-[10%] bg-[#4fb3e5] text-white rounded-full py-2 my-6 hover:bg-[#3da5d6] transition duration-300 disabled:opacity-50"
             >
-              Logout
+              {logoutMutation.isPending ? "Logging out..." : "Logout"}
             </button>
           </div>
         </div>

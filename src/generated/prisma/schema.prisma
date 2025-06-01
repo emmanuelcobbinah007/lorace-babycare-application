@@ -17,7 +17,9 @@ datasource db {
 
 enum SizingType {
   Clothing
-  Footwear
+  FootwearInfants
+  FootwearToddlers
+  FootwearChildren
   Diapers
   NA
 }
@@ -28,16 +30,21 @@ enum UserRole {
 }
 
 model User {
-  id        String      @id @default(uuid()) @db.Uuid
-  firstname String
-  lastname  String
-  email     String      @unique
-  password  String
-  role      UserRole    @default(USER)
-  createdAt DateTime    @default(now())
-  cart      Cart?
-  orders    Order[]
-  emailList EmailList[]
+  id                     String      @id @default(uuid()) @db.Uuid
+  firstname              String
+  lastname               String
+  email                  String      @unique
+  phone                  String      @unique
+  password               String
+  role                   UserRole    @default(USER)
+  emailIsVerified        Boolean     @default(false)
+  emailVerificationToken String?
+  phoneIsVerified        Boolean     @default(false)
+  phoneVerificationToken String?
+  createdAt              DateTime    @default(now())
+  cart                   Cart?
+  orders                 Order[]
+  emailList              EmailList[]
 }
 
 model Category {
@@ -63,7 +70,6 @@ model Product {
   name             String
   descriptionShort String
   descriptionLong  String
-  imageUrl         String
   price            Float
   stock            Int
   isHidden         Boolean          @default(false)
@@ -78,6 +84,14 @@ model Product {
   salePercent      Float            @default(0.0)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
+  images           ProductImage[]
+}
+
+model ProductImage {
+  id        String  @id @default(uuid()) @db.Uuid
+  url       String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.Uuid
 }
 
 model EmailList {

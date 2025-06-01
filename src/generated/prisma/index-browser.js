@@ -242,7 +242,9 @@ exports.UserRole = exports.$Enums.UserRole = {
 
 exports.SizingType = exports.$Enums.SizingType = {
   Clothing: 'Clothing',
-  Footwear: 'Footwear',
+  FootwearInfants: 'FootwearInfants',
+  FootwearToddlers: 'FootwearToddlers',
+  FootwearChildren: 'FootwearChildren',
   Diapers: 'Diapers',
   NA: 'NA'
 };

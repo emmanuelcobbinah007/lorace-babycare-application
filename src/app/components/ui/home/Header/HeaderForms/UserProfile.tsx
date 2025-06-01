@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import axios from "axios";
 import {
   User as UserIcon,
   Sms,
@@ -10,6 +9,9 @@ import {
   LogoutCurve,
 } from "iconsax-reactjs";
 import { ShoppingBag } from "iconsax-reactjs";
+import { useLogout } from "../../../../../hooks/useAuth";
+import { toast } from "react-toastify";
+import { User } from "../../../../../api/auth/authApi";
 
 interface Order {
   id: string;
@@ -18,18 +20,18 @@ interface Order {
   status: string;
 }
 
-interface User {
-  id: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-  role: string;
-  emailIsVerified: boolean;
-  emailVerificationToken: string | null;
-  phoneIsVerified: boolean;
-  phoneVerificationToken: string | null;
-  createdAt: string;
-}
+// interface User {
+//   id: string;
+//   email: string;
+//   firstname: string;
+//   lastname: string;
+//   role: string;
+//   emailIsVerified: boolean;
+//   emailVerificationToken: string | null;
+//   phoneIsVerified: boolean;
+//   phoneVerificationToken: string | null;
+//   createdAt: string;
+// }
 
 interface UserProfileProps {
   user: User | null;
@@ -37,24 +39,24 @@ interface UserProfileProps {
   setUser: (user: User | null) => void;
 }
 
-const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const UserProfile: React.FC<UserProfileProps> = ({
+  user,
+  setLoggedIn,
+  setUser,
+}) => {
+  const orders: Order[] = []; // Replace with actual orders fetched from an API
+  const logoutMutation = useLogout();
 
-  const UserProfile: React.FC<UserProfileProps> = ({
-    user,
-    setLoggedIn,
-    setUser,
-  }) => {
-    const orders: Order[] = []; // Replace with actual orders fetched from an API
-  
-    const initLogout = async () => {
-      await axios.get(`${NEXT_PUBLIC_ROOT_URL}/api/auth/logout`, {
-        withCredentials: true,
-      });
-  
+  const initLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
       setLoggedIn(false);
       setUser(null);
-    };
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
+  };
   
     const handleEmailVerification = async () => {
       alert("Email verification link sent!");
@@ -186,17 +188,17 @@ const NEXT_PUBLIC_ROOT_URL =
       ))}
     </ul>
   )}
-</div>
-
-  
-        {/* Logout Button */}
+</div>        {/* Logout Button */}
         <div className="pt-4">
           <button
             onClick={initLogout}
-            className="flex items-center justify-center gap-3 bg-red-600 hover:bg-red-500 text-white text-sm px-5 py-3 rounded-2xl w-full sm:w-auto transition"
+            disabled={logoutMutation.isPending}
+            className={`flex items-center justify-center gap-3 ${
+              logoutMutation.isPending ? "bg-red-400" : "bg-red-600 hover:bg-red-500"
+            } text-white text-sm px-5 py-3 rounded-2xl w-full sm:w-auto transition`}
           >
             <LogoutCurve size="24" />
-            Logout
+            {logoutMutation.isPending ? "Logging out..." : "Logout"}
           </button>
         </div>
       </div>

@@ -4,154 +4,84 @@ import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
-import {toast, ToastContainer} from "react-toastify";
-
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+import { toast, ToastContainer } from "react-toastify";
+import { 
+  useCategories, 
+  useSubCategory, 
+  useCreateSubCategory, 
+  useUpdateSubCategory 
+} from "../../../../hooks/useCategories";
 
 const AddSubCategoryModal = ({
-  subCategories,
   editing,
   editId,
   setEditing,
   setShowModal,
   animateModal,
   setAnimateModal,
-  setSubCategories,
-  setFilteredSubCategories
 }: {
-  subCategories: any[];
   editing: boolean;
   editId: string;
   setEditing: (show: boolean) => void;
   setShowModal: (show: boolean) => void;
   animateModal: boolean;
   setAnimateModal: (animate: boolean) => void;
-  setSubCategories: React.Dispatch<React.SetStateAction<any[]>>;
-  setFilteredSubCategories: React.Dispatch<React.SetStateAction<any[]>>;
 }) => {
   interface SubCategoryFormValues {
     subCategoryName: string;
     categoryId: string;
   }
-
   const [subCategoryName, setSubCategoryName] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [submitting, setSubmitting] = useState(false);
+  
+  // Hooks for data fetching and mutations
+  const { data: categories = [] } = useCategories();
+  const { data: editingSubCategory } = useSubCategory(editing ? editId : null);
+  const createSubCategoryMutation = useCreateSubCategory();
+  const updateSubCategoryMutation = useUpdateSubCategory();
+  
+  const submitting = createSubCategoryMutation.isPending || updateSubCategoryMutation.isPending;
 
+  // Set initial values when editing
   useEffect(() => {
-    if (editing && editId) {
-      const fetchSubCategory = async () => {
-        try {
-          const res = await axios.get(
-            `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${editId}`
-          );
-          const subCategory = res.data;
-          setSubCategoryName(subCategory.name);
-          setCategoryId(subCategory.categoryId);
-          // console.log(subCategory);
-        } catch (error) {
-          console.log("Error fetching subcategory:", error);
-        }
-      };
-
-      fetchSubCategory();
+    if (editing && editingSubCategory) {
+      setSubCategoryName(editingSubCategory.name);
+      setCategoryId(editingSubCategory.categoryId);
     }
-  }, [editing, editId]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/category`);
-        setCategories(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  }, [editing, editingSubCategory]);
 
   const handleClose = () => {
     setAnimateModal(false);
     setEditing(false);
     setTimeout(() => setShowModal(false), 300);
   };
-
   const handleSubmit = async (values: SubCategoryFormValues) => {
-    setSubmitting(true);
-    const subCategoryItem = {
+    const subCategoryData = {
       name: values.subCategoryName.trim(),
       categoryId: values.categoryId,
     };
 
-    if(editing) {
-
-      try {
-        const response = await axios.put(
-          `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${editId}`,
-          subCategoryItem,
-          { withCredentials: true }
-        );
-        toast.success(response.data.message);
-        handleClose();
-
-        const res = await axios.get(
-          `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${response.data.subCategory.id}`
-        );
-
-        const updatedSubCategory = res.data;
-        const updatedSubCategories = subCategories.map((subCategory) => 
-          subCategory.id === editId ? updatedSubCategory : subCategory
-        );
-        setSubCategories(updatedSubCategories);
-        setFilteredSubCategories(updatedSubCategories);
-      } catch (error) {
-        toast.error("An error occurred, please try again");
-      } finally {
-        values.subCategoryName = "";
-        values.categoryId = "";
-        setSubmitting(false);
+    try {
+      if (editing) {
+        await updateSubCategoryMutation.mutateAsync({
+          id: editId,
+          data: subCategoryData,
+        });
+        toast.success("Subcategory updated successfully");
+      } else {
+        await createSubCategoryMutation.mutateAsync(subCategoryData);
+        toast.success("Subcategory created successfully");
       }
-
-    } else {
-
-      try {
-        const res = await axios.post(
-          `${NEXT_PUBLIC_BASE_URL}/api/subcategories`,
-          subCategoryItem
-        );
-  
-        if (res.status === 201) {
-          const response = await axios.get(
-            `${NEXT_PUBLIC_BASE_URL}/api/subcategories/${res.data.id}`
-          );
-          const newSubCategory = response.data;
-          const updatedSubCategories = [...subCategories, newSubCategory];
-          setSubCategories(updatedSubCategories);
-          setFilteredSubCategories(updatedSubCategories);
-  
-          handleClose();
-        } else {
-          toast.error(
-            res.status === 409
-              ? "Subcategory already exists under the selected category"
-              : "Unexpected error occurred. Please try again."
-          );
-        }
-      } catch (error: any) {
-        toast.error(
-          error.response?.status === 409
-            ? "Subcategory already exists under the selected category"
-            : "Server error. Please try again later."
-        );
-      } finally {
-        values.subCategoryName = "";
-        values.categoryId = "";
-        setSubmitting(false);
-      }
-
+      
+      handleClose();
+      // Reset form values
+      values.subCategoryName = "";
+      values.categoryId = "";
+    } catch (error: any) {
+      const errorMessage = error?.response?.status === 409 
+        ? "Subcategory already exists under the selected category"
+        : "An error occurred, please try again";
+      toast.error(errorMessage);
     }
   };
 

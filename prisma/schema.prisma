@@ -17,7 +17,9 @@ datasource db {
 
 enum SizingType {
   Clothing
-  Footwear
+  FootwearInfants
+  FootwearToddlers
+  FootwearChildren
   Diapers
   NA
 }

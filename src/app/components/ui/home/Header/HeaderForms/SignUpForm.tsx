@@ -1,8 +1,8 @@
 import React from "react";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useSignUp } from "../../../../../hooks/useAuth";
 
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
@@ -13,10 +13,9 @@ interface SignUpFormProps {
   setUser: (user: any) => void;
 }
 
-const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
 const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm, setLoggedIn, setUser }) => {
+  const signUpMutation = useSignUp();
+
   return (
     <div>
       <ToastContainer
@@ -50,72 +49,45 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm, setLoggedIn, set
             .required("Phone number is required")
             .matches(/^\+\d{10,15}$/, "Invalid phone number"),
         })}
-        onSubmit={async (values, { setSubmitting }) => {
-          const user = {
-            firstname: values.firstname,
-            lastname: values.lastname,
-            email: values.email,
-            phone: values.phone,
-            password: values.password,
-          };
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          try {
+            const userData = {
+              firstname: values.firstname,
+              lastname: values.lastname,
+              email: values.email,
+              phone: values.phone,
+              password: values.password,
+            };
 
-          const makeRequest = async () => {
-            try {
-              const response = await axios.post(
-                `${NEXT_PUBLIC_ROOT_URL}/api/auth/signup`,
-                user
-              );
-              console.log(response);
-              if (response.status === 201) {
-                toast.success("User registered successfully", {
-                  position: "top-right",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                });
-              }
-
-              await setUser(response.data.user);
-              setLoggedIn(true);
-            } catch (err) {
-              if (axios.isAxiosError(err) && err.response?.status === 409) {
-                toast.error("Email already exists", {
-                  position: "top-right",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                });
-              } else {
-                console.log(err);
-                toast.error("An error occurred during signup", {
-                  position: "top-right",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                });
-              }
+            const response = await signUpMutation.mutateAsync(userData);
+            
+            setUser(response.user);
+            setLoggedIn(true);
+            resetForm();
+            
+            toast.success("User registered successfully!", {
+              position: "top-right",
+              autoClose: 3000,
+            });
+            
+            showLoginForm(); // Switch to login view
+          } catch (error: any) {
+            const errorMessage = error?.response?.data?.message || error?.message || "Signup failed";
+            
+            if (errorMessage.includes("already exists") || errorMessage.includes("User already exists")) {
+              toast.error("Email already exists", {
+                position: "top-right",
+                autoClose: 3000,
+              });
+            } else {
+              toast.error("An error occurred during signup", {
+                position: "top-right",
+                autoClose: 3000,
+              });
             }
-          };
-
-          await makeRequest();
-
-          // Reset form values after submission
-          values.firstname = "";
-          values.lastname = "";
-          values.email = "";
-          values.phone = "";
-          values.password = "";
-
-          setSubmitting(false);
+          } finally {
+            setSubmitting(false);
+          }
         }}
       >
         {({ isSubmitting, errors, touched }) => (
@@ -214,7 +186,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm, setLoggedIn, set
                 type="password"
                 id="password"
                 name="password"
-                className="mt-1 p-2 block w-full border border-gray-300 rounded-md hover:ring-[#a4c745] focus:ring-[#a4c745] focus:border-[#a4c745] sm:text-sm"
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <ErrorMessage
                 name="password"
@@ -226,10 +198,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ showLoginForm, setLoggedIn, set
             <div>
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className={`w-full ${isSubmitting ? "bg-[#dcaed0]" : "bg-black"} text-white py-2 px-4 rounded-2xl hover:bg-[#b970a0] focus:outline-none focus:ring-2 focus:ring-[#b970a0] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4`}
+                disabled={isSubmitting || signUpMutation.isPending}
+                className={`w-full ${isSubmitting || signUpMutation.isPending ? "bg-[#dcaed0]" : "bg-black"} text-white py-2 px-4 rounded-2xl hover:bg-[#b970a0] focus:outline-none focus:ring-2 focus:ring-[#b970a0] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4`}
               >
-                {isSubmitting ? "Registering..." : "Register"}
+                {isSubmitting || signUpMutation.isPending ? "Registering..." : "Register"}
               </button>
             </div>
           </Form>

@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { string } from "yup";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+
+import { useProductImages, useUploadProductImage, useDeleteProductImage } from "../../../../hooks/useProducts";
+import { ProductImage } from "../../../../api/products/productApi";
 
 interface AddImagesModalProps {
   handleClose: () => void;
@@ -23,14 +25,11 @@ interface AddImagesModalProps {
     categoryId: string;
     subCategoryId: string;
     salePercent: number;
-  };
-  setShowModal: (value: boolean) => void;
+  };  setShowModal: (value: boolean) => void;
 }
 
-interface ProductImage {
-  id: string;
-  url: string;
-  productId: string;
+interface CloudinaryResponse {
+  secure_url: string;
 }
 
 const NEXT_PUBLIC_BASE_URL =
@@ -43,36 +42,15 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
   product,
   setShowModal,
 }) => {
+  // TanStack Query hooks
+  const { data: existingImages = [], isLoading } = useProductImages(product.id);
+  const uploadImageMutation = useUploadProductImage();
+  const deleteImageMutation = useDeleteProductImage();
+
   const [imageList, setImageList] = useState<string[]>([]);
   const [productImageUrl1, setProductImageUrl1] = useState<string | null>(null);
   const [productImageUrl2, setProductImageUrl2] = useState<string | null>(null);
   const [productImageUrl3, setProductImageUrl3] = useState<string | null>(null);
-  const [existingImages, setExistingImages] = useState<ProductImage[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Fetch existing images
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await axios.get(
-          `${NEXT_PUBLIC_BASE_URL}/api/products/images/${product.id}`
-        );
-        setExistingImages(response.data);
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (product?.id) {
-      fetchImages();
-    }
-  }, [product.id]);
-
-  interface CloudinaryResponse {
-    secure_url: string;
-  }
 
   interface HandleImageChangeProps {
     e: React.ChangeEvent<HTMLInputElement>;
@@ -114,18 +92,15 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       toast.error("Error uploading image. Please try again.");
     }
   };
-
   const handleDeleteImage = async (imageId: string) => {
     try {
-      await axios.delete(`${NEXT_PUBLIC_BASE_URL}/api/products/images/${imageId}`);
-      setExistingImages(existingImages.filter(img => img.id !== imageId));
+      await deleteImageMutation.mutateAsync(imageId);
       toast.success("Image deleted successfully");
     } catch (error) {
       console.error("Error deleting image:", error);
       toast.error("Failed to delete image");
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -134,28 +109,24 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       return;
     }
 
-    const id = product.id;
-
     try {
-      const response = await axios.post(
-        `${NEXT_PUBLIC_BASE_URL}/api/products/images`,
-        {
-          id,
-          imageList,
-        }
-      );
+      // Upload each image individually using the TanStack Query mutation
+      for (const imageUrl of imageList) {
+        const formData = new FormData();
+        formData.append('url', imageUrl);
+        
+        await uploadImageMutation.mutateAsync({ 
+          productId: product.id, 
+          formData 
+        });
+      }
       
-      toast.success(response.data.message);
+      toast.success("Images uploaded successfully!");
       setImageList([]);
       setProductImageUrl1(null);
       setProductImageUrl2(null);
       setProductImageUrl3(null);
       
-      // Refresh the list of images
-      const imagesResponse = await axios.get(
-        `${NEXT_PUBLIC_BASE_URL}/api/products/images/${product.id}`
-      );
-      setExistingImages(imagesResponse.data);
       handleClose();
     } catch (error) {
       toast.error("Error saving images, please try again");

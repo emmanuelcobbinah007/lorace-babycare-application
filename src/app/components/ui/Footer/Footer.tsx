@@ -1,15 +1,12 @@
 "use client";
 
 import { FaFacebookF, FaInstagram, FaPinterest } from "react-icons/fa";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Patrick_Hand } from "next/font/google";
 import AuroraLogo from "../../../../../public/HouseKeeping/auroraLogo.png";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-
-const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+import { useCurrentUser, useCheckSubscription, useSubscribe } from "../../../hooks/useAuth";
 
 const patrickHand = Patrick_Hand({
   subsets: ["latin"],
@@ -18,70 +15,46 @@ const patrickHand = Patrick_Hand({
 });
 
 const Footer = () => {
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [subscribed, setSubscribed] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-
-    const checkLoginAndSubscribtion = async () => {
-      const res = await axios.get(`${NEXT_PUBLIC_ROOT_URL}/api/auth/me`, {
-        withCredentials: true,
-      });
-
-      if (res.status === 200 && res.data) {
-        setUserEmail(res.data.user.email);
-        setUserId(res.data.user.id);
-      } else {
-        setUserEmail(null);
-      }
-
-      if (res.data.user.email) {
-        const emailRes = await axios.get(
-          `${NEXT_PUBLIC_ROOT_URL}/api/subscribe/check?email=${res.data.user.email}`
-        );
-        if (emailRes.status === 200 && emailRes.data.subscribed) {
-          setSubscribed(true);
-        } else {
-          setSubscribed(false);
-        }
-      }
-
-      setLoading(false);
-    };
-
-    checkLoginAndSubscribtion();
-  }, []);
-
+  const [emailInput, setEmailInput] = useState<string>("");
+  
+  // Get current user data
+  const { data: currentUser, isLoading: userLoading } = useCurrentUser();
+  
+  // Get subscription status for current user's email
+  const userEmail = currentUser?.user?.email;
+  const { data: isSubscribed, isLoading: subscriptionLoading } = useCheckSubscription(userEmail || "");
+  
+  // Subscribe mutation
+  const subscribeMutation = useSubscribe();
+  
+  const loading = userLoading || subscriptionLoading;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setUserEmail(e.target.value);
+    setEmailInput(e.target.value);
   };
 
   const handleEmailSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!userEmail) return;
+    
+    // Use current user's email if logged in, otherwise use input email
+    const emailToSubscribe = userEmail || emailInput;
+    if (!emailToSubscribe) {
+      toast.error("Please enter an email address");
+      return;
+    }
+
     try {
-      const res = await axios.post(`${NEXT_PUBLIC_ROOT_URL}/api/subscribe`, {
-        email: userEmail,
-        ...(userId && { id: userId }),
+      await subscribeMutation.mutateAsync({
+        email: emailToSubscribe,
+        ...(currentUser?.user?.id && { id: currentUser.user.id }),
       });
-      if (res.status === 200) {
-        toast.success("Subscribed successfully!");
-        setSubscribed(true);
-      } else {
-        toast.error("Subscription failed. Please try again.");
-      }
+      
+      toast.success("Subscribed successfully!");
+      setEmailInput(""); // Clear the input field
     } catch (error) {
       console.error(error);
       toast.error("An error occurred. Please try again later.");
     }
-
-    // console.log("Email subscribed:", userEmail);
-    toast.success("Subscribed successfully!");
-    setUserEmail("");
-
   };
 
   return (
@@ -98,9 +71,8 @@ const Footer = () => {
           draggable
           pauseOnHover
           />
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          <div>
-            { subscribed ? (
+        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">        <div>
+            { isSubscribed ? (
               <h2
                 className={`text-2xl font-semibold text-[#b970a0] mb-6 ${patrickHand.className}`}
               >
@@ -123,16 +95,18 @@ const Footer = () => {
             >
               <input
                 type="email"
-                value={loading ? "" : userEmail || ""}
+                value={loading ? "" : userEmail || emailInput}
                 onChange={handleChange}
                 placeholder="Enter your email"
                 className="px-4 py-2 rounded-md border border-gray-300 w-full md:w-auto"
+                disabled={loading || subscribeMutation.isPending}
               />
               <button
                 type="submit"
-                className="bg-[#4fb3e5] text-white px-6 py-2 rounded-md hover:bg-[#3da5d6] transition-all duration-300"
+                disabled={loading || subscribeMutation.isPending}
+                className="bg-[#4fb3e5] text-white px-6 py-2 rounded-md hover:bg-[#3da5d6] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Subscribe
+                {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
               </button>
             </form>
               </div>

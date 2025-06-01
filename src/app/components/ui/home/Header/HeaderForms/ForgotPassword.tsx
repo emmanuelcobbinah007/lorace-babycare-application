@@ -1,6 +1,7 @@
 import React from "react";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { toast } from "react-toastify";
 
 interface ForgotPasswordProps {
   showLoginForm: () => void;
@@ -19,9 +20,12 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ showLoginForm }) => {
           email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
-        })}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log("Form data", values);
+        })}        onSubmit={(values, { setSubmitting }) => {
+          // TODO: Implement password reset functionality
+          toast.info("Password reset functionality will be implemented soon. Please contact support.", {
+            position: "top-right",
+            autoClose: 5000,
+          });
           setSubmitting(false);
         }}
       >

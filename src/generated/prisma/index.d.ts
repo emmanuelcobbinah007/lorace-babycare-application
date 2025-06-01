@@ -75,7 +75,9 @@ export type OrderItem = $Result.DefaultSelection<Prisma.$OrderItemPayload>
 export namespace $Enums {
   export const SizingType: {
   Clothing: 'Clothing',
-  Footwear: 'Footwear',
+  FootwearInfants: 'FootwearInfants',
+  FootwearToddlers: 'FootwearToddlers',
+  FootwearChildren: 'FootwearChildren',
   Diapers: 'Diapers',
   NA: 'NA'
 };

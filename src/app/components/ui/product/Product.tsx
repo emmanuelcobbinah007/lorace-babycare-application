@@ -3,78 +3,34 @@
 import React, { useState, useEffect } from "react";
 import { FadeLoader } from "react-spinners";
 import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
 import { FaShoppingCart, FaArrowLeft } from "react-icons/fa";
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
-interface Product {
-    id: string;
-  name: string;
-  descriptionShort: string;
-  descriptionLong: string;
-  price: number;
-  stock: number;
-  isHidden: boolean;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-    createdAt: string;
-    isHidden: boolean;
-  };
-  subCategoryId: string;
-  subCategory: {
-    id: string;
-    name: string;
-    categoryId: string;
-    createdAt: string;
-    isHidden: boolean;
-  };
-  images: {
-    id: string;
-    url: string;
-    productId: string;
-  }[];
-  salePercent: number;
-  sizingType: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useProduct } from "@/app/hooks/useProducts";
+import { Product as ProductType } from "@/app/api/products/productApi";
 
 const Product = () => {
   const params = useParams();
   const router = useRouter();
-  const id = params.id;
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const id = params.id as string;
+  
+  // Use React Query to fetch product
+  const { data: product, isLoading: loading, error } = useProduct(id);
+  
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [size, setSize] = useState<string>("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
+  // Set the first image when product data is loaded
   useEffect(() => {
-    const fetchProduct = async () => {
-        try {
-            const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/products/${id}`);
-            setProduct(response.data.product);
-            if (response.data.product.images && response.data.product.images.length > 0) {
-                setSelectedImage(response.data.product.images[0].url);
-            }
-            console.log(response.data);
-        } catch (error) {
-            console.log("Error retrieving products:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    fetchProduct();
-  }, [id]);
+    if (product?.images && product.images.length > 0) {
+      setSelectedImage(product.images[0].url);
+    }
+  }, [product]);
 
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
@@ -82,17 +38,21 @@ const Product = () => {
       setQuantity(newQuantity);
     }
   };
-
   const handleAddToCart = () => {
-    if (product?.sizingType && !size) {
+    if (product?.sizingType && product.sizingType !== 'NA' && !size) {
       toast.error("Please select a size");
       return;
     }
+
+    // Check whether user is logged in
+    // If not, show a login prompt or redirect to login page
+    // check whether user has a cart
+    // if not, create a new cart for the user
+    // Add the product to the cart with the selected quantity and size
     
     toast.success(`${product?.name} added to cart!`);
     // Here you would add the actual cart functionality
   };
-
   if (loading) {
     return (
       <div className="flex h-[75vh] justify-center items-center mt-0 md:mt-10">
@@ -100,6 +60,22 @@ const Product = () => {
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="w-[85%] mx-auto text-center py-16">
+        <h2 className="text-2xl font-semibold text-gray-800">Error loading product</h2>
+        <p className="text-gray-600 mt-2">Please try again later</p>
+        <button 
+          onClick={() => router.back()}
+          className="mt-4 flex items-center justify-center mx-auto bg-[#b970a0] hover:bg-[#a55f91] text-white px-4 py-2 rounded-lg"
+        >
+          <FaArrowLeft className="mr-2" /> Go Back
+        </button>
+      </div>
+    );
+  }
+
   if (!product) {
     return (
       <div className="w-[85%] mx-auto text-center py-16">
@@ -211,15 +187,15 @@ const Product = () => {
             {product.salePercent > 0 ? (
               <>
                 <p className="text-2xl font-semibold text-[#b970a0]">
-                  ${finalPrice.toFixed(2)}
+                  GH₵{finalPrice.toFixed(2)}
                 </p>
                 <p className="ml-2 text-lg text-gray-500 line-through">
-                  ${product.price.toFixed(2)}
+                  GH₵{product.price.toFixed(2)}
                 </p>
               </>
             ) : (
               <p className="text-2xl font-semibold text-[#b970a0]">
-                ${product.price.toFixed(2)}
+                GH₵{product.price.toFixed(2)}
               </p>
             )}
           </div>
@@ -234,25 +210,48 @@ const Product = () => {
               {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
             </p>
           </div>
-          
-          {/* Size selection if applicable */}
-          {product.sizingType && (
+            {/* Size selection if applicable */}
+          {product.sizingType && product.sizingType !== 'NA' && (
             <div className="mb-6">
               <h3 className="text-sm font-medium text-gray-700 mb-2">Size</h3>
               <div className="flex flex-wrap gap-2">
-                {['XS', 'S', 'M', 'L', 'XL'].map((sizeOption) => (
-                  <button
-                    key={sizeOption}
-                    onClick={() => setSize(sizeOption)}
-                    className={`px-3 py-1 border rounded-md ${
-                      size === sizeOption 
-                        ? 'border-[#b970a0] bg-[#b970a0] text-white' 
-                        : 'border-gray-300 text-gray-700 hover:border-[#b970a0]'
-                    }`}
-                  >
-                    {sizeOption}
-                  </button>
-                ))}
+                {(() => {
+                  let sizeOptions: string[] = [];
+                  
+                  switch (product.sizingType) {
+                    case 'Clothing':
+                      sizeOptions = ['0-3M', '3-6M', '6-9M', '9-12M', '12-18M', '18-24M', '1-2Y', '2-3Y', '3-4Y', '4-5Y', '5-6Y', '6-7Y', '7-8Y', '8-9Y', '9-10Y'];
+                      break;
+                    case 'FootwearChildren':
+                      sizeOptions = ['UK 10', 'UK 11', 'UK 12', 'UK 13', 'UK 1 kid', 'UK 2 kid', 'UK 3 kid', 'UK 4 kid', "UK 5 kid"];
+                      break;
+                    case 'FootwearInfants':
+                      sizeOptions = ['0-6M', '6-12M'];
+                      break;
+                    case 'FootwearToddlers':
+                      sizeOptions = ['12-18M', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8', 'UK 9', 'Size 10'];
+                      break;
+                    case 'Diapers':
+                      sizeOptions = ['Newborn', 'Size 1', 'Size 2', 'Size 3', 'Size 4', 'Size 4+', 'Size 5', 'Size 5+', 'Size 6', 'Size 6+', 'Size 7', 'Size 8', 'Small', 'Medium', 'Large'];
+                      break;
+                    default:
+                      sizeOptions = ['XS', 'S', 'M', 'L', 'XL'];
+                  }
+                  
+                  return sizeOptions.map((sizeOption) => (
+                    <button
+                      key={sizeOption}
+                      onClick={() => setSize(sizeOption)}
+                      className={`px-3 py-2 border rounded-lg text-sm font-medium transition-all duration-200 ${
+                        size === sizeOption 
+                          ? 'border-[#b970a0] bg-[#b970a0] text-white shadow-md' 
+                          : 'border-gray-300 text-gray-700 hover:border-[#b970a0] hover:bg-[#f9f5f8]'
+                      }`}
+                    >
+                      {sizeOption}
+                    </button>
+                  ));
+                })()}
               </div>
             </div>
           )}

@@ -2,85 +2,48 @@
 
 import React, { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
-import axios from "axios";
 import { FadeLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 
+// import { SignUpForm } from "../HeaderForms/SignUpForm";
 import SignUpForm from "../HeaderForms/SignUpForm";
 import LoginForm from "../HeaderForms/LoginForm";
 import ForgotPassword from "../HeaderForms/ForgotPassword";
 import UserProfile from "../HeaderForms/UserProfile";
+import {useCurrentUser} from "../../../../../hooks/useAuth";
+import {User} from "../../../../../api/auth/authApi";
 
 interface UserModalProps {
   handleClose: () => void;
   animateModal: boolean;
 }
 
-interface User {
-  id: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-  role: string;
-  emailIsVerified: boolean;
-  emailVerificationToken: string | null;
-  phoneIsVerified: boolean;
-  phoneVerificationToken: string | null;
-  createdAt: string;
-}
-
-const NEXT_PUBLIC_ROOT_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
 const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
+  // TanStack Query hooks
+  const { data: authResponse, isLoading: loading, error } = useCurrentUser();
+  const user = authResponse?.user;
+  
   const [loginForm, setLoginForm] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [localUser, setLocalUser] = useState<User | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(
-          `${NEXT_PUBLIC_ROOT_URL}/api/auth/me`,
-          {
-            withCredentials: true,
-          }
-        );
-
-        if (response.data.user.role === "ADMIN") {
-          router.push("/admin");
-          return;
-        } 
-        
-        setUser({
-          id: response.data.user.id,
-          email: response.data.user.email,
-          firstname: response.data.user.firstname,
-          lastname: response.data.user.lastname,
-          role: response.data.user.role,
-          emailIsVerified: response.data.user.emailIsVerified,
-          emailVerificationToken: response.data.user.emailVerificationToken,
-          phoneIsVerified: response.data.user.phoneIsVerified,
-          phoneVerificationToken: response.data.user.phoneVerificationToken,
-          createdAt: response.data.user.createdAt,
-        });
-        setLoggedIn(true);
-        setLoginForm(false);
-      } catch (error) {
-        
+    if (user && !error) {
+      if (user.role === "ADMIN") {
+        router.push("/admin");
+        return;
       }
-
-      finally {
-        setLoading(false);
-      }
+      setLoggedIn(true);
+      setLoginForm(false);
+      setLocalUser(user);
+    } else {
+      setLoggedIn(false);
+      setLocalUser(null);
     }
-
-    fetchUser();
-  }, [])
+  }, [user, error, router]);
 
   // when we open the menu, we check whether we're logged in, if not we show the signup form, if yes we show the user profile
 
@@ -136,34 +99,31 @@ const UserModal: React.FC<UserModalProps> = ({ handleClose, animateModal }) => {
                 </div>
             ) : (
               <div className="relative">
-              <div
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                loginForm || forgotPassword || loggedIn ? "opacity-0 pointer-events-none" : "opacity-100"
-                }`}
-              >
-                <SignUpForm showLoginForm={showLoginForm} setLoggedIn={setLoggedIn} setUser={setUser} />
-              </div>
-              <div
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
-                }`}
-              >
-                <LoginForm setUser={setUser} setLoggedIn={setLoggedIn} showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
-              </div>
-              <div
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
-                }`}
-              >
-                <ForgotPassword showLoginForm={showLoginForm} showForgotPassword={showForgotPassword} />
-              </div>
-              <div
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                loggedIn && !loginForm && !forgotPassword ? "opacity-100" : "opacity-0 pointer-events-none"
-                }`}
-              >
-                <UserProfile setLoggedIn={setLoggedIn} user={user} setUser={(user) => setUser(user)} />
-              </div>
+                {loginForm && !forgotPassword ? (
+                  <LoginForm
+                    setUser={setLocalUser}
+                    setLoggedIn={setLoggedIn}
+                    showLoginForm={showLoginForm}
+                    showForgotPassword={showForgotPassword}
+                  />
+                ) : forgotPassword ? (
+                  <ForgotPassword
+                    showLoginForm={showLoginForm}
+                    showForgotPassword={showForgotPassword}
+                  />
+                ) : loggedIn && !loginForm && !forgotPassword ? (
+                  <UserProfile
+                    setLoggedIn={setLoggedIn}
+                    user={localUser}
+                    setUser={setLocalUser}
+                  />
+                ) : (
+                  <SignUpForm
+                    showLoginForm={showLoginForm}
+                    setLoggedIn={setLoggedIn}
+                    setUser={setLocalUser}
+                  />
+                )}
               </div>
             )}
         </div>

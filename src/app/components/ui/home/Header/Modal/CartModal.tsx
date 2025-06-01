@@ -1,110 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { Trash } from "iconsax-reactjs";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FadeLoader } from "react-spinners";
+import { useCurrentUser } from "../../../../../hooks/useAuth";
+import { useCart, useRemoveFromCart, useCreateCart } from "../../../../../hooks/useCart";
+import { CartItem } from "../../../../../api/cart/cartApi";
 
 interface CartModalProps {
   handleClose: () => void;
   animateModal: boolean;
 }
 
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
 const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
-  interface CartItem {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-    size: string;
-    image: StaticImageData | string;
-  }
-
   const [notLoggedIn, setNotLoggedIn] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  
+  const { data: user, isLoading: userLoading, error: userError } = useCurrentUser();
+  const { data: cart, isLoading: cartLoading, error: cartError } = useCart();
+  const createCartMutation = useCreateCart();
+  const removeFromCartMutation = useRemoveFromCart();
 
-  // Fetch user and cart
-  useEffect(() => {
-    const initCart = async () => {
-      try {
-        const response = await axios.get(
-          `${NEXT_PUBLIC_BASE_URL}/api/auth/me`,
-          {
-            withCredentials: true,
-          }
-        );
+  const loading = userLoading || cartLoading;
+  const cartItems = cart?.items || [];
 
-        if (response.status === 200) {
-          const userData = response.data.user;
-          setUser(userData);
+  // Handle user not logged in
+  React.useEffect(() => {
+    if (userError) {
+      setNotLoggedIn(true);
+    }
+  }, [userError]);
 
-          if (!userData?.cart) {
-            await axios.post(
-              `${NEXT_PUBLIC_BASE_URL}/api/create-cart`,
-              { userID: userData.id },
-              { withCredentials: true }
-            );
-            window.location.reload();
-          } else {
-            setCart(userData.cart);
-          }
-        }
-      } catch (error) {
-        console.error("Error initializing cart:", error);
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-          setNotLoggedIn(true);
-        }
-        setLoading(false);
-      }
-    };
+  // Auto-create cart if user doesn't have one
+  React.useEffect(() => {
+    if (user && !cart && !cartLoading && !cartError) {
+      createCartMutation.mutate();
+    }
+  }, [user, cart, cartLoading, cartError, createCartMutation]);
 
-    initCart();
-  }, []);
-
-  // Fetch cart items after cart is set
-  useEffect(() => {
-    if (cart.length === 0) return;
-
-    const fetchCartItems = async () => {
-      try {
-        const response = await axios.post(
-          `${NEXT_PUBLIC_BASE_URL}/api/cart`,
-          { cartDetails: cart },
-          { withCredentials: true }
-        );
-        setCartItems(response.data.cartItems);
-      } catch (error) {
-        console.error("Error fetching cart items:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCartItems();
-  }, [cart]);
-
-  const handleRemoveItem = async (itemId: number) => {
+    const handleRemoveItem = async (itemId: string) => {
     try {
-      const response = await axios.delete(
-        `${NEXT_PUBLIC_BASE_URL}/api/cart/${itemId}`,
-        { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        setCartItems((prevItems) =>
-          prevItems.filter((item) => item.id !== itemId)
-        );
-        toast.success("Item removed from cart", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
+      await removeFromCartMutation.mutateAsync(itemId);
+      toast.success("Item removed from cart", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } catch (error) {
       toast.error("Failed to remove item from cart", {
         position: "top-right",
@@ -112,9 +52,11 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
       });
     }
   };
-
   const totalPrice = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total: number, item: CartItem) => {
+      const price = item.product.salePrice || item.product.price;
+      return total + price * item.quantity;
+    },
     0
   );
 
@@ -171,30 +113,36 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
               </button>
             </div>
           ) : (
-            <>
-              {cartItems.map((item) => (
+            <>              {cartItems.map((item: CartItem) => (
                 <div
                   key={item.id}
                   className="flex items-center justify-between border-b-2 border-gray-100 pb-4 mb-4 w-full"
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.images[0]?.url || '/placeholder-image.jpg'}
+                      alt={item.product.images[0]?.alt || item.product.name}
                       width={64}
                       height={64}
                       className="rounded-2xl w-16 h-16 object-cover mr-4"
                     />
                     <div className="flex flex-col">
                       <h3 className="text-md md:text-lg font-semibold">
-                        {item.name}
+                        {item.product.name}
                       </h3>
                       <p className="text-xs md:text-gray-500">
-                        Price: ${item.price.toFixed(2)}
+                        Price: ${(item.product.salePrice || item.product.price).toFixed(2)}
+                        {item.product.salePrice && (
+                          <span className="line-through ml-2 text-gray-400">
+                            ${item.product.price.toFixed(2)}
+                          </span>
+                        )}
                       </p>
-                      <p className="text-xs md:text-gray-500">
-                        Size: {item.size}
-                      </p>
+                      {item.size && (
+                        <p className="text-xs md:text-gray-500">
+                          Size: {item.size}
+                        </p>
+                      )}
                       <p className="text-xs md:text-gray-500">
                         Quantity: {item.quantity}
                       </p>
@@ -203,6 +151,7 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
                   <button
                     onClick={() => handleRemoveItem(item.id)}
                     className="text-red-500 hover:text-red-700 hover:scale-105 transition duration-300"
+                    disabled={removeFromCartMutation.isPending}
                   >
                     <Trash size={20} />
                   </button>

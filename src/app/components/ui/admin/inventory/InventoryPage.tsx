@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { SearchNormal } from "iconsax-reactjs"; // Adjust the import path if necessary
-import axios from "axios";
+import { SearchNormal } from "iconsax-reactjs";
 import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash, FaRegStar, FaStar } from "react-icons/fa";
 import { FadeLoader } from "react-spinners";
@@ -11,60 +10,35 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 
 import AddProductModal from "./AddProductModal";
+import { 
+  useProducts, 
+  useDeleteProduct, 
+  useHideProduct, 
+  useShowProduct,
+  useFeaturedProducts,
+  useAddToFeatured,
+  useRemoveFromFeatured
+} from "../../../../hooks/useProducts";
+import { Product, FeaturedProduct } from "../../../../api/products/productApi";
 
 const NEXT_PUBLIC_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const InventoryPage = () => {
-  interface Product {
-    id: string;
-    name: string;
-    descriptionShort: string;
-    descriptionLong: string;
-    price: number;
-    stock: number;
-    isHidden: boolean;
-    categoryId: string;
-    category: {
-      id: string;
-      name: string;
-      createdAt: string;
-      isHidden: boolean;
-    };
-    subCategoryId: string;
-    subCategory: {
-      id: string;
-      name: string;
-      categoryId: string;
-      createdAt: string;
-      isHidden: boolean;
-    };
-    images: {
-      id: string;
-      url: string;
-      productId: string;
-    }[];
-    salePercent: number;
-    sizingType: string;
-    createdAt: string;
-    updatedAt: string;
-  }
+  // TanStack Query hooks
+  const { data: fetchedProducts = [], isLoading: loading, error } = useProducts();
+  const { data: featuredProducts = [] } = useFeaturedProducts();
+  const deleteProductMutation = useDeleteProduct();
+  const hideProductMutation = useHideProduct();
+  const showProductMutation = useShowProduct();
+  const addToFeaturedMutation = useAddToFeatured();
+  const removeFromFeaturedMutation = useRemoveFromFeatured();
 
-  interface FeaturedProduct {
-    id: string;
-    productId: string;
-    createdAt: string;
-    updatedAt: string;
-  }
-
-  const [fetchedProducts, setFetchedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
   const [editing, setEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<FeaturedProduct[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   //   const [productName, setProductName] = useState("");
   //   const [productDescription, setProductDescription] = useState("");
@@ -74,39 +48,21 @@ const InventoryPage = () => {
   //   const [isSizeable, setIsSizeable] = useState(true);
   //   const [isHidden, setIsHidden] = useState(true);
   //   const [productImageUrl, setProductImageUrl] = useState<string | null>(null);
-
-  // fetching featured products from database
-  const fetchFeaturedProducts = async () => {
-    try {
-      const response = await axios.get(
-        `${NEXT_PUBLIC_BASE_URL}/api/products/featured-products`
-      );
-      setFeaturedProducts(response.data);
-    } catch (error) {
-      console.log("Error fetching featured products:", error);
-    }
-  };
+  // Filter products based on search term
+  useEffect(() => {
+    setFilteredProducts(fetchedProducts);
+  }, [fetchedProducts]);
 
   useEffect(() => {
-    // Fetch products from the API
-    const fetchProducts = async () => {
-      fetchFeaturedProducts();
-
-      try {
-        const response = await axios.get(
-          `${NEXT_PUBLIC_BASE_URL}/api/products`
-        );
-        setFetchedProducts(response.data);
-        setFilteredProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+    if (searchTerm) {
+      const filtered = fetchedProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(fetchedProducts);
+    }
+  }, [searchTerm, fetchedProducts]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
@@ -123,7 +79,6 @@ const InventoryPage = () => {
     setShowModal(true);
     setTimeout(() => setAnimateModal(true), 10);
   };
-
   const toggleFeatured = async (productId: string) => {
     try {
       const isFeatured = featuredProducts.some((fp) => fp.productId === productId);
@@ -138,10 +93,7 @@ const InventoryPage = () => {
           confirmButtonText: "Yes, remove it!",
         });
         if (result.isConfirmed) {
-          await axios.delete(
-            `${NEXT_PUBLIC_BASE_URL}/api/products/featured-products/${productId}`
-          );
-          await fetchFeaturedProducts(); // Always re-fetch after change
+          await removeFromFeaturedMutation.mutateAsync(productId);
           toast.success("Product removed from featured");
         }
       } else {
@@ -155,19 +107,15 @@ const InventoryPage = () => {
           confirmButtonText: "Yes, add it!",
         });
         if (result.isConfirmed) {
-          await axios.post(
-            `${NEXT_PUBLIC_BASE_URL}/api/products/featured-products`,
-            { productId }
-          );
-          await fetchFeaturedProducts(); // Always re-fetch after change
+          await addToFeaturedMutation.mutateAsync(productId);
           toast.success("Product added to featured!");
         }
       }
     } catch (error) {
       console.error("Error toggling featured product:", error);
+      toast.error("Failed to update featured product");
     }
   };
-
   const initDelete = (product: Product) => {
     Swal.fire({
       title: "Are you sure?",
@@ -180,60 +128,26 @@ const InventoryPage = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(
-            `${NEXT_PUBLIC_BASE_URL}/api/products/${product.id}`
-          );
-          setFetchedProducts((prev) =>
-            prev.filter((p) => p.id !== product.id)
-          );
-          setFilteredProducts((prev) =>
-            prev.filter((p) => p.id !== product.id)
-          );
+          await deleteProductMutation.mutateAsync(product.id);
           toast.success("Product deleted successfully");
         } catch (error) {
           console.error("Error deleting product:", error);
           toast.error("Failed to delete product");
         }
       }
-    })
-  }
-
+    });
+  };
   const handleHide = async (productId: string) => {
     try {
-      await axios.patch(`${NEXT_PUBLIC_BASE_URL}/api/products/${productId}`, {
-        isHidden: true,
-      });
-      setFetchedProducts((prev) =>
-        prev.map((product) =>
-          product.id === productId ? { ...product, isHidden: true } : product
-        )
-      );
-      setFilteredProducts((prev) =>
-        prev.map((product) =>
-          product.id === productId ? { ...product, isHidden: true } : product
-        )
-      );
+      await hideProductMutation.mutateAsync(productId);
       toast.success("Product hidden");
     } catch (error) {
       toast.error("Failed to hide product");
     }
   };
-
   const handleUnHide = async (productId: string) => {
     try {
-      await axios.patch(`${NEXT_PUBLIC_BASE_URL}/api/products/${productId}`, {
-        isHidden: false,
-      });
-      setFetchedProducts((prev) =>
-        prev.map((product) =>
-          product.id === productId ? { ...product, isHidden: false } : product
-        )
-      );
-      setFilteredProducts((prev) =>
-        prev.map((product) =>
-          product.id === productId ? { ...product, isHidden: false } : product
-        )
-      );
+      await showProductMutation.mutateAsync(productId);
       toast.success("Product unhidden");
     } catch (error) {
       toast.error("Failed to unhide product");
@@ -297,10 +211,10 @@ const InventoryPage = () => {
                           {product.descriptionShort}
                         </p>
                         <div className="flex items-center justify-between mt-2">
-                          <span className="text-[#4fb3e5] font-semibold text-lg md:text-base">
+                          <span className="text-[#4fb3e5] font-semibold text-base">
                             GH₵{product.price}
                           </span>
-                          <span className="hidden md:block bg-[#b970a0] text-white text-xs px-2 py-1 rounded-full font-semibold">
+                          <span className="bg-[#b970a0] text-white text-xs px-2 py-1 rounded-full font-semibold">
                             Featured
                           </span>
                         </div>

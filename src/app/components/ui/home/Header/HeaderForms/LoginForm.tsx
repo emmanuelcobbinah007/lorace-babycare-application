@@ -1,9 +1,9 @@
 import React from "react";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import axios from 'axios';
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
+import { useLogin } from "../../../../../hooks/useAuth";
 
 interface LoginFormProps {
   setUser: (user: any) => void;
@@ -12,11 +12,9 @@ interface LoginFormProps {
   showForgotPassword: () => void;
 }
 
-const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
 const LoginForm: React.FC<LoginFormProps> = ({ setUser, setLoggedIn, showLoginForm, showForgotPassword }) => {
-
   const router = useRouter();
+  const loginMutation = useLogin();
 
   return (
     <div>
@@ -46,46 +44,38 @@ const LoginForm: React.FC<LoginFormProps> = ({ setUser, setLoggedIn, showLoginFo
             .min(6, "Password must be at least 6 characters"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          // console.log("Form data", values);
+          try {
+            const credentials = {
+              email: values.email,
+              password: values.password,
+            };
 
-          const user = {
-            email: values.email,
-            password: values.password,
-          };
+            const response = await loginMutation.mutateAsync(credentials);
+            
+            console.log("Login response:", response);
 
-          const makeRequest = async () => {
-            try {
-              const response = await axios.post(`${NEXT_PUBLIC_ROOT_URL}/api/auth/login`, user);
-              
-              if (response.data.user.role === "ADMIN") {
-                router.push("/admin");
-                return;
-              }
-
-              await setUser(response.data.user);
-              setLoggedIn(true);
-
-              console.log(response);
-            } catch (error) {
-              if (axios.isAxiosError(error)) {
-                const errorMessage = error.response?.data.error || "An error occurred";
-                toast.error(errorMessage, {
-                  position: "top-right",
-                  autoClose: 3000,
-                });
-              } else {
-                toast.error("An unexpected error occurred", {
-                  position: "top-right",
-                  autoClose: 3000,
-                });
-              }
-              console.error("Error during login:", error);
+            if (response.user.role === "ADMIN") {
+              router.push("/admin");
+              return;
             }
-          }
 
-          await makeRequest();
-          setSubmitting(false);
-          showLoginForm();
+            setUser(response.user);
+            setLoggedIn(true);
+            showLoginForm();
+            
+            toast.success("Login successful!", {
+              position: "top-right",
+              autoClose: 3000,
+            });
+          } catch (error: any) {
+            const errorMessage = error?.response?.data?.error || error?.message || "Login failed";
+            toast.error(errorMessage, {
+              position: "top-right",
+              autoClose: 3000,
+            });
+          } finally {
+            setSubmitting(false);
+          }
         }}
       >
         {({ isSubmitting }) => (
@@ -141,10 +131,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ setUser, setLoggedIn, showLoginFo
             <div>
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className={`w-full ${isSubmitting ? "bg-[#b3def2]" : "bg-black"} text-white py-2 px-4 rounded-2xl hover:bg-[#4fb3e5] focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4`}
+                disabled={isSubmitting || loginMutation.isPending}
+                className={`w-full ${isSubmitting || loginMutation.isPending ? "bg-[#b3def2]" : "bg-black"} text-white py-2 px-4 rounded-2xl hover:bg-[#4fb3e5] focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] focus:ring-offset-2 duration-300 hover:cursor-pointer my-4`}
               >
-                {isSubmitting ? "Signing In..." : "Sign In"}
+                {isSubmitting || loginMutation.isPending ? "Signing In..." : "Sign In"}
               </button>
             </div>
           </Form>

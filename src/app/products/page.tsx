@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useMemo } from "react";
 import { Patrick_Hand } from "next/font/google";
 import { SearchNormal } from "iconsax-reactjs";
 
 import { FadeLoader } from "react-spinners";
 
 import Products from "@/app/components/ui/products/Products";
+import { useProducts } from "@/app/hooks/useProducts";
+import { Product } from "@/app/api/products/productApi";
 
 const patrickHand = Patrick_Hand({
   subsets: ["latin"],
@@ -15,77 +16,45 @@ const patrickHand = Patrick_Hand({
   variable: "--font-patrickHand",
 });
 
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
-interface Product {
-  id: string;
-  name: string;
-  descriptionShort: string;
-  descriptionLong: string;
-  price: number;
-  stock: number;
-  isHidden: boolean;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-    createdAt: string;
-    isHidden: boolean;
-  };
-  subCategoryId: string;
-  subCategory: {
-    id: string;
-    name: string;
-    categoryId: string;
-    createdAt: string;
-    isHidden: boolean;
-  };
-  images: {
-    id: string;
-    url: string;
-    productId: string;
-  }[];
-  salePercent: number;
-  sizingType: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 const page = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Use React Query to fetch products
+  const { data: products = [], isLoading: loading, error } = useProducts();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(
-          `${NEXT_PUBLIC_BASE_URL}/api/products`
-        );
-        setProducts(response.data);
-        const visibleProducts = response.data.filter((product: Product) => !product.isHidden);
-        setFilteredProducts(visibleProducts);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  // Filter products to show only visible ones and apply search
+  const filteredProducts = useMemo(() => {
+    const visibleProducts = products.filter((product: Product) => !product.isHidden);
+    
+    if (!searchTerm) return visibleProducts;
+    
+    return visibleProducts.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.subCategory.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [products, searchTerm]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(value)
-    );
-
-    setFilteredProducts(filtered);
+    setSearchTerm(e.target.value);
   };
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="flex h-[75vh] justify-center items-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">Error loading products</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-[#b970a0] text-white px-4 py-2 rounded-lg hover:bg-[#a55f91]"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   //TODO: add a search button in staging areas
   return (
@@ -98,11 +67,10 @@ const page = () => {
           >
             All Products
           </h1>
-          {/* Search Bar */}
-          <div className="relative w-full md:w-[40%] flex items-center">
+          {/* Search Bar */}          <div className="relative w-full md:w-[40%] flex items-center">
             <input
               type="text"
-              placeholder="Search by subcategory or category..."
+              placeholder="Search products, categories, or subcategories..."
               value={searchTerm}
               onChange={handleSearch}
               className="w-full pl-12 pr-4 py-3 text-base border-2 border-[#b970a0] rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] transition bg-white/80 backdrop-blur placeholder:text-[#b970a0] text-[#4fb3e5] font-semibold"
@@ -121,11 +89,10 @@ const page = () => {
         ) : filteredProducts.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-500">No products found.</p>
-          </div>
-        ) : (
+          </div>        ) : (
           <Products
             products={filteredProducts}
-            setFilteredProducts={setFilteredProducts}
+            setFilteredProducts={() => {}} // Not needed anymore since we handle filtering with useMemo
           />
         )}
       </div>

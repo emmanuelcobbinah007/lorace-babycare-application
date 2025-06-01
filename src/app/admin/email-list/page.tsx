@@ -3,73 +3,28 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { MdOutlineEmail, MdOutlineDeleteOutline } from "react-icons/md";
-import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
-
-const NEXT_PUBLIC_API_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+import { ToastContainer } from "react-toastify";
+import { useEmailList, useDeleteEmail } from "../../hooks/useEmailList";
 
 const Page = () => {
-  interface Email {
-    id: string;
-    email: string;
-  }
-
-  const [emailList, setEmailList] = useState<Email[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${NEXT_PUBLIC_API_URL}/api/email-list`
-        );
-        setEmailList(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { data: emailList = [], isLoading, error } = useEmailList();
+  const deleteEmailMutation = useDeleteEmail();
 
   const filteredEmails = emailList.filter((email) =>
     email.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDelete = (id: string) => async () => {
+  const handleDelete = (id: string) => () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this email?"
     );
     if (!confirmDelete) return;
 
-    try {
-      await axios.delete(`${NEXT_PUBLIC_API_URL}/api/email-list/${id}`);
-      setEmailList((prev) => prev.filter((email) => email.id !== id));
-      toast.success("Email deleted successfully", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } catch (error) {
-      console.error("Error deleting email:", error);
-      toast.error("Failed to delete email", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
+    deleteEmailMutation.mutate(id);
   };
 
   return (
@@ -109,10 +64,21 @@ const Page = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4fb3e5] text-gray-700 placeholder-gray-400"
             />
-          </div>
-
-          <div>
-            {filteredEmails.length > 0 ? (
+          </div>          <div>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-48">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+              </div>
+            ) : error ? (
+              <div className="text-center text-gray-500 px-8 mt-8">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Error Loading Emails
+                </h2>
+                <p className="text-gray-500">
+                  Failed to load email list. Please try again.
+                </p>
+              </div>
+            ) : filteredEmails.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-8 mt-6">
                 {filteredEmails.map((email) => (
                   <div
@@ -130,9 +96,12 @@ const Page = () => {
                       </div>
                       <div className="flex gap-2">
                         <button
-                          className="p-2 rounded-lg bg-white text-[#4fb3e5] shadow-sm transition-transform hover:scale-105"
+                          className={`p-2 rounded-lg bg-white text-[#4fb3e5] shadow-sm transition-transform hover:scale-105 ${
+                            deleteEmailMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
                           title="Delete"
                           onClick={handleDelete(email.id)}
+                          disabled={deleteEmailMutation.isPending}
                         >
                           <MdOutlineDeleteOutline size={18} />
                         </button>
@@ -147,7 +116,7 @@ const Page = () => {
                   No Emails Found
                 </h2>
                 <p className="text-gray-500">
-                  Try searching for a different email.
+                  {searchTerm ? 'Try searching for a different email.' : 'No emails in the list yet.'}
                 </p>
               </div>
             )}

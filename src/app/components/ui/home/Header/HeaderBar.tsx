@@ -10,7 +10,7 @@ import {
 } from "iconsax-reactjs";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
-import axios from "axios";
+import { useCategories } from "../../../../hooks/useCategories";
 
 import Logo from "../../../../../../public/images/loraceLogo.png";
 import CartModal from "./Modal/CartModal";
@@ -28,18 +28,17 @@ const categories = [
   { name: "Diapering", subItems: ["Diapers", "Wipes", "Changing Pads"] },
   { name: "Feeding", subItems: ["Bottles", "Breast Pumps", "High Chairs"] },
   { name: "Babycare", subItems: ["Skincare", "Bathing", "Health"] },
-  { name: "Clothing and Footwear", subItems: ["Onesies", "Shoes", "Accessories"] },
   { name: "Back to School", subItems: ["Backpacks", "Lunch Boxes", "Stationery"] },
+  { name: "Clothing and Footwear", subItems: ["Onesies", "Shoes", "Accessories"] },
   { name: "Maternity", subItems: ["Maternity Wear", "Nursing Pads", "Pillows"] },
-  { name: "Sales", subItems: ["Discounted Items", "Clearance", "Special Offers"] },
 ];
 
 interface SubCategory {
   categoryId: string;
   createdAt: string;
   id: string;
-  isHidden: boolean;
   name: string;
+  isHidden?: boolean;
 }
 interface fetchedCategories {
   createdAt: string;
@@ -48,9 +47,6 @@ interface fetchedCategories {
   subCategories: SubCategory[];
 }
 
-const NEXT_PUBLIC_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
 const HeaderBar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
@@ -58,8 +54,8 @@ const HeaderBar = () => {
   const [showUserModal, setShowUserModal] = useState(false);
   const [showMenuModal, setShowMenuModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
-  const [fetchedCategories, setFetchedCategories] = useState<fetchedCategories[]>([]);
-  const [loading, setLoading] = useState(true);
+  
+  const { data: fetchedCategories = [], isLoading: loading } = useCategories();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,25 +64,9 @@ const HeaderBar = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
 
-  // we're about to fetch categories from the server joined with the subcategories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/categories`);
-        setFetchedCategories(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log("Error fetching Categories:", error)
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchCategories();
-  }, [])
+    }, []);
 
   const openModal = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(true);
@@ -205,7 +185,15 @@ const HeaderBar = () => {
         <UserModal handleClose={() => closeModal(setShowUserModal)} animateModal={animateModal} />
       )}
       {showMenuModal && (
-        <MenuModal handleClose={() => closeModal(setShowMenuModal)} animateModal={animateModal} fetchedCategories={fetchedCategories} loading={loading}/>
+        <MenuModal
+          handleClose={() => closeModal(setShowMenuModal)}
+          animateModal={animateModal}
+          fetchedCategories={fetchedCategories.map(category => ({
+            ...category,
+            subCategories: category.subCategories ?? [],
+          }))}
+          loading={loading}
+        />
       )}
     </>
   );

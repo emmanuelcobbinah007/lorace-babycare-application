@@ -2,44 +2,8 @@ import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { toast, ToastContainer } from "react-toastify";
 import { SearchNormal } from "iconsax-reactjs";
-import axios from "axios";
-
-const NEXT_PUBLIC_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
-interface Product {
-  id: string;
-  name: string;
-  descriptionShort: string;
-  descriptionLong: string;
-  price: number;
-  stock: number;
-  isHidden: boolean;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-    createdAt: string;
-    isHidden: boolean;
-  };
-  subCategoryId: string;
-  subCategory: {
-    id: string;
-    name: string;
-    categoryId: string;
-    createdAt: string;
-    isHidden: boolean;
-  };
-  images: {
-    id: string;
-    url: string;
-    productId: string;
-  }[];
-  salePercent: number;
-  sizingType: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useCreateSale, useRemoveSale } from "../../../../hooks/useProducts";
+import { Product } from "../../../../api/products/productApi";
 
 const CreateSaleModal = ({
   fetchedProducts,
@@ -60,22 +24,23 @@ const CreateSaleModal = ({
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const [newSalePercent, setNewSalePercent] = useState<number | null>(null);
+  const createSaleMutation = useCreateSale();
+  const removeSaleMutation = useRemoveSale();
+  const submitting = createSaleMutation.isPending || removeSaleMutation.isPending;
 
   useEffect(() => {
     if (editing && productOnSale) {
       setSelectedProduct(productOnSale);
+      setNewSalePercent(productOnSale.salePercent);
     }
-    console.log(fetchedProducts);
-  }, []);
-
+  }, [editing, productOnSale]);
   const handleClose = () => {
     setAnimateModal(false);
     setEditing(false);
     setTimeout(() => setShowModal(false), 300);
   };
-
+  
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     product: Product | null,
@@ -88,43 +53,28 @@ const CreateSaleModal = ({
       return;
     }
 
-    if (salePercent === null) {
-      toast.error("Please enter a valid sale percent");
+    if (salePercent === null || salePercent <= 0 || salePercent >= 1) {
+      toast.error("Please enter a valid sale percent (1-99)");
       return;
     }
 
-    setSubmitting(true);
-
     try {
-      const data = {
-        product: product,
-        salePercent: salePercent,
-      };
+      await createSaleMutation.mutateAsync({
+        productId: product.id,
+        data: {
+          product: product,
+          salePercent: salePercent,
+        },
+      });
 
-      const response = await axios.post(
-        `${NEXT_PUBLIC_BASE_URL}/api/products/${product.id}/sale`,
-        data,
-        {
-          withCredentials: true,
-        }
-      );
-
-        if (response.status < 200 || response.status >= 300) {
-          console.error("Failed to create sale");
-        }
-
-      console.log(response.data);
       toast.success("Sale created successfully");
-
+      
       setTimeout(() => {
         handleClose();
       }, 1000);
-      setSelectedProduct(null);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to create sale");
-    } finally {
-      setSubmitting(false);
+      console.error("Failed to create sale:", error);
+      toast.error("Failed to create sale. Please try again.");
     }
   };
 

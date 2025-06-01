@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import axios from "axios";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Only apply middleware to /admin and all its subroutes
@@ -13,22 +13,26 @@ export function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    // Verify token by calling your API using axios
-    return axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/me`, {
-        headers: { Cookie: `token=${token}` },
-      })
-      .then((response) => {
-        const data = response.data;
+    try {
+      // Verify token by calling your API using axios
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/me`, {
+        headers: { 
+          Cookie: `token=${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-        if (data.user?.role !== "ADMIN") {
-          console.log("User is not an admin, redirecting...");
-          return NextResponse.redirect(new URL("/not-authorized", req.url));
-        }
-        console.log("User is an admin, allowing access...");
-        return NextResponse.next();
-      })
-      .catch(() => NextResponse.redirect(new URL("/", req.url))); // Redirect on error
+      if (response.data.user?.role !== "ADMIN") {
+        console.log("User is not an admin, redirecting...");
+        return NextResponse.redirect(new URL("/not-authorized", req.url));
+      }
+      
+      console.log("User is an admin, allowing access...");
+      return NextResponse.next();
+    } catch (error) {
+      console.error("Auth middleware error:", error);
+      return NextResponse.redirect(new URL("/", req.url));
+    }
   }
 }
 
