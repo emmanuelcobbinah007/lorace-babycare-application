@@ -5,6 +5,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import {ArrowRight2} from 'iconsax-reactjs';
 import Image from 'next/image'
 import { Patrick_Hand } from 'next/font/google';
+import { useCategories } from '../../../../hooks/useCategories';
 
 const patrickHand = Patrick_Hand({
   subsets: ['latin'],
@@ -23,6 +24,11 @@ import Baby8 from "../../../../../../public/images/babySchool.jpg"
 
 const HeroSection = () => {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
+      // Fetch categories
+    const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategories();
+    
+    // Console log the categories for debugging
+    console.log('Categories:', categories);
 
     const autoplay = useCallback(() => {
         if (!emblaApi) return
@@ -44,12 +50,12 @@ const HeroSection = () => {
 
     const slides = [
         { id: 1, image: Baby4, main: 'All baby must-haves in one spot.', tagline: 'Everything Your Baby Needs', slug: '/products', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
-        { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: '/store', mobilePositionClass: 'object-center', textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
-        { id: 3, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: '/food', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
-        { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: '/clothing', mobilePositionClass: 'object-center' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
-        { id: 5, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: '/accessories', mobilePositionClass: 'object-right' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
-        { id: 6, image: Baby8, main: 'School gear for little achievers', tagline: 'Ready, Set, Learn!', slug: '/back-to-school', mobilePositionClass: 'object-center', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
-        { id: 7, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: '/mama', mobilePositionClass: 'object-center' , textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
+        { id: 2, image: Baby5, main: 'Diaper solutions for day and night', tagline: 'Soft, Snug & Leak-Free', slug: categories.length > 0 ? `/category/${categories[0].id}` : '/products', mobilePositionClass: 'object-center', textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
+        { id: 3, image: Baby2, main: 'Tasty, healthy meals for your baby.', tagline: 'Tiny Bites, Big Smiles', slug: categories.length > 0 ? `/category/${categories[4].id}` : '/products', mobilePositionClass: 'object-right', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
+        { id: 4, image: Baby1, main: 'Adorable outfits for every tiny moment.', tagline: 'Soft, Snuggly Styles', slug: categories.length > 0 ? `/category/${categories[5].id}` : '/products', mobilePositionClass: 'object-center' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
+        { id: 5, image: Baby7, main: 'Add charm with lovely baby accessories.', tagline: 'Cute Little Extras', slug: categories.length > 0 ? `/category/${categories[3].id}` : '/products', mobilePositionClass: 'object-right' , textPositionClass: 'right-4 md:right-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
+        { id: 6, image: Baby8, main: 'School gear for little achievers', tagline: 'Ready, Set, Learn!', slug: categories.length > 0 ? `/category/${categories[2].id}` : '/products', mobilePositionClass: 'object-center', textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0'},
+        { id: 7, image: Baby6, main: 'Essentials to support every mom.', tagline: 'Care for Mama Too', slug: categories.length > 0 ? `/category/${categories[1].id}` : '/products', mobilePositionClass: 'object-center' , textPositionClass: 'left-4 md:left-10', mobileTextPositionClass: 'translate-y-[25%] md:translate-y-0',},
     ]
 
   return (

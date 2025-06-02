@@ -57,7 +57,7 @@ export const fetchCategories = async (): Promise<Category[]> => {
 
 export const fetchCategory = async (id: string): Promise<Category> => {
   const { data } = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/category/${id}`);
-  return data;
+  return data.category;
 };
 
 export const createCategory = async (categoryData: CreateCategoryData): Promise<Category> => {
