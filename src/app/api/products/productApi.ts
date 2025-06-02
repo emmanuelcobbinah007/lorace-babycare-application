@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { NextResponse } from 'next/server';
 
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -157,7 +158,11 @@ export const updateProduct = async (id: string, productData: UpdateProductData):
         'Content-Type': 'application/json',
       },
     });
+
+    // const response = await productData;
+
     return response.data;
+
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || 'Failed to update product');

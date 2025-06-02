@@ -27,50 +27,64 @@ export async function GET(request: NextRequest) {
 
 // saving product details
 export async function POST(request: NextRequest) {
-    const {
-        productName,
-        productDescriptionShort,
-        productDescriptionLong,
-        productPrice,
-        productStock,
-        subCategoryID,
+    const requestData = await request.json();
+    
+    // Log the incoming data to debug
+    console.log("Received request data:", requestData);
+      const {
+        name,
+        descriptionShort,
+        descriptionLong,
+        price,
+        stock,
+        subCategoryId,
         sizingType,
         isHidden,
-        categoryID,
+        categoryId,
         salePercent,
-    } = await request.json();
+    } = requestData;
 
-    try {
-        
-        // Check if the product already exists
+    // Log the destructured values to debug
+    console.log("Destructured values:", {
+        name,
+        descriptionShort,
+        descriptionLong,
+        price,
+        stock,
+        subCategoryId,
+        sizingType,
+        isHidden,
+        categoryId,
+        salePercent,
+    });try {        // Check if the product already exists
         const existingProduct = await prisma.product.findFirst({
             where: {
-                name: productName,
+                name: name,
             },
         });
 
         if (existingProduct) {
             return NextResponse.json({
                 message: "Product already exists",
+                existingProduct
             }, {
                 status: 400,
-            });
-        }
+            });        }
 
         const product = await prisma.product.create({
             data: {
-                name: productName,
-                descriptionShort: productDescriptionShort,
-                descriptionLong: productDescriptionLong,
-                price: productPrice,
-                stock: productStock,
+                name,
+                descriptionShort,
+                descriptionLong,
+                price,
+                stock,
                 isHidden,
-                sizingType, // maybe here, string but an enum in the db
-                categoryId: categoryID,
-                subCategoryId: subCategoryID,
+                sizingType,
+                categoryId,
+                subCategoryId,
                 salePercent,
             }
-        })
+        });
 
         return NextResponse.json({
             message: "Product created successfully",

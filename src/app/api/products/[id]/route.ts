@@ -59,6 +59,20 @@ export async function PATCH(req: NextRequest, context: any) {
       where: { id },
       data: updateData,
     });
+
+    // const updatedProduct = {
+    //    isHidden, 
+    //   productName, 
+    //   productDescriptionShort, 
+    //   productDescriptionLong, 
+    //   productPrice, 
+    //   productStock,
+    //   sizingType,
+    //   categoryID,
+    //   subCategoryID,
+    //   salePercent
+
+    // }
     
     return NextResponse.json(updatedProduct, { status: 200 });
   } catch (error) {

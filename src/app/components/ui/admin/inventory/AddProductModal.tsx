@@ -26,6 +26,7 @@ interface ProductFormValues {
   productStock: number | string;
   subCategoryID: string;
   sizingType: string;
+  isHidden: boolean;
 }
 
 const NEXT_PUBLIC_BASE_URL =
@@ -50,34 +51,10 @@ const AddProductModal = ({
   const { data: subCategories = [] } = useSubCategories();
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
-
   const [showImagesModal, setShowImagesModal] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
   const [animateModal2, setAnimateModal2] = useState(false);
-  const [productName, setProductName] = useState("");
-  const [productDescriptionShort, setProductDescriptionShort] = useState("");
-  const [productDescriptionLong, setProductDescriptionLong] = useState("");
-  const [productPrice, setProductPrice] = useState(0.0);
-  const [productStock, setProductStock] = useState(0);
-  const [subCategoryID, setSubCategoryID] = useState("");
-  const [sizingType, setSizingType] = useState("");
-  const [isHidden, setIsHidden] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    // Pre-fill form if in edit mode
-    if (editing && editingProduct) {
-      setProductName(editingProduct.name);
-      setProductDescriptionShort(editingProduct.descriptionShort);
-      setProductDescriptionLong(editingProduct.descriptionLong);
-      setProductPrice(editingProduct.price);
-      setProductStock(editingProduct.stock);
-      setSubCategoryID(editingProduct.subCategoryId);
-      setSizingType(editingProduct.sizingType);
-      setIsHidden(editingProduct.isHidden);
-      setProduct(editingProduct);
-    }
-  }, [editing, editingProduct]);
 
   const handleSubmit = async (values: ProductFormValues) => {
     try {
@@ -86,8 +63,7 @@ const AddProductModal = ({
         (subCategory) => subCategory.id === values.subCategoryID
       );
 
-      if (editing && editingProduct) {
-        // Update existing product
+      if (editing && editingProduct) {        // Update existing product
         const updateData: UpdateProductData = {
           name: values.productName,
           descriptionShort: values.productDescriptionShort,
@@ -97,7 +73,7 @@ const AddProductModal = ({
           subCategoryId: values.subCategoryID,
           categoryId: selectedSubCategory ? selectedSubCategory.categoryId : "",
           sizingType: values.sizingType,
-          isHidden,
+          isHidden: values.isHidden,
         };
 
         await updateProductMutation.mutateAsync({
@@ -110,8 +86,7 @@ const AddProductModal = ({
           handleClose();
           // Don't reload the page as TanStack Query handles cache updates
         }, 2000);
-      } else {
-        // Create new product
+      } else {        // Create new product
         const createData: CreateProductData = {
           name: values.productName,
           descriptionShort: values.productDescriptionShort,
@@ -121,15 +96,16 @@ const AddProductModal = ({
           subCategoryId: values.subCategoryID,
           categoryId: selectedSubCategory ? selectedSubCategory.categoryId : "",
           sizingType: values.sizingType,
-          isHidden,
+          isHidden: values.isHidden,
         };
 
         const newProduct = await createProductMutation.mutateAsync(createData);
         toast.success("Product saved successfully");
-        // setProduct(newProduct);
-        // setAnimateModal2(true);
-        // setShowImagesModal(true);
+        setProduct(newProduct);
+        setAnimateModal2(true);
+        setShowImagesModal(true);
         console.log("Product created:", newProduct);
+        // console.log("Product created:", createData);
       }
     } catch (error) {
       console.error("Error saving product:", error);
@@ -141,19 +117,10 @@ const AddProductModal = ({
     } finally {
       setSubmitting(false);
     }
-  };
-  const handleClose = () => {
+  };  const handleClose = () => {
     setAnimateModal(false);
     setTimeout(() => setShowModal(false), 300);
     setEditing(false);
-    setProductName("");
-    setProductDescriptionShort("");
-    setProductDescriptionLong("");
-    setProductPrice(0.0);
-    setProductStock(0);
-    setSubCategoryID("");
-    setSizingType("");
-    setIsHidden(false);
     setProduct(null);
   };
 
@@ -199,30 +166,31 @@ const AddProductModal = ({
             </button>
           </div>{" "}
           <Formik
-            enableReinitialize
-            initialValues={{
+            enableReinitialize            initialValues={{
               productName:
-                editing && editingProduct ? editingProduct.name : productName,
+                editing && editingProduct ? editingProduct.name : "",
               productDescriptionShort:
                 editing && editingProduct
                   ? editingProduct.descriptionShort
-                  : productDescriptionShort,
+                  : "",
               productDescriptionLong:
                 editing && editingProduct
                   ? editingProduct.descriptionLong
-                  : productDescriptionLong,
+                  : "",
               productPrice:
-                editing && editingProduct ? editingProduct.price : productPrice,
+                editing && editingProduct ? editingProduct.price : 0,
               productStock:
-                editing && editingProduct ? editingProduct.stock : productStock,
+                editing && editingProduct ? editingProduct.stock : 0,
               subCategoryID:
                 editing && editingProduct
                   ? editingProduct.subCategoryId
-                  : subCategoryID,
+                  : "",
               sizingType:
                 editing && editingProduct
                   ? editingProduct.sizingType
-                  : sizingType,
+                  : "Clothing",
+              isHidden:
+                editing && editingProduct ? editingProduct.isHidden : false,
             }}
             validationSchema={Yup.object({
               productName: Yup.string().required("Product name is required"),
@@ -413,8 +381,19 @@ const AddProductModal = ({
                     <option value="FootwearToddlers">Footwear-Toddlers</option>
                     <option value="FootwearChildren">Footwear-Children</option>
                     <option value="Diapers">Diapers</option>
-                    <option value="NA">N/A</option>
-                  </Field>
+                    <option value="NA">N/A</option>                  </Field>
+                </div>
+                <div className="mb-4">
+                  <label className="flex items-center">
+                    <Field
+                      type="checkbox"
+                      name="isHidden"
+                      className="mr-2 h-4 w-4 text-[#8B4513] focus:ring-[#8B4513] border-gray-300 rounded"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      Hide product from store
+                    </span>
+                  </label>
                 </div>{" "}
                 <button
                   type="submit"
