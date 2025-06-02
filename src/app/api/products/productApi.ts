@@ -106,9 +106,7 @@ export const fetchProductById = async (id: string): Promise<Product> => {
 
 export const fetchProductsByCategory = async (categoryId: string): Promise<Product[]> => {
   try {
-    const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/products`, {
-      params: { categoryId }
-    });
+    const response = await axios.get(`${NEXT_PUBLIC_BASE_URL}/api/products/category/${categoryId}`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
