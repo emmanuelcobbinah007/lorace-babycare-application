@@ -180,8 +180,8 @@ export const useUploadProductImage = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: ({ productId, formData }: { productId: string; formData: FormData }) =>
-      uploadProductImage(productId, formData),
+    mutationFn: ({ productId, imageUrl }: { productId: string; imageUrl: string }) =>
+      uploadProductImage(productId, imageUrl),
     onSuccess: (_, { productId }) => {
       queryClient.invalidateQueries({ queryKey: ['productImages', productId] });
       queryClient.invalidateQueries({ queryKey: productQueryKeys.detail(productId) });

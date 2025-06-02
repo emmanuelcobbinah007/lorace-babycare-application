@@ -100,8 +100,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       console.error("Error deleting image:", error);
       toast.error("Failed to delete image");
     }
-  };
-  const handleSubmit = async (e: React.FormEvent) => {
+  };  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (imageList.length === 0) {
@@ -112,12 +111,9 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
     try {
       // Upload each image individually using the TanStack Query mutation
       for (const imageUrl of imageList) {
-        const formData = new FormData();
-        formData.append('url', imageUrl);
-        
-        await uploadImageMutation.mutateAsync({ 
-          productId: product.id, 
-          formData 
+        await uploadImageMutation.mutateAsync({
+          productId: product.id,
+          imageUrl
         });
       }
       
@@ -127,7 +123,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       setProductImageUrl2(null);
       setProductImageUrl3(null);
       
-      handleClose();
+      // handleClose();
     } catch (error) {
       toast.error("Error saving images, please try again");
       console.error("Error saving images:", error);

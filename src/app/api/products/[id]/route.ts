@@ -27,32 +27,45 @@ export async function GET(req: NextRequest, context: any) {
 export async function PATCH(req: NextRequest, context: any) {
   const { id } = context.params;
   try {
-    const body = await req.json();
+    const requestData = await req.json();
     const { 
       isHidden, 
-      productName, 
-      productDescriptionShort, 
-      productDescriptionLong, 
-      productPrice, 
-      productStock,
+      name, 
+      descriptionShort, 
+      descriptionLong, 
+      price, 
+      stock,
       sizingType,
-      categoryID,
-      subCategoryID,
+      categoryId,
+      subCategoryId,
       salePercent
-    } = body;
+    } = requestData;
+
+    // const {
+    //     name,
+    //     descriptionShort,
+    //     descriptionLong,
+    //     price,
+    //     stock,
+    //     subCategoryId,
+    //     sizingType,
+    //     isHidden,
+    //     categoryId,
+    //     salePercent,
+    // } = requestData;
 
     const updateData: any = {};
     
     // Only include fields that are provided in the request
     if (isHidden !== undefined) updateData.isHidden = isHidden;
-    if (productName !== undefined) updateData.name = productName;
-    if (productDescriptionShort !== undefined) updateData.descriptionShort = productDescriptionShort;
-    if (productDescriptionLong !== undefined) updateData.descriptionLong = productDescriptionLong;
-    if (productPrice !== undefined) updateData.price = Number(productPrice);
-    if (productStock !== undefined) updateData.stock = Number(productStock);
+    if (name !== undefined) updateData.name = name;
+    if (descriptionShort !== undefined) updateData.descriptionShort = descriptionShort;
+    if (descriptionLong !== undefined) updateData.descriptionLong = descriptionLong;
+    if (price !== undefined) updateData.price = Number(price);
+    if (stock !== undefined) updateData.stock = Number(stock);
     if (sizingType !== undefined) updateData.sizingType = sizingType;
-    if (categoryID !== undefined) updateData.categoryId = categoryID;
-    if (subCategoryID !== undefined) updateData.subCategoryId = subCategoryID;
+    if (categoryId !== undefined) updateData.categoryId = categoryId;
+    if (subCategoryId !== undefined) updateData.subCategoryId = subCategoryId;
     if (salePercent !== undefined) updateData.salePercent = Number(salePercent);
     
     const updatedProduct = await prisma.product.update({
@@ -71,7 +84,6 @@ export async function PATCH(req: NextRequest, context: any) {
     //   categoryID,
     //   subCategoryID,
     //   salePercent
-
     // }
     
     return NextResponse.json(updatedProduct, { status: 200 });

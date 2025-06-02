@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const requestData = await request.json();
     
     // Log the incoming data to debug
-    console.log("Received request data:", requestData);
+    // console.log("Received request data:", requestData);
       const {
         name,
         descriptionShort,
@@ -45,18 +45,20 @@ export async function POST(request: NextRequest) {
     } = requestData;
 
     // Log the destructured values to debug
-    console.log("Destructured values:", {
-        name,
-        descriptionShort,
-        descriptionLong,
-        price,
-        stock,
-        subCategoryId,
-        sizingType,
-        isHidden,
-        categoryId,
-        salePercent,
-    });try {        // Check if the product already exists
+    // console.log("Destructured values:", {
+    //     name,
+    //     descriptionShort,
+    //     descriptionLong,
+    //     price,
+    //     stock,
+    //     subCategoryId,
+    //     sizingType,
+    //     isHidden,
+    //     categoryId,
+    //     salePercent,
+    // });
+    // 
+        try {        // Check if the product already exists
         const existingProduct = await prisma.product.findFirst({
             where: {
                 name: name,

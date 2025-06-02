@@ -76,10 +76,12 @@ const AddProductModal = ({
           isHidden: values.isHidden,
         };
 
-        await updateProductMutation.mutateAsync({
+        const response = await updateProductMutation.mutateAsync({
           id: editingProduct.id,
           data: updateData,
         });
+
+        console.log(response);
 
         toast.success("Product updated successfully");
         setTimeout(() => {

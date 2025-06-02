@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { NextResponse } from 'next/server';
 
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -78,7 +77,6 @@ export interface FeaturedProduct {
   productId: string;
   createdAt: string;
   updatedAt: string;
-  product: Product;
 }
 
 // Read operations
@@ -159,10 +157,10 @@ export const updateProduct = async (id: string, productData: UpdateProductData):
       },
     });
 
-    // const response = await productData;
-
     return response.data;
 
+    // const response = productData;
+    // return response as Product; // Assuming the response is of type Product
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || 'Failed to update product');
@@ -262,9 +260,16 @@ export const fetchProductImages = async (productId: string): Promise<ProductImag
   }
 };
 
-export const uploadProductImage = async (productId: string, formData: FormData): Promise<ProductImage> => {
+export const uploadProductImage = async (productId: string, imageUrl: string): Promise<ProductImage> => {
   try {
-    const response = await axios.post(`${NEXT_PUBLIC_BASE_URL}/api/products/${productId}/images`, formData);
+    const response = await axios.post(`${NEXT_PUBLIC_BASE_URL}/api/products/${productId}/images`, 
+      { url: imageUrl },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
