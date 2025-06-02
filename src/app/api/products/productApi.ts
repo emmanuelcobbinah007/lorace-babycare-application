@@ -77,6 +77,7 @@ export interface FeaturedProduct {
   productId: string;
   createdAt: string;
   updatedAt: string;
+  product: Product;
 }
 
 // Read operations
