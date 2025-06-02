@@ -13,17 +13,16 @@ export async function GET(request: NextRequest) {
         const existingSubscription = await prisma.emailList.findUnique({
             where: { email },
         });
-        
-        if (existingSubscription) {
+          if (existingSubscription) {
             return NextResponse.json(
-                { subscribed: true, },
+                { isSubscribed: true },
                 { status: 200 }
             );
         }
 
         return NextResponse.json(
-            {subscribed: false},
-            {status: 200}
+            { isSubscribed: false },
+            { status: 200 }
         )
 
 

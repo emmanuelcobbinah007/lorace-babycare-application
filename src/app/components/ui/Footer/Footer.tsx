@@ -6,7 +6,11 @@ import Link from "next/link";
 import { Patrick_Hand } from "next/font/google";
 import AuroraLogo from "../../../../../public/HouseKeeping/auroraLogo.png";
 import { toast, ToastContainer } from "react-toastify";
-import { useCurrentUser, useCheckSubscription, useSubscribe } from "../../../hooks/useAuth";
+import {
+  useCurrentUser,
+  useCheckSubscription,
+  useSubscribe,
+} from "../../../hooks/useAuth";
 
 const patrickHand = Patrick_Hand({
   subsets: ["latin"],
@@ -16,17 +20,19 @@ const patrickHand = Patrick_Hand({
 
 const Footer = () => {
   const [emailInput, setEmailInput] = useState<string>("");
-  
+
   // Get current user data
   const { data: currentUser, isLoading: userLoading } = useCurrentUser();
-  
+
   // Get subscription status for current user's email
   const userEmail = currentUser?.user?.email;
-  const { data: isSubscribed, isLoading: subscriptionLoading } = useCheckSubscription(userEmail || "");
-  
+
+  const { data: isSubscribed, isLoading: subscriptionLoading } =
+    useCheckSubscription(userEmail || "");
+
   // Subscribe mutation
   const subscribeMutation = useSubscribe();
-  
+
   const loading = userLoading || subscriptionLoading;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -35,7 +41,7 @@ const Footer = () => {
 
   const handleEmailSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Use current user's email if logged in, otherwise use input email
     const emailToSubscribe = userEmail || emailInput;
     if (!emailToSubscribe) {
@@ -48,7 +54,7 @@ const Footer = () => {
         email: emailToSubscribe,
         ...(currentUser?.user?.id && { id: currentUser.user.id }),
       });
-      
+
       toast.success("Subscribed successfully!");
       setEmailInput(""); // Clear the input field
     } catch (error) {
@@ -70,50 +76,52 @@ const Footer = () => {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          />
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">        <div>
-            { isSubscribed ? (
+        />
+        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          {" "}
+          <div>
+            {isSubscribed ? (
               <h2
                 className={`text-2xl font-semibold text-[#b970a0] mb-6 ${patrickHand.className}`}
               >
                 Thank You for Subscribing!
               </h2>
-            )
-            : (
+            ) : (
               <div>
                 <h2
-              className={`text-2xl font-semibold text-[#b970a0] mb-6 ${patrickHand.className}`}
-            >
-              Join Our Newsletter
-            </h2>
-            <p className="text-sm mb-6 text-gray-600">
-              Stay updated with the latest trends, exclusive offers, and more.
-            </p>
-            <form
-              onSubmit={handleEmailSubscribe}
-              className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4"
-            >
-              <input
-                type="email"
-                value={loading ? "" : userEmail || emailInput}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                className="px-4 py-2 rounded-md border border-gray-300 w-full md:w-auto"
-                disabled={loading || subscribeMutation.isPending}
-              />
-              <button
-                type="submit"
-                disabled={loading || subscribeMutation.isPending}
-                className="bg-[#4fb3e5] text-white px-6 py-2 rounded-md hover:bg-[#3da5d6] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
-              </button>
-            </form>
+                  className={`text-2xl font-semibold text-[#b970a0] mb-6 ${patrickHand.className}`}
+                >
+                  Join Our Newsletter
+                </h2>
+                <p className="text-sm mb-6 text-gray-600">
+                  Stay updated with the latest trends, exclusive offers, and
+                  more.
+                </p>
+                <form
+                  onSubmit={handleEmailSubscribe}
+                  className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4"
+                >
+                  <input
+                    type="email"
+                    value={loading ? "" : userEmail || emailInput}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="px-4 py-2 rounded-md border border-gray-300 w-full md:w-auto"
+                    disabled={loading || subscribeMutation.isPending}
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading || subscribeMutation.isPending}
+                    className="bg-[#4fb3e5] text-white px-6 py-2 rounded-md hover:bg-[#3da5d6] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {subscribeMutation.isPending
+                      ? "Subscribing..."
+                      : "Subscribe"}
+                  </button>
+                </form>
               </div>
-            )
-            }
+            )}
           </div>
-
           {/* Navigation Links */}
           <div>
             <h3
@@ -144,7 +152,6 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-
           {/* Social Media */}
           <div>
             <h3
