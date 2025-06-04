@@ -74,6 +74,7 @@ export interface SaleData {
 
 export interface FeaturedProduct {
   id: string;
+  product: Product;
   productId: string;
   createdAt: string;
   updatedAt: string;
