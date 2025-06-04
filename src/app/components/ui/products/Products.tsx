@@ -58,7 +58,7 @@ const Products: React.FC<ProductsProps> = ({
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
         {products.map((product: Product) => (
-          <Link href={`products/${product.id}`}
+          <Link href={`/products/${product.id}`}
             key={product.id}
             onClick={() =>  console.log("Card Clicked!")}
             className="group relative bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl border border-gray-200 flex flex-col min-h-[340px] sm:min-h-[370px] md:min-h-[420px]"

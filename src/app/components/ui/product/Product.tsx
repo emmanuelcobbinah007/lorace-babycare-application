@@ -55,9 +55,11 @@ const Product = () => {
   };
   if (loading) {
     return (
-      <div className="flex h-[75vh] justify-center items-center mt-0 md:mt-10">
-        <FadeLoader color="#b970a0" />
-      </div>
+      <div className="h-[80vh] flex items-center justify-center">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b970a0] mx-auto"></div>
+              </div>
+            </div>
     );
   }
 
