@@ -5,22 +5,16 @@ const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export interface Category {
   id: string;
   name: string;
-  description?: string;
-  image?: string;
   createdAt: string;
-  updatedAt: string;
   subCategories?: SubCategory[];
 }
 
 export interface SubCategory {
   id: string;
+  isHidden: boolean;
   name: string;
-  description?: string;
-  image?: string;
   categoryId: string;
-  category?: Category;
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface CreateCategoryData {

@@ -13,7 +13,6 @@ const patrickHand = Patrick_Hand({
 
 const FeaturedProducts = () => {
   const { data: products = [], isLoading, error } = useFeaturedProducts();
-  console.log("Featured Products Data:", products);
 
   return (
     <div className="mt-10 md:mt-20">

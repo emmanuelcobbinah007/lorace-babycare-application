@@ -56,6 +56,7 @@ const HeaderBar = () => {
   const [animateModal, setAnimateModal] = useState(false);
   
   const { data: fetchedCategories = [], isLoading: loading } = useCategories();
+  console.log("fetched Categories:", fetchedCategories);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -190,7 +191,7 @@ const HeaderBar = () => {
           animateModal={animateModal}
           fetchedCategories={fetchedCategories.map(category => ({
             ...category,
-            subCategories: category.subCategories ?? [],
+            subCategories: category.subCategories ?? []
           }))}
           loading={loading}
         />
