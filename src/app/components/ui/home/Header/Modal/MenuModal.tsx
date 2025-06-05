@@ -138,7 +138,10 @@ const MenuModal: React.FC<MenuModalProps> = ({ handleClose, animateModal, fetche
                   className="font-[600] text-left border-b-2 border-gray-100 pb-4 cursor-pointer"
                   onClick={() => handleCategoryClick(category.name)}
                 >
+                  <a href={`/category/${category.id}`}
+                  onClick={handleClose}>
                   {category.name}
+                  </a>
                   <span>
                   <span className="absolute right-5">
                         {isActive ? <ArrowDown2 size="18" color="#b970a0" /> : <ArrowRight2 size="18" color="#b970a0" />}
