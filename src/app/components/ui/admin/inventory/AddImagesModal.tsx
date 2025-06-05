@@ -6,7 +6,11 @@ import { toast, ToastContainer } from "react-toastify";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
-import { useProductImages, useUploadProductImage, useDeleteProductImage } from "../../../../hooks/useProducts";
+import {
+  useProductImages,
+  useUploadProductImage,
+  useDeleteProductImage,
+} from "../../../../hooks/useProducts";
 import { ProductImage } from "../../../../api/products/productApi";
 
 interface AddImagesModalProps {
@@ -25,7 +29,8 @@ interface AddImagesModalProps {
     categoryId: string;
     subCategoryId: string;
     salePercent: number;
-  };  setShowModal: (value: boolean) => void;
+  };
+  setShowModal: (value: boolean) => void;
 }
 
 interface CloudinaryResponse {
@@ -56,6 +61,10 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
     e: React.ChangeEvent<HTMLInputElement>;
     setImageUrl: React.Dispatch<React.SetStateAction<string | null>>;
   }
+
+  useEffect(() => {
+    console.log("Product in Add Image Modal: ", product);
+  }, [])
 
   const handleImageChange = async ({
     e,
@@ -100,7 +109,8 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       console.error("Error deleting image:", error);
       toast.error("Failed to delete image");
     }
-  };  const handleSubmit = async (e: React.FormEvent) => {
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (imageList.length === 0) {
@@ -108,21 +118,23 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       return;
     }
 
+    console.log("Product Id before push to backend: ", product.id);
+
     try {
       // Upload each image individually using the TanStack Query mutation
       for (const imageUrl of imageList) {
         await uploadImageMutation.mutateAsync({
           productId: product.id,
-          imageUrl
+          imageUrl,
         });
       }
-      
+
       toast.success("Images uploaded successfully!");
       setImageList([]);
       setProductImageUrl1(null);
       setProductImageUrl2(null);
       setProductImageUrl3(null);
-      
+
       // handleClose();
     } catch (error) {
       toast.error("Error saving images, please try again");
@@ -198,9 +210,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       <div className="my-6 border-t border-gray-200"></div>
 
       {/* Add New Images Section */}
-      <h3 className="font-medium text-lg mb-4 text-gray-700">
-        Add New Images
-      </h3>
+      <h3 className="font-medium text-lg mb-4 text-gray-700">Add New Images</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label

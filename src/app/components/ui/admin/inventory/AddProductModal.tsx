@@ -63,7 +63,8 @@ const AddProductModal = ({
         (subCategory) => subCategory.id === values.subCategoryID
       );
 
-      if (editing && editingProduct) {        // Update existing product
+      if (editing && editingProduct) {
+        // Update existing product
         const updateData: UpdateProductData = {
           name: values.productName,
           descriptionShort: values.productDescriptionShort,
@@ -88,7 +89,8 @@ const AddProductModal = ({
           handleClose();
           // Don't reload the page as TanStack Query handles cache updates
         }, 2000);
-      } else {        // Create new product
+      } else {
+        // Create new product
         const createData: CreateProductData = {
           name: values.productName,
           descriptionShort: values.productDescriptionShort,
@@ -103,10 +105,11 @@ const AddProductModal = ({
 
         const newProduct = await createProductMutation.mutateAsync(createData);
         toast.success("Product saved successfully");
+        console.log("New product created:", newProduct);
         setProduct(newProduct);
+        console.log("Product state saved:", product);
         setAnimateModal2(true);
         setShowImagesModal(true);
-        console.log("Product created:", newProduct);
         // console.log("Product created:", createData);
       }
     } catch (error) {
@@ -119,7 +122,8 @@ const AddProductModal = ({
     } finally {
       setSubmitting(false);
     }
-  };  const handleClose = () => {
+  };
+  const handleClose = () => {
     setAnimateModal(false);
     setTimeout(() => setShowModal(false), 300);
     setEditing(false);
@@ -168,25 +172,21 @@ const AddProductModal = ({
             </button>
           </div>{" "}
           <Formik
-            enableReinitialize            initialValues={{
-              productName:
-                editing && editingProduct ? editingProduct.name : "",
+            enableReinitialize
+            initialValues={{
+              productName: editing && editingProduct ? editingProduct.name : "",
               productDescriptionShort:
                 editing && editingProduct
                   ? editingProduct.descriptionShort
                   : "",
               productDescriptionLong:
-                editing && editingProduct
-                  ? editingProduct.descriptionLong
-                  : "",
+                editing && editingProduct ? editingProduct.descriptionLong : "",
               productPrice:
                 editing && editingProduct ? editingProduct.price : 0,
               productStock:
                 editing && editingProduct ? editingProduct.stock : 0,
               subCategoryID:
-                editing && editingProduct
-                  ? editingProduct.subCategoryId
-                  : "",
+                editing && editingProduct ? editingProduct.subCategoryId : "",
               sizingType:
                 editing && editingProduct
                   ? editingProduct.sizingType
@@ -383,7 +383,8 @@ const AddProductModal = ({
                     <option value="FootwearToddlers">Footwear-Toddlers</option>
                     <option value="FootwearChildren">Footwear-Children</option>
                     <option value="Diapers">Diapers</option>
-                    <option value="NA">N/A</option>                  </Field>
+                    <option value="NA">N/A</option>{" "}
+                  </Field>
                 </div>
                 <div className="mb-4">
                   <label className="flex items-center">
@@ -447,19 +448,7 @@ const AddProductModal = ({
             handleClose={handleClose}
             animateModal={animateModal2}
             setAnimateModal={setAnimateModal2}
-            product={{
-              id: product.id,
-              name: product.name,
-              descriptionShort: product.descriptionShort,
-              descriptionLong: product.descriptionLong,
-              price: product.price,
-              stock: product.stock,
-              isHidden: product.isHidden,
-              sizingType: product.sizingType,
-              categoryId: product.categoryId,
-              subCategoryId: product.subCategoryId,
-              salePercent: product.salePercent,
-            }}
+            product={product}
             setShowModal={setShowImagesModal}
           />
         )}

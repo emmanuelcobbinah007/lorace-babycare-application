@@ -139,7 +139,7 @@ export const createProduct = async (productData: CreateProductData): Promise<Pro
         'Content-Type': 'application/json',
       },
     });
-    return response.data;
+    return response.data.product;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || 'Failed to create product');
@@ -270,6 +270,17 @@ export const uploadProductImage = async (productId: string, imageUrl: string): P
       }
     );
     return response.data;
+
+    // Mocked ProductImage object for demonstration; replace with actual API response in production
+    // const productImage: ProductImage = {
+    //   id: "", // Provide actual id if available
+    //   url: imageUrl,
+    //   alt: '', // Provide actual alt text if available
+    //   productId,
+    // };
+
+    // return productImage;
+
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || 'Failed to upload product image');
