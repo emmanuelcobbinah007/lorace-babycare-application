@@ -7,6 +7,7 @@ import Image from "next/image";
 import { FaShoppingCart, FaArrowLeft } from "react-icons/fa";
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
+import Trust from "../home/Trust/Trust";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useProduct } from "@/app/hooks/useProducts";
@@ -358,6 +359,8 @@ const Product = () => {
         </div>
       </div>
     </div>
+
+    <Trust />
     </div>
   );
 };
