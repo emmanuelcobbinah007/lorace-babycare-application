@@ -230,7 +230,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                                 </p>
                                 <div className="flex items-center justify-between">
                                   <p className="text-sm font-semibold text-[#4fb3e5]">
-                                    ${product.price.toFixed(2)}
+                                    GH₵{product.price.toFixed(2)}
                                   </p>
                                   {product.stock > 0 ? (
                                     <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">
@@ -326,7 +326,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                               </p>
                               <div className="flex items-center justify-between">
                                 <p className="text-sm font-semibold text-[#4fb3e5]">
-                                  ${product.price.toFixed(2)}
+                                  GH₵{product.price.toFixed(2)}
                                   {product.salePercent > 0 && (
                                     <span className="ml-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">
                                       {product.salePercent}% OFF
