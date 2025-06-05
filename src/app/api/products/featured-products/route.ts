@@ -8,6 +8,8 @@ export async function GET(req: NextRequest) {
         product: {
           include: {
             images: true,
+            category: true,
+            subCategory: true,
           },
         },
       },

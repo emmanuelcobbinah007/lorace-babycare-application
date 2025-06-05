@@ -3,7 +3,7 @@ import { Patrick_Hand } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useFeaturedProducts } from "../../../../hooks/useProducts";
-import Products from "../../products/Products"
+import FeaturedProductsGrid from "./FeaturedProductsGrid"
 
 const patrickHand = Patrick_Hand({
   subsets: ["latin"],
@@ -39,9 +39,8 @@ const FeaturedProducts = () => {
         ) : products.length === 0 ? (
           <div className="text-center text-gray-500">
             <p>No featured products available</p>
-          </div>
-        ) : (
-          <Products products={products.map(featuredProduct => featuredProduct.product)} />
+          </div>        ) : (
+          <FeaturedProductsGrid featuredProducts={products} />
         )}
 
         {/* View All Products Button */}
