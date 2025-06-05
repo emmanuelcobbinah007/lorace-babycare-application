@@ -82,7 +82,7 @@ const AddProductModal = ({
           data: updateData,
         });
 
-        console.log(response);
+        // console.log(response);
 
         toast.success("Product updated successfully");
         setTimeout(() => {
@@ -105,9 +105,9 @@ const AddProductModal = ({
 
         const newProduct = await createProductMutation.mutateAsync(createData);
         toast.success("Product saved successfully");
-        console.log("New product created:", newProduct);
+        // console.log("New product created:", newProduct);
         setProduct(newProduct);
-        console.log("Product state saved:", product);
+        // console.log("Product state saved:", product);
         setAnimateModal2(true);
         setShowImagesModal(true);
         // console.log("Product created:", createData);

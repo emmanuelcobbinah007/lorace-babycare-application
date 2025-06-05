@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect} from "react";
+import React from "react";
 import Link from "next/link";
 import { ShoppingCart, Star } from "iconsax-reactjs";
 
@@ -53,10 +53,6 @@ const FeaturedProductsGrid: React.FC<FeaturedProductsGridProps> = ({
   featuredProducts,
 }) => {
 
-    useEffect(() => {
-        console.log("Featured products loaded:", featuredProducts);
-    }, [])
-
   const handleAddToCart = async (product: Product, quantity: number) => {
     console.log("Adding to cart:", product.id, quantity);
     // Add cart functionality here
@@ -71,7 +67,6 @@ const FeaturedProductsGrid: React.FC<FeaturedProductsGridProps> = ({
             <Link 
               href={`/products/${product.id}`}
               key={product.id}
-              onClick={() => console.log("Featured product clicked!")}
               className="group relative bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl border border-gray-200 flex flex-col min-h-[40px] sm:min-h-[70px] md:min-h-[70px]"
             >
               <div className="relative">

@@ -45,9 +45,21 @@ const FeaturedProducts = () => {
 
         {/* View All Products Button */}
         <div className="flex justify-center mt-8 md:mt-12">
-           <Link href="/products" className="flex justify-center w-[80%] md:w-[50%] px-5 py-2.5 md:px-6 md:py-3 bg-[#b970a0] text-white rounded-full font-semibold text-sm md:text-base hover:bg-[#9a5a8c] transition duration-300">
-            View All Products
-         </Link>
+          <Link
+            href="/products"
+            className="group relative inline-flex items-center justify-center w-[80%] md:w-[50%] px-6 py-3 bg-white border border-pink-400 text-pink-600 rounded-full font-semibold text-base shadow hover:bg-pink-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-300"
+          >
+            <span className="mr-2 transition-transform group-hover:translate-x-1">View All Products</span>
+            <svg
+              className="w-5 h-5 transition-transform group-hover:translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
         </div>
       </div>
     </div>

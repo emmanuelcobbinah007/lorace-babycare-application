@@ -51,8 +51,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ setUser, setLoggedIn, showLoginFo
             };
 
             const response = await loginMutation.mutateAsync(credentials);
-            
-            console.log("Login response:", response);
 
             if (response.user.role === "ADMIN") {
               router.push("/admin");

@@ -56,7 +56,7 @@ const HeaderBar = () => {
   const [animateModal, setAnimateModal] = useState(false);
   
   const { data: fetchedCategories = [], isLoading: loading } = useCategories();
-  console.log("fetched Categories:", fetchedCategories);
+  // console.log("fetched Categories:", fetchedCategories);
 
   useEffect(() => {
     const handleScroll = () => {

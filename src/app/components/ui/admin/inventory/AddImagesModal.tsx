@@ -62,9 +62,9 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
     setImageUrl: React.Dispatch<React.SetStateAction<string | null>>;
   }
 
-  useEffect(() => {
-    console.log("Product in Add Image Modal: ", product);
-  }, [])
+  // useEffect(() => {
+  //   console.log("Product in Add Image Modal: ", product);
+  // }, [])
 
   const handleImageChange = async ({
     e,
@@ -118,7 +118,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       return;
     }
 
-    console.log("Product Id before push to backend: ", product.id);
+    // console.log("Product Id before push to backend: ", product.id);
 
     try {
       // Upload each image individually using the TanStack Query mutation

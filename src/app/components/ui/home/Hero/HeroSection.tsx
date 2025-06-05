@@ -26,9 +26,6 @@ const HeroSection = () => {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
       // Fetch categories
     const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useCategories();
-    
-    // Console log the categories for debugging
-    console.log('Categories:', categories);
 
     const autoplay = useCallback(() => {
         if (!emblaApi) return
@@ -75,7 +72,7 @@ const HeroSection = () => {
             <div className="absolute inset-0 z-10 flex items-center justify-center">
               <div className={`absolute ${slide.textPositionClass} text-center text-white px-4 ${slide.mobileTextPositionClass}`}>
               <p className="text-md md:text-lg font-[500] text-black">{slide.tagline}</p>
-              <h2 className={`text-3xl md:text-5xl font-bold text-black my-2 ${patrickHand.className}`}>{slide.main}</h2>
+              <h2 className={`text-3xl md:text-5xl font-bold md:font-extrabold text-black my-2 ${patrickHand.className}`}>{slide.main}</h2>
               <a
                 href={slide.slug}
                 className="inline-block mt-4 px-4 py-2 bg-black text-white text-sm md:text-base font-medium rounded-3xl hover:bg-[#b970a0] transition duration-300"
