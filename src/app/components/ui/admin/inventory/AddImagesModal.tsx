@@ -135,7 +135,7 @@ const AddImagesModal: React.FC<AddImagesModalProps> = ({
       setProductImageUrl2(null);
       setProductImageUrl3(null);
 
-      // handleClose();
+       handleClose();
     } catch (error) {
       toast.error("Error saving images, please try again");
       console.error("Error saving images:", error);
