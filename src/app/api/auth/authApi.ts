@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_ROOT_URL || 'http://localhost:3000';
+const NEXT_PUBLIC_ROOT_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 export interface User {
   id: string;
@@ -58,6 +58,8 @@ export const getCurrentUser = async (): Promise<AuthResponse> => {
     throw new Error('Failed to get current user');
   }
 };
+
+//TODO:
 
 export const login = async (credentials: LoginData): Promise<AuthResponse> => {
   try {
