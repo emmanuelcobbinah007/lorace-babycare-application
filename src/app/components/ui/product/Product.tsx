@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useProduct } from "@/app/hooks/useProducts";
 import { Product as ProductType } from "@/app/api/products/productApi";
+import { RelatedProducts } from "./RelatedProducts";
 
 const Product = () => {
   const params = useParams();
@@ -349,8 +350,7 @@ const Product = () => {
             </div>
         </div>
       </div>
-      
-      {/* Product description */}
+        {/* Product description */}
       <div className="mt-12">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Product Description</h2>
         <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
@@ -358,6 +358,13 @@ const Product = () => {
                dangerouslySetInnerHTML={{ __html: product.descriptionLong || product.descriptionShort }} />
         </div>
       </div>
+
+      {/* Related Products */}
+      <RelatedProducts 
+        subCategoryId={product.subCategoryId}
+        subCategoryName={product.subCategory.name}
+        currentProductId={product.id}
+      />
     </div>
 
     <Trust />

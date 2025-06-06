@@ -4,7 +4,22 @@ import prisma from '@/app/libs/prisma';
 // retrieving all products with their respective product images
 export async function GET(request: NextRequest) {
     try {
+        // Get query parameters from the URL
+        const { searchParams } = new URL(request.url);
+        const subCategoryId = searchParams.get('subCategoryId');
+        const categoryId = searchParams.get('categoryId');
+
+        // Build the where clause based on available parameters
+        const whereClause: any = {};
+        
+        if (subCategoryId) {
+            whereClause.subCategoryId = subCategoryId;
+        } else if (categoryId) {
+            whereClause.categoryId = categoryId;
+        }
+
         const products = await prisma.product.findMany({
+            where: whereClause,
             include: {
                 images: true,
                 category: true,
