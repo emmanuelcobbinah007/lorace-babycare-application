@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { IoMdClose } from "react-icons/io";
 import { SearchNormal } from "iconsax-reactjs";
-import { FiFolder, FiShoppingBag } from "react-icons/fi";
+import { FiFolder, FiShoppingBag, FiShoppingCart as ShoppingCart } from "react-icons/fi";
 
 import { useProducts } from "@/app/hooks/useProducts";
 import { useCategories } from "@/app/hooks/useCategories";
@@ -19,13 +19,13 @@ interface SearchModalProps {
 const SearchModal: React.FC<SearchModalProps> = ({
   handleClose,
   animateModal,
-}) => {
-  const [searchTerm, setSearchTerm] = useState("");
+}) => {  const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
   // Fetch data using React Query
   const { data: products = [], isLoading: productsLoading } = useProducts();
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
+
   // Filter categories based on search term
   const filteredCategories = useMemo(() => {
     if (!searchTerm.trim() || categoriesLoading) return [];
@@ -87,6 +87,18 @@ const SearchModal: React.FC<SearchModalProps> = ({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [animateModal, handleClose]);
+
+  // Add to Cart handler
+  function handleAddToCart(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    product: Product
+  ): void {
+    e.stopPropagation(); // Prevent triggering parent click (navigation)
+    // TODO: Replace with your cart logic (e.g., context, redux, API call)
+    // For now, just show a toast or alert
+    // Example: addToCart(product)
+    alert(`Added "${product.name}" to cart!`);
+  }
 
   return (
     <div className="fixed inset-0 z-[999] flex font-poppins">
@@ -190,17 +202,16 @@ const SearchModal: React.FC<SearchModalProps> = ({
                         <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                           <FiShoppingBag className="text-[#4fb3e5]" size={20} />
                           Products ({filteredProducts.length})
-                        </h3>
-                        {/* Products Grid - 4 cards per row on desktop */}
+                        </h3>                        {/* Products Grid - 4 cards per row on desktop */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                           {filteredProducts.map((product: Product) => (
                             <div
                               key={product.id}
                               onClick={() => handleProductClick(product.id)}
-                              className="bg-white rounded-xl border border-gray-200 hover:border-[#4fb3e5] cursor-pointer transition-all duration-200 hover:shadow-lg group overflow-hidden"
+                              className="bg-white rounded-xl border border-gray-200 hover:border-[#4fb3e5] cursor-pointer transition-all duration-200 hover:shadow-lg group overflow-hidden relative"
                             >
                               {/* Product Image */}
-                              <div className="aspect-square bg-gray-100 overflow-hidden">
+                              <div className="aspect-square bg-gray-100 overflow-hidden relative">
                                 {product.images.length > 0 ? (
                                   <img
                                     src={product.images[0].url}
@@ -214,9 +225,19 @@ const SearchModal: React.FC<SearchModalProps> = ({
                                 )}
                                 {/* Sale Badge */}
                                 {product.salePercent > 0 && (
-                                  <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                                  <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
                                     {product.salePercent}% OFF
                                   </div>
+                                )}
+                                {/* Add to Cart Button */}
+                                {product.stock > 0 && (
+                                  <button
+                                    onClick={(e) => handleAddToCart(e, product)}
+                                    className="absolute top-2 right-2 bg-[#4fb3e5] hover:bg-[#b970a0] text-white rounded-full p-2 transition-colors duration-200 flex items-center justify-center shadow-md border border-white opacity-0 group-hover:opacity-100"
+                                    aria-label="Add to Cart"
+                                  >
+                                    <ShoppingCart size="16" color="#fff" />
+                                  </button>
                                 )}
                               </div>
                               
@@ -229,9 +250,18 @@ const SearchModal: React.FC<SearchModalProps> = ({
                                   {product.category.name} • {product.subCategory.name}
                                 </p>
                                 <div className="flex items-center justify-between">
-                                  <p className="text-sm font-semibold text-[#4fb3e5]">
-                                    GH₵{product.price.toFixed(2)}
-                                  </p>
+                                  <div>
+                                    <p className="text-sm font-semibold text-[#4fb3e5]">
+                                      {product.salePercent > 0
+                                        ? `GH₵${((1 - product.salePercent / 100) * product.price).toFixed(2)}`
+                                        : `GH₵${product.price.toFixed(2)}`}
+                                    </p>
+                                    {product.salePercent > 0 && (
+                                      <p className="text-xs text-gray-400 line-through">
+                                        GH₵{product.price.toFixed(2)}
+                                      </p>
+                                    )}
+                                  </div>
                                   {product.stock > 0 ? (
                                     <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">
                                       In Stock
@@ -291,18 +321,17 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                       <FiShoppingBag className="text-[#4fb3e5]" size={20} />
                       Products ({filteredProducts.length})
-                    </h3>
-                    {/* Products Stack - Single column on mobile */}
+                    </h3>                    {/* Products Stack - Single column on mobile */}
                     <div className="space-y-3">
                       {filteredProducts.map((product: Product) => (
                         <div
                           key={product.id}
                           onClick={() => handleProductClick(product.id)}
-                          className="bg-white rounded-xl border border-gray-200 hover:border-[#4fb3e5] cursor-pointer transition-all duration-200 hover:shadow-lg overflow-hidden"
+                          className="bg-white rounded-xl border border-gray-200 hover:border-[#4fb3e5] cursor-pointer transition-all duration-200 hover:shadow-lg overflow-hidden group"
                         >
                           <div className="flex gap-3 p-3">
                             {/* Product Image */}
-                            <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                            <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                               {product.images.length > 0 ? (
                                 <img
                                   src={product.images[0].url}
@@ -325,23 +354,44 @@ const SearchModal: React.FC<SearchModalProps> = ({
                                 {product.category.name} • {product.subCategory.name}
                               </p>
                               <div className="flex items-center justify-between">
-                                <p className="text-sm font-semibold text-[#4fb3e5]">
-                                  GH₵{product.price.toFixed(2)}
+                                <div>
+                                  <p className="text-sm font-semibold text-[#4fb3e5]">
+                                    {product.salePercent > 0
+                                      ? `GH₵${((1 - product.salePercent / 100) * product.price).toFixed(2)}`
+                                      : `GH₵${product.price.toFixed(2)}`}
+                                  </p>
+                                  {product.salePercent > 0 && (
+                                    <span className="text-xs text-gray-400 line-through">
+                                      GH₵{product.price.toFixed(2)}
+                                    </span>
+                                  )}
                                   {product.salePercent > 0 && (
                                     <span className="ml-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">
                                       {product.salePercent}% OFF
                                     </span>
                                   )}
-                                </p>
-                                {product.stock > 0 ? (
-                                  <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                                    In Stock
-                                  </span>
-                                ) : (
-                                  <span className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full">
-                                    Out of Stock
-                                  </span>
-                                )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {product.stock > 0 ? (
+                                    <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                                      In Stock
+                                    </span>
+                                  ) : (
+                                    <span className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full">
+                                      Out of Stock
+                                    </span>
+                                  )}
+                                  {/* Add to Cart Button for Mobile */}
+                                  {product.stock > 0 && (
+                                    <button
+                                      onClick={(e) => handleAddToCart(e, product)}
+                                      className="bg-[#4fb3e5] hover:bg-[#b970a0] text-white rounded-full p-1.5 transition-colors duration-200 flex items-center justify-center shadow-md"
+                                      aria-label="Add to Cart"
+                                    >
+                                      <ShoppingCart size="14" color="#fff" />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -390,8 +440,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#b970a0]"></div>
               <span className="text-gray-600">Searching...</span>
             </div>
-          </div>
-        )}
+          </div>        )}
       </div>
     </div>
   );

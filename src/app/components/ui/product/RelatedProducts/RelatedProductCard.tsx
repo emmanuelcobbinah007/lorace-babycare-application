@@ -5,17 +5,19 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ShoppingCart } from "iconsax-reactjs";
 import { Product } from "@/app/api/products/productApi";
+import { toast } from "react-toastify";
 
 interface RelatedProductCardProps {
   product: Product;
 }
 
 const RelatedProductCard: React.FC<RelatedProductCardProps> = ({ product }) => {
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Add to cart logic here
-    console.log('Add to cart:', product.id);
+    
+    // Placeholder for add to cart functionality
+    toast.info("Add to cart functionality coming soon!");
   };
 
   const cardVariants = {
@@ -98,8 +100,7 @@ const RelatedProductCard: React.FC<RelatedProductCardProps> = ({ product }) => {
                   GH₵{(product.price).toFixed(2)}
                 </span>
               )}
-            </div>
-            <button
+            </div>            <button
               onClick={handleAddToCart}
               className={`bg-[#4fb3e5] hover:bg-[#b970a0] text-white rounded-full p-2 sm:p-2.5 transition-colors duration-200 flex items-center justify-center shadow-md border border-white ${
                 product.stock === 0 ? "opacity-50 cursor-not-allowed" : ""
@@ -110,7 +111,8 @@ const RelatedProductCard: React.FC<RelatedProductCardProps> = ({ product }) => {
               <ShoppingCart size="18" color="#fff" />
             </button>
           </div>
-        </div>      </Link>
+        </div>
+      </Link>
     </motion.div>
   );
 };

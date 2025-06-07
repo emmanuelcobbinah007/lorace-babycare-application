@@ -2,8 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-
 import { ShoppingCart } from "iconsax-reactjs";
+import { toast } from "react-toastify";
 
 interface Product {
   id: string;
@@ -48,11 +48,10 @@ const Products: React.FC<ProductsProps> = ({
   products,
   setFilteredProducts,
 }) => {
-
-  const handleAddToCart = async (product: Product, quantity: number) => {
-
-    console.log(product.id, quantity)
-  }
+  const handleAddToCart = (product: Product) => {
+    // Placeholder for add to cart functionality
+    toast.info("Add to cart functionality coming soon!");
+  };
 
   return (
     <div>
@@ -109,9 +108,8 @@ const Products: React.FC<ProductsProps> = ({
                       GH₵{(product.price).toFixed(2)}
                     </span>
                   )}
-                </div>
-                <button
-                onClick={(e) => { e.stopPropagation(); handleAddToCart(product, 1); }}
+                </div>                <button
+                onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
                   className={`bg-[#4fb3e5] hover:bg-[#b970a0] text-white rounded-full p-2 sm:p-2.5 transition-colors duration-200 flex items-center justify-center shadow-md border border-white ${
                     product.stock === 0 ? "opacity-50 cursor-not-allowed" : ""
                   }`}

@@ -18,8 +18,7 @@ const Product = () => {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  
-  // Use React Query to fetch product
+    // Use React Query to fetch product
   const { data: product, isLoading: loading, error } = useProduct(id);
   
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -32,14 +31,13 @@ const Product = () => {
     if (product?.images && product.images.length > 0) {
       setSelectedImage(product.images[0].url);
     }
-  }, [product]);
-
-  const handleQuantityChange = (change: number) => {
+  }, [product]);  const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
     if (newQuantity >= 1 && newQuantity <= (product?.stock || 10)) {
       setQuantity(newQuantity);
     }
   };
+
   const handleAddToCart = () => {
     if (product?.sizingType && product.sizingType !== 'NA' && !size) {
       toast.error("Please select a size");
@@ -308,14 +306,11 @@ const Product = () => {
             >
               <FaShoppingCart className="mr-2" />
               {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-            </button>
-
-            {product.stock > 0 && (
+            </button>            {product.stock > 0 && (
               <button
                 onClick={() => {
-                  handleAddToCart();
-                  // Additional buy now logic here
-                  router.push('/checkout');
+                  // Placeholder for buy now functionality
+                  toast.info("Buy now functionality coming soon!");
                 }}
                 className="flex-1 px-6 py-3 rounded-lg flex items-center justify-center bg-gradient-to-r from-[#4fb3e5] to-[#3a92c5] hover:from-[#3a92c5] hover:to-[#2d7ba8] text-white shadow-md transition-all duration-200 hover:shadow-lg"
               >
@@ -357,17 +352,13 @@ const Product = () => {
           <div className="prose max-w-none text-gray-700" 
                dangerouslySetInnerHTML={{ __html: product.descriptionLong || product.descriptionShort }} />
         </div>
-      </div>
-
-      {/* Related Products */}
+      </div>      {/* Related Products */}
       <RelatedProducts 
         subCategoryId={product.subCategoryId}
         subCategoryName={product.subCategory.name}
         currentProductId={product.id}
       />
-    </div>
-
-    <Trust />
+    </div>    <Trust />
     </div>
   );
 };

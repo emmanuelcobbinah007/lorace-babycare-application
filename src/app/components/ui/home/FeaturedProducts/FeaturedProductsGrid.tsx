@@ -117,8 +117,7 @@ const FeaturedProductsGrid: React.FC<FeaturedProductsGridProps> = ({
     },
     tap: {
       scale: 0.95,
-      rotate: -5,
-    },
+      rotate: -5,    },
   };
 
   const handleAddToCart = async (product: Product, quantity: number) => {
@@ -222,8 +221,7 @@ const FeaturedProductsGrid: React.FC<FeaturedProductsGridProps> = ({
                     </motion.button>
                   </div>
                 </div>
-              </Link>
-            </motion.div>
+              </Link>            </motion.div>
           );
         })}
       </div>
