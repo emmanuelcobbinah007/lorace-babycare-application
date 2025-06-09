@@ -13,14 +13,15 @@ export async function PATCH(req: NextRequest, context: any) {
             );
         }
 
-        // Get the token from the Authorization header
-        const token = req.headers.get('authorization')?.replace('Bearer ', '');
+        // Get the token from cookies
+        const token = req.cookies.get("token")?.value;
         
         if (!token) {
             return NextResponse.json(
-                { message: "Access token is required" },
+                { message: "Unauthorized" },
                 { status: 401 }
-            );        }
+            );
+        }
 
         // Verify the token and get user info
         const decoded = verifyToken(token);
@@ -110,14 +111,15 @@ export async function DELETE(req: NextRequest, context: any) {
             );
         }
 
-        // Get the token from the Authorization header
-        const token = req.headers.get('authorization')?.replace('Bearer ', '');
+        // Get the token from cookies
+        const token = req.cookies.get("token")?.value;
         
         if (!token) {
             return NextResponse.json(
-                { message: "Access token is required" },
+                { message: "Unauthorized" },
                 { status: 401 }
-            );        }
+            );
+        }
 
         // Verify the token and get user info
         const decoded = verifyToken(token);

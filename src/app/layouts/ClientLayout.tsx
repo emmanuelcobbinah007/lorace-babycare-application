@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import HeaderBar from "../components/ui/home/Header/HeaderBar";
 import Footer from "../components/ui/Footer/Footer";
 import QueryProvider from "../providers/QueryProvider";
+import { ModalProvider } from "../contexts/ModalContext";
 
 import { ReactNode } from "react";
 
@@ -14,13 +15,13 @@ children: ReactNode }) {
         <QueryProvider>
             {children}
         </QueryProvider>
-    );
-
-    return (
+    );    return (
         <QueryProvider>
-            <HeaderBar />
-                {children}
-            <Footer />
+            <ModalProvider>
+                <HeaderBar />
+                    {children}
+                <Footer />
+            </ModalProvider>
         </QueryProvider>
     )
 }

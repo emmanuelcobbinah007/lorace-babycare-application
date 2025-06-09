@@ -11,6 +11,7 @@ import {
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { useCategories } from "../../../../hooks/useCategories";
+import { useModal } from "../../../../contexts/ModalContext";
 
 import Logo from "../../../../../../public/images/loraceLogo.png";
 import CartModal from "./Modal/CartModal";
@@ -51,13 +52,13 @@ const HeaderBar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
-  const [showUserModal, setShowUserModal] = useState(false);
   const [showMenuModal, setShowMenuModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
+  const [animateLoginModal, setAnimateLoginModal] = useState(false);
   
+  const { isLoginModalOpen, openLoginModal, closeLoginModal } = useModal();
   const { data: fetchedCategories = [], isLoading: loading } = useCategories();
   // console.log("fetched Categories:", fetchedCategories);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -65,11 +66,16 @@ const HeaderBar = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-
-    }, []);
-
-  const openModal = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
+  // Handle login modal animation
+  useEffect(() => {
+    if (isLoginModalOpen) {
+      setTimeout(() => setAnimateLoginModal(true), 10);
+    } else {
+      setAnimateLoginModal(false);
+    }
+  }, [isLoginModalOpen]);  const openModal = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(true);
     setTimeout(() => setAnimateModal(true), 10);
   };
@@ -77,6 +83,11 @@ const HeaderBar = () => {
   const closeModal = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setAnimateModal(false);
     setTimeout(() => setter(false), 300);
+  };
+
+  const handleCloseLoginModal = () => {
+    setAnimateLoginModal(false);
+    setTimeout(() => closeLoginModal(), 300);
   };
 
   return (
@@ -160,10 +171,9 @@ const HeaderBar = () => {
               size="20"
               onClick={() => openModal(setShowSearchModal)}
               className="text-black hover:text-[#4fb3e5] hover:scale-110 transition-all duration-300"
-            />
-            <User
+            />            <User
               size="20"
-              onClick={() => openModal(setShowUserModal)}
+              onClick={openLoginModal}
               className="md:inline hidden text-black hover:text-[#b970a0] hover:scale-110 transition-all duration-300"
             />
             <ShoppingCart
@@ -178,12 +188,10 @@ const HeaderBar = () => {
       {/* Modals */}
       {showCartModal && (
         <CartModal handleClose={() => closeModal(setShowCartModal)} animateModal={animateModal} />
-      )}
-      {showSearchModal && (
+      )}      {showSearchModal && (
         <SearchModal handleClose={() => closeModal(setShowSearchModal)} animateModal={animateModal} />
-      )}
-      {showUserModal && (
-        <UserModal handleClose={() => closeModal(setShowUserModal)} animateModal={animateModal} />
+      )}      {isLoginModalOpen && (
+        <UserModal handleClose={handleCloseLoginModal} animateModal={animateLoginModal} />
       )}
       {showMenuModal && (
         <MenuModal

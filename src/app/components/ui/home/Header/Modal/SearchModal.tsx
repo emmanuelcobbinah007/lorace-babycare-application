@@ -10,6 +10,8 @@ import { useProducts } from "@/app/hooks/useProducts";
 import { useCategories } from "@/app/hooks/useCategories";
 import { Product } from "@/app/api/products/productApi";
 import { Category } from "@/app/api/categories/categoryApi";
+import { useModal } from "@/app/contexts/ModalContext";
+import addToCart from "@/app/utils/addToCart";
 
 interface SearchModalProps {
   handleClose: () => void;
@@ -21,6 +23,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   animateModal,
 }) => {  const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
+  const { openLoginModal } = useModal();
 
   // Fetch data using React Query
   const { data: products = [], isLoading: productsLoading } = useProducts();
@@ -87,17 +90,19 @@ const SearchModal: React.FC<SearchModalProps> = ({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [animateModal, handleClose]);
-
   // Add to Cart handler
-  function handleAddToCart(
+  async function handleAddToCart(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     product: Product
-  ): void {
+  ): Promise<void> {
     e.stopPropagation(); // Prevent triggering parent click (navigation)
-    // TODO: Replace with your cart logic (e.g., context, redux, API call)
-    // For now, just show a toast or alert
-    // Example: addToCart(product)
-    alert(`Added "${product.name}" to cart!`);
+    
+    try {
+      // Use the actual addToCart utility with modal support
+      await addToCart(product.id, 1, "", router, openLoginModal);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   }
 
   return (

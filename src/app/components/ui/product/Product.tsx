@@ -13,17 +13,21 @@ import "react-toastify/dist/ReactToastify.css";
 import { useProduct } from "@/app/hooks/useProducts";
 import { Product as ProductType } from "@/app/api/products/productApi";
 import { RelatedProducts } from "./RelatedProducts";
+import addToCart from "@/app/utils/addToCart";
+import { useModal } from "@/app/contexts/ModalContext";
 
 const Product = () => {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const { openLoginModal } = useModal();
     // Use React Query to fetch product
   const { data: product, isLoading: loading, error } = useProduct(id);
   
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [size, setSize] = useState<string>("");
+  const [IsAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   // Set the first image when product data is loaded
@@ -37,21 +41,20 @@ const Product = () => {
       setQuantity(newQuantity);
     }
   };
-
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (product?.sizingType && product.sizingType !== 'NA' && !size) {
       toast.error("Please select a size");
       return;
     }
 
-    // Check whether user is logged in
-    // If not, show a login prompt or redirect to login page
-    // check whether user has a cart
-    // if not, create a new cart for the user
-    // Add the product to the cart with the selected quantity and size
-    
-    toast.success(`${product?.name} added to cart!`);
-    // Here you would add the actual cart functionality
+    setIsAddingToCart(true);    try {
+      if (product) {
+        await addToCart(product.id, quantity, size, router, openLoginModal);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);    } finally {
+      setIsAddingToCart(false);
+    }
   };
   if (loading) {
     return (
@@ -189,7 +192,7 @@ const Product = () => {
             {product.salePercent > 0 ? (
               <>
                 <p className="text-2xl font-semibold text-[#b970a0]">
-                  GH₵{finalPrice.toFixed(2)}
+                  GH₵{((1 - (product.salePercent ?? 0)) * product.price).toFixed(2)}
                 </p>
                 <p className="ml-2 text-lg text-gray-500 line-through">
                   GH₵{product.price.toFixed(2)}

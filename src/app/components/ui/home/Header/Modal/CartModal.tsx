@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
+import Link from "next/link";
 import { Trash } from "iconsax-reactjs";
 import { toast, ToastContainer } from "react-toastify";
 import { FadeLoader } from "react-spinners";
@@ -20,23 +21,29 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
   const { data: cart, isLoading: cartLoading, error: cartError } = useCart();
   const createCartMutation = useCreateCart();
   const removeFromCartMutation = useRemoveFromCart();
-
   const loading = userLoading || cartLoading;
-  const cartItems = cart?.items || [];
-
+  const cartItems = cart?.cartItems || [];
+  
   // Handle user not logged in
   React.useEffect(() => {
     if (userError) {
       setNotLoggedIn(true);
     }
   }, [userError]);
-
+  
+  // Check if the user has a cart
+  const hasCart = user && cart && !cartError;
+  const needsCart = user && !cart && !cartLoading && !cartError;
+  const cartEmpty = hasCart && cartItems.length === 0;
+  const cartHasItems = hasCart && cartItems.length > 0;
   // Auto-create cart if user doesn't have one
   React.useEffect(() => {
-    if (user && !cart && !cartLoading && !cartError) {
+    if (needsCart) {
       createCartMutation.mutate();
     }
-  }, [user, cart, cartLoading, cartError, createCartMutation]);
+  }, [needsCart, createCartMutation]);
+
+  // Check if there are items in the cart and if yes, display the items
 
     const handleRemoveItem = async (itemId: string) => {
     try {
@@ -108,9 +115,9 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
               <p className="text-sm md:text-base">
                 Your cart is currently empty.
               </p>
-              <button className="px-4 py-2 bg-black text-white rounded-full hover:bg-[#b970a0] transition duration-300">
+              <Link href="/products"  className="px-4 py-2 bg-black text-white rounded-full hover:bg-[#b970a0] transition duration-300">
                 Browse Products
-              </button>
+              </Link>
             </div>
           ) : (
             <>              {cartItems.map((item: CartItem) => (
@@ -131,10 +138,10 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
                         {item.product.name}
                       </h3>
                       <p className="text-xs md:text-gray-500">
-                        Price: ${(item.product.salePrice || item.product.price).toFixed(2)}
+                        Price: GH₵{(item.product.salePrice || item.product.price).toFixed(2)}
                         {item.product.salePrice && (
                           <span className="line-through ml-2 text-gray-400">
-                            ${item.product.price.toFixed(2)}
+                            GH₵{item.product.price.toFixed(2)}
                           </span>
                         )}
                       </p>
@@ -162,7 +169,7 @@ const CartModal: React.FC<CartModalProps> = ({ handleClose, animateModal }) => {
               <div className="mt-6 border-t-2 border-gray-100 pt-4 w-full">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">Total:</h3>
-                  <p className="text-lg font-bold">${totalPrice.toFixed(2)}</p>
+                  <p className="text-lg font-bold">GH₵{totalPrice.toFixed(2)}</p>
                 </div>
                 <button className="w-full px-4 py-2 bg-black text-white rounded-lg hover:bg-[#b970a0] transition duration-300">
                   Proceed to Checkout
