@@ -50,7 +50,7 @@ export const businessConfigs: Record<string, BusinessConfiguration> = {
       ogImage: '/images/lorace-og.jpg'
     },
     contact: {
-      email: 'info@loracebabycare.com',
+      email: 'loracebabycare@gmail.com',
       phone: '+233-XXX-XXXX',
       address: 'Accra, Ghana',
       socialMedia: {
@@ -75,10 +75,10 @@ export const businessConfigs: Record<string, BusinessConfiguration> = {
     updatedAt: new Date().toISOString()
   },
   
-  'company2': {
+  'shopssentials': {
     id: 'company2',
-    name: 'company2',
-    displayName: 'Company 2',
+    name: 'shopssentials',
+    displayName: 'Shopssentials',
     subdomain: 'company2',
     domain: 'company2.lolyraced.com',
     theme: {
@@ -119,10 +119,10 @@ export const businessConfigs: Record<string, BusinessConfiguration> = {
     updatedAt: new Date().toISOString()
   },
   
-  'company3': {
+  "lyLashomes": {
     id: 'company3',
-    name: 'company3',
-    displayName: 'Company 3',
+    name: "LyLa's Homes",
+    displayName: "LyLa's Homes",
     subdomain: 'company3',
     domain: 'company3.lolyraced.com',
     theme: {
