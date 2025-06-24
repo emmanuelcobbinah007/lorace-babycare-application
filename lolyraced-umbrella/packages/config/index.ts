@@ -27,13 +27,13 @@ export const umbrellaCompany: UmbrellaCompany = {
 };
 
 // Individual business configurations
-export const businessConfigs: Record<string, BusinessConfiguration> = {
-  'loracebabycare': {
+export const businessConfigs: Record<string, BusinessConfiguration> = {  'loracebabycare': {
     id: 'loracebabycare',
     name: 'lorace-babycare',
     displayName: 'Lorace Babycare',
     subdomain: 'loracebabycare',
     domain: 'loracebabycare.lolyraced.com',
+    developmentUrl: 'http://localhost:3000',
     theme: {
       primaryColor: '#dcaed0',
       secondaryColor: '#b970a0',
@@ -74,13 +74,13 @@ export const businessConfigs: Record<string, BusinessConfiguration> = {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
-  
-  'shopssentials': {
+    'shopssentials': {
     id: 'company2',
     name: 'shopssentials',
     displayName: 'Shopssentials',
     subdomain: 'company2',
     domain: 'company2.lolyraced.com',
+    developmentUrl: 'http://localhost:3001',
     theme: {
       primaryColor: '#2563eb',
       secondaryColor: '#1d4ed8',
@@ -118,13 +118,13 @@ export const businessConfigs: Record<string, BusinessConfiguration> = {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
-  
-  "lyLashomes": {
+    "lyLashomes": {
     id: 'company3',
     name: "LyLa's Homes",
     displayName: "LyLa's Homes",
     subdomain: 'company3',
     domain: 'company3.lolyraced.com',
+    developmentUrl: 'http://localhost:3002',
     theme: {
       primaryColor: '#059669',
       secondaryColor: '#047857',
@@ -185,6 +185,17 @@ export const getBusinessBySubdomain = (subdomain: string): BusinessConfiguration
   return businessConfigs[subdomain] || null;
 };
 
+// Environment-based URL generation
+export const getBusinessUrl = (business: BusinessConfiguration): string => {
+  const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || 'production';
+  
+  if (environment === 'development') {
+    return business.developmentUrl;
+  }
+  
+  return `https://${business.domain}`;
+};
+
 // Default export
 export default {
   umbrellaCompany,
@@ -192,5 +203,6 @@ export default {
   getBusinessConfig,
   getActiveBusinesses,
   getAllBusinesses,
-  isValidSubdomain
+  isValidSubdomain,
+  getBusinessUrl
 };

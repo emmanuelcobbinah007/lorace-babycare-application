@@ -1,3 +1,4 @@
+// Business configuration types
 export interface BusinessTheme {
   primaryColor: string;
   secondaryColor: string;
@@ -48,6 +49,7 @@ export interface BusinessConfiguration {
   displayName: string;
   subdomain: string;
   domain: string;
+  developmentUrl: string;
   theme: BusinessTheme;
   seo: BusinessSEO;
   contact: BusinessContact;
